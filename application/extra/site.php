@@ -4,7 +4,7 @@ return array (
   'name' => '工作流系统',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.3',
+  'version' => '1.0.4',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
