@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-xs-3 col-md-3" id="deptbar" style="padding-right:0;">
+        <div class="panel panel-default panel-intro">
+            <div class="panel-heading">
+                <div class="panel-lead">
+                    <em>常用变量/函数</em>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="treeview">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-9 col-md-9" id="userpanel">
+        <div class="panel panel-default panel-intro">
+            <div class="panel-heading">
+                <div class="panel-lead">
+                    <em>信息</em>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="one">
+                        <div class="form-group">
+                            <label for="pre" class="control-label col-xs-12 col-sm-2">{:__('文本信息')}:</label>
+                            <div class="col-xs-12 col-sm-10">
+                                <input type="text" class="form-control" id="lineLabel" name="row[lineLabel]" value="" data-rule="required;letters"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pre" class="control-label col-xs-12 col-sm-2">{:__('sql表达式')}:</label>
+                            <div class="col-xs-12 col-sm-10">
+                                <textarea  name="fieldlistText" id='fieldlistText' class="form-control" data-rule="" rows="5" data-tip=""></textarea>
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

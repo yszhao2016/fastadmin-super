@@ -1,0 +1,159 @@
+<style>
+    legend {padding-bottom:5px;font-size:14px;font-weight:600;padding-left: 10px;padding-right: 15px;padding-top: 12px;}
+    label {font-weight:normal;}
+    .form-control{padding:6px 8px;}
+    .fileds-item{margin-top:10px;}
+    .form-group{margin-bottom: 6px;}
+    #chooseicon {
+        margin:10px;
+    }
+    #chooseicon ul {
+        margin:5px 0 0 0;
+    }
+    #chooseicon ul li{
+        width:41px;height:42px;
+        line-height:42px;
+        border:1px solid #efefef;
+        padding:1px;
+        margin:1px;
+        text-align: center;
+        font-size:18px;
+    }
+    #chooseicon ul li:hover{
+        border:1px solid #2c3e50;
+        cursor:pointer;
+    }
+</style>
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="content" style="padding-top: 0px;">
+        <input type="hidden" name="commandtype" value="crud" />
+        <div class="row">
+            <legend class="text-info">单据表选择</legend>
+            <div class="col-xs-12 col-sm-4" style="padding-bottom: 12px;">
+                <label>选择单据表:</label>
+                <div>
+                    <select id="table" class="form-control selectpicker" data-live-search="true" name="table">
+                        {volist name='tables' id='table'}
+                        <option value="{$table['name']}">{$table['name']}({$table['comment']})</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4" style="padding-bottom: 12px;">
+                <label>显示字段(默认全部):</label>
+                <div>
+                    <select name="fields[]" id="fields" multiple style="height:30px;" class="form-control selectpicker"></select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4" style="padding-bottom: 12px;">
+                <label for="icon">选择图标:</label>
+                <div class="input-group input-groupp-md">
+                    <input type="text" class="form-control" id="icon" name="icon" value="fa-circle-o" />
+                    <a href="javascript:;" class="btn-search-icon input-group-addon">搜索图标</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <legend class="text-info">控制器设置<b class="text-warning"> 默认控制器为"fastflow/bill/控制器名"，如要建立独立单据，可自定义控制器路径和名称</b></legend>
+            <div class="col-xs-12 col-sm-12">
+                <label  style="padding-top: 8px;float: left">控制器:</label>
+                <div class="col-xs-12 col-sm-6">
+                    <input id="c-controller" class="form-control text-bold" name="controller" type="text">
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group" style="margin-top: 12px;">
+            <legend class="text-info">关联模型选择(无关联模型可不选)</legend>
+            <div id="flowoutcondition" class="form-group">
+                <div class="col-xs-12 col-sm-12">
+                    <table class="table table-responsive fieldlist table-bordered" data-name="relation_json" data-template="relationtpl" data-tag="tr">
+                        <tr><th>关联表</th><th>关联类型</th><th>关联外键</th><th>关联主键</th><th>显示字段</th><th>删除</th></tr>
+                        <tr><td colspan="5"><a href="javascript:;" class="btn btn-sm btn-success btn-append btn-newrelation"><i class="fa fa-plus"></i> 追加关联模型</a></td></tr>
+                        <textarea name="relation_json" class="form-control hidden" cols="30" rows="5"></textarea>
+                    </table>
+                    <script type="text/html" id="relationtpl">
+                        <tr class="form-inline">
+                            <td><select name="relation[<%=index%>][relation]" class="form-control relationtable" data-live-search="true"></select></td>
+                            <td><select name="relation[<%=index%>][relationmode]" class="form-control relationmode"></select></td>
+                            <td><select name="relation[<%=index%>][relationforeignkey]" class="form-control relationforeignkey"></select></td>
+                            <td><select name="relation[<%=index%>][relationprimarykey]" class="form-control relationprimarykey"></select></td>
+                            <td><select name="relation[<%=index%>][relationfields][]" multiple class="form-control relationfields"></select></td>
+                            <td><span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span></td>                        </tr>
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group layer-footer">
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">创建单据</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+
+<script id="filedstpl" type="text/html">
+    <div class="row fileds-item">
+        <div class="col-xs-2">
+            <label>字段名(英文)</label>
+            <input name="fileds[<%=index%>][name]" class="form-control" data-toggle="tooltip" title="字段名" placeholder="字段名(*必填)">
+        </div>
+        <div class="col-xs-2">
+            <label>中文名(注释)</label>
+            <input name="fileds[<%=index%>][comment]" class="form-control" data-toggle="tooltip" title="字段注释,中文" placeholder="字段注释">
+        </div>
+        <div class="col-xs-2">
+            <label>字段类型</label>
+            <select name="fileds[<%=index%>][type]" class="form-control selectpicker">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+        <div class="col-xs-2">
+            <label>可选值</label>
+            <input name="fileds[<%=index%>][comment]" class="form-control" data-toggle="tooltip" title="字段注释,中文" placeholder="字段注释">
+        </div>
+        <div class="col-xs-2">
+            <label>可选值</label>
+            <input name="fileds[<%=index%>][comment]" class="form-control" data-toggle="tooltip" title="字段注释,中文" placeholder="字段注释">
+        </div>
+        <div class="col-xs-1">
+            <label>显示</label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox">
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <label>&nbsp;</label>
+            <a href="javascript:;" class="btn btn-danger btn-block btn-removefileds"></a>
+        </div>
+    </div>
+</script>
+<script id="chooseicontpl" type="text/html">
+    <div id="chooseicon">
+        <div>
+            <form onsubmit="return false;">
+                <div class="input-group input-groupp-md">
+                    <div class="input-group-addon">{:__('Search icon')}</div>
+                    <input class="js-icon-search form-control" type="text" placeholder="">
+                </div>
+            </form>
+        </div>
+        <div>
+            <ul class="list-inline">
+                <% for(var i=0; i<iconlist.length; i++){ %>
+                <li data-font="<%=iconlist[i]%>" data-toggle="tooltip" title="<%=iconlist[i]%>">
+                    <i class="fa fa-<%=iconlist[i]%>"></i>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+
+    </div>
+</script>

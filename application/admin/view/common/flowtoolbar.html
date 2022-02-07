@@ -1,0 +1,57 @@
+{if condition="$instance['instancestatus'] neq 2"}
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">审批意见</label>
+    <div class="col-xs-12 col-sm-8">
+        <textarea id="c-comment" class="form-control" data-use-current="true" name="comment"></textarea>
+    </div>
+</div>
+{/if}
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2">审批历史</label>
+    <div class="col-xs-12 col-sm-8">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>审批人</td>
+                    <td>审批步骤</td>
+                    <td>审批意见</td>
+                    <td>审批时间</td>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="history" id="vo" }
+                <tr>
+                    <td>{$vo.nickname}</td>
+                    <td>{$vo.stepname}</td>
+                    <td>{$vo.comment}</td>
+                    <td>{$vo.completedtime}</td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="form-group layer-footer">
+    <div class="col-xs-12 col-sm-12" style="text-align: center;">
+        {if condition="$mode neq 'view'"}
+        {if condition="$instance['instancestatus'] eq 0"}
+        <button type="button" id='start' class="btn btn-success btn-embossed">提交</button>
+        {elseif condition="$instance['instancestatus'] eq 1"/}
+        <button type="submit" id='agree' class="btn btn-success btn-embossed disabled">{:__('同意')}</button>
+        <button type="submit" id='trans' class="btn btn-success btn-embossed disabled">{:__('转发')}</button>
+        <button type="submit" id='refuse' class="btn btn-danger btn-embossed disabled">{:__('拒绝')}</button>
+        
+        {else/}
+        {/if}
+        {/if}
+        {if condition="$instance['instancestatus'] neq 2 and $instance['instancestatus'] neq 3 and
+        $instance['originator'] eq $auth->id"}
+        <button type="submit" id='cancel' class="btn btn-danger btn-embossed disabled">{:__('取消')}</button>
+        {/if}
+        <button type="button" id='flowchart' class="btn btn-warning btn-embossed">{:__('流程图')}</button>
+        <button type="button" id='flowprint' class="btn btn-warning btn-embossed">{:__('打印')}</button>
+        
+        
+    </div>
+</div>

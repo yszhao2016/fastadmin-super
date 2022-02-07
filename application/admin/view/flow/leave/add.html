@@ -1,0 +1,47 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+<div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('流水号')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="instancecode"  class="form-control" name="row[instancecode]" type="text" value="{$serial_no}" readonly>
+        </div>
+    </div>
+    {if $fieldList.start_time.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Start_time')}:</label>
+        <div class="col-xs-12 col-sm-8 ">
+            <input id="c-start_time" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[start_time]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    {/if}
+    {if $fieldList.end_time.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('End_time')}:</label>
+        <div class="col-xs-12 col-sm-8 ">
+            <input id="c-end_time" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[end_time]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    {/if}
+    {if $fieldList.content.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
+        <div class="col-xs-12 col-sm-8 ">
+            <input id="c-content" data-rule="required" class="form-control" name="row[content]" type="text" value="">
+        </div>
+    </div>
+    {/if}
+    {if $fieldList.day.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Day')}:</label>
+        <div class="col-xs-12 col-sm-8 ">
+            <input id="c-day" data-rule="required" class="form-control" name="row[day]" type="number" value="0">
+        </div>
+    </div>
+    {/if}
+    <div class="form-group layer-footer">
+        <div class="col-xs-12 col-sm-12" style="text-align: center;">
+            <button id='save' type="button" class="btn btn-success btn-embossed">保存</button>
+            <button id='add' type="submit" class="btn btn-info btn-embossed">提交</button>
+            <button type="button" id='flowchart' class="btn btn-warning btn-embossed">{:__('流程图')}</button>
+        </div>
+    </div>
+</form>

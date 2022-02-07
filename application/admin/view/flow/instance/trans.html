@@ -1,0 +1,18 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group"  id="userGroup">
+                                <label for="username" class="control-label col-xs-12 col-sm-3">审批人</label>
+                                <div class="col-xs-12 col-sm-8" style="zIndex:999">
+                                    <div class="input-group input-groupp-md">
+                                        <input type="text" id="txtUser" class="form-control selectpage" style="width:340px;" data-multiple="false" data-source="flow/scheme/selectuserpage" data-field="username" name="row[userid]" data-page-size='10' value=""/>
+                                    </div>
+                                </div>
+     </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" id='ok' class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

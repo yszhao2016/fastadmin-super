@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>查看</title>
+    <style>
+        .timeline-item {
+            margin-top: 8px !important;
+        }
+
+        .timeline li .label-step {
+            display: inline-block;
+            min-width: 80px;
+            font-size: 100%;
+            background-size: 100% 100%;
+        }
+
+        .timeline-header {
+            background: #f9f9f9;
+            color: #0a6aa1;
+            font-size: 15px !important;
+        }
+
+        .timeline-body p span {
+            vertical-align: middle;
+        }
+
+        li .label {
+            padding: .3em .6em .3em !important;
+        }
+
+        .fa {
+            margin-right: 4px;
+        }
+
+        body.is-dialog, #main {
+            background: #ecf0f5 !important;
+        }
+
+        legend {
+            padding-bottom: 5px;
+            font-size: 14px;
+            padding-right: 15px;
+        }
+
+        .span-content {
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .timeline-header a {
+            font-size: 80%;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+<ul class="timeline">
+    {volist name='logs' id='log'}
+    <li class="time-label">
+        <span class="bg-light-blue">{$key}</span>
+    </li>
+    {volist name='log' id='row'}
+    <li>
+        <!--            <i class="fa fa-user bg-aqua"></i>-->
+        <span class="label label-info label-step"><i class="fa fa-tasks"></i>{$row['step_name']}</span>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {$row['longtime']}</span>
+            <div class="timeline-header">
+                <label style="font-weight:300;">
+                    {if $row['check_type']==6}流程结束：{elseif $row['check_type']==5}发起人：{else /}审批人：{/if}
+                    <span class="text-warning">{$row['worker_name']}</span>
+                </label>
+                {if $row['check_type']==1}<a class="btn btn-success-light btn-xs">同意</a>{/if}
+                {if $row['check_type']==2}<a class="btn btn-danger-light btn-xs">驳回</a>{/if}
+                {if $row['check_type']==3}<a class="btn btn-info-light btn-xs">会签</a>{/if}
+                {if $row['check_type']==5}<a class="btn btn-success-light btn-xs">发起流程</a>{/if}
+                {if $row['is_agency']==1}<a class="btn btn-info-light btn-xs">代理</a>{/if}
+            </div>
+            <div class="timeline-body">
+                <div style="margin-left: 10px;">
+                    {if $row['check_type']==6}
+                    <p><a class="btn btn-warning btn-xs" style="font-size: 80%">流程结束</a></p>
+                    {elseif $row['check_type']==4}
+                    <p><a class="btn btn-warning btn-xs" style="font-size: 80%">审批被强制终止</a></p>
+                    {else /}
+                    <legend>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-3" style="margin-bottom: 8px;">
+                                <span class="label label-success text-bold"><i class="fa fa-television"></i>审批操作：</span>
+                                <span class="span-content">
+                                {if $row['check_type']==1}同意{/if}
+                                {if $row['check_type']==2}驳回{/if}
+                                {if $row['check_type']==3}会签{/if}
+                                {if $row['check_type']==5}发起{/if}
+                                </span>
+                            </div>
+                            {if $row['is_agency']==1}
+                            <div class="col-xs-12 col-sm-4" style="margin-bottom: 8px;">
+                                <span class="label label-info text-bold"><i class="fa fa-user"></i>代理人(组)：</span>
+                                <span class="span-content">
+                                    {$row['agent']}
+                                </span>
+                            </div>
+                            <div class="col-xs-12 col-sm-5" style="margin-bottom: 8px;">
+                                <span class="label label-info text-bold"><i class="fa fa-user"></i>被代理人(组)：</span>
+                                <span class="span-content">
+                                    {$row['principal']}
+                                </span>
+                            </div>
+                            {/if}
+                        </div>
+                    </legend>
+                    {if $row['check_type']==2}
+                    <p>
+                        <span class="text-bold"><i class="fa fa-mail-reply text-danger"></i>驳回步骤：</span>
+                        <span class="text-info">{$row['back_steps']}</span>
+                    </p>
+                    {/if}
+                    {if $row['check_type']==3}
+                    <p><span class="text-bold"><i class="fa  fa-user text-success"></i>会签人员：</span>
+                        <span class="text-info">{$row['sign_worker']}</span>
+                        <span class="text-success">
+                            {php}
+                            if(count(explode(',',$row['sign_worker']))>1){
+                                if($row['sign_checkmode']==1){
+                                    echo '(联合会签)';
+                                }
+                                else{
+                                    echo '(任一会签)';
+                                }
+                            }
+                            {/php}
+                        </span>
+                    </p>
+                    {/if}
+                    <p><span class="text-bold"><i class="fa fa-pencil-square-o text-warning"></i>审批内容：</span>{$row['check_content']}
+                    </p>
+                    {if $row['file']!=''}<p><span class="text-bold"><i
+                        class="fa  fa-file-text-o text-gray"></i>资料下载：</span><a href="{$row['file']}"
+                                                                                class="btn btn-info-light btn-xs">{$row['file_name']}</a>
+                </p>{/if}
+                    {/if}
+                </div>
+            </div>
+
+        </div>
+    </li>
+    {/volist}
+    {/volist}
+
+</ul>
+
+</body>
+</html>

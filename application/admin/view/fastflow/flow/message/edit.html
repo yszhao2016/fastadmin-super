@@ -1,0 +1,168 @@
+<style>
+    legend {
+        padding-bottom: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        padding-left: 10px;
+        padding-right: 15px;
+        padding-top: 12px;
+    }
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 4px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+</style>
+
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="form-group">
+        <legend>{:__('配置')}</legend>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-1">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-6">
+            <input id="c-name" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-1">{:__('Key')}:</label>
+        <div class="col-xs-12 col-sm-6">
+            <input id="c-key" class="form-control" name="row[key]" type="text" value="{$row.key|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-1">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-6">
+            <div class="radio">
+                {foreach name="statusList" item="vo"}
+                <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-1">{:__('Config')}:</label>
+        <div class="col-xs-12 col-sm-6">
+            <dl class="fieldlist" data-template="configtpl" data-name="row[config]">
+                <dd>
+                    <ins class="text-center">键名</ins>
+                    <ins class="text-center">值</ins>
+                </dd>
+                <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i>
+                    {:__('Append')}</a></dd>
+                <textarea name="row[config]" class="form-control hidden" cols="30"
+                          rows="5">{$row.config|htmlentities}</textarea>
+            </dl>
+            <script id="configtpl" type="text/html">
+                <dd class="form-inline" fieldlist-item="true">
+                    <input class="form-control" name="<%=name%>[<%=index%>][key]" type="text" value="<%=row.key%>">
+                    <input class="form-control" name="<%=name%>[<%=index%>][value]" type="text" value="<%=row.value%>">
+                    <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                </dd>
+            </script>
+        </div>
+    </div>
+    <div class="form-group">
+        <legend>{:__('Templet')}</legend>
+        <div class="col-xs-12 col-sm-4">
+            <div class="box">
+                <div class="box-header">
+                    <span class="box-title" style="font-size: 14px;">变量表</span>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <th>变量</th>
+                            <th>解释</th>
+                        </tr>
+                        <tr>
+                            <td>{flowName}</td>
+                            <td>流程名称</td>
+                        </tr>
+                        <tr>
+                            <td>{flowDescription}</td>
+                            <td>流程描述</td>
+                        </tr>
+                        <tr>
+                            <td>{scope}</td>
+                            <td>域</td>
+                        </tr>
+                        <tr>
+                            <td>{scopeName}</td>
+                            <td>域名称</td>
+                        </tr>
+                        <tr>
+                            <td>{workerIds}</td>
+                            <td>原审批人ID</td>
+                        </tr>
+                        <tr>
+                            <td>{workerNames}</td>
+                            <td>原审批人名</td>
+                        </tr>
+                        <tr>
+                            <td>{checkmode}</td>
+                            <td>审批模式</td>
+                        </tr>
+                        <tr>
+                            <td>{stepName}</td>
+                            <td>步骤名</td>
+                        </tr>
+                        <tr>
+                            <td>{preStepName}</td>
+                            <td>上一步骤名</td>
+                        </tr>
+                        <tr>
+                            <td>{bill}</td>
+                            <td>单据表名</td>
+                        </tr>
+                        <tr>
+                            <td>{billId}</td>
+                            <td>单据id</td>
+                        </tr>
+                        <tr>
+                            <td>{billName}</td>
+                            <td>单据注释名</td>
+                        </tr>
+                        <tr>
+                            <td>{agency}</td>
+                            <td>是否为代理</td>
+                        </tr>
+                        <tr>
+                            <td>{agentId}</td>
+                            <td>代理人ID</td>
+                        </tr>
+                        <tr>
+                            <td>{agentName}</td>
+                            <td>代理人名</td>
+                        </tr>
+                        <tr>
+                            <td>{principalIds}</td>
+                            <td>被代理人ID</td>
+                        </tr>
+                        <tr>
+                            <td>{principalName}</td>
+                            <td>被代理人名</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-templet" class="form-control" style="min-height:320px;background: #363839;color: #f0f8ff;" rows="30" name="row[templet]" cols="50">{$row.templet|htmlentities}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

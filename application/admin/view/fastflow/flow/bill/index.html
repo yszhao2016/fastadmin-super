@@ -1,0 +1,32 @@
+<style>
+    legend {color:#466a82;padding-bottom:5px;font-size:14px;font-weight:600;padding-right: 15px;}
+    .table-mustcomtain th,td{
+        border: 1px solid #d7d7d7 !important;
+    }
+
+</style>
+<div class="row">
+    <div class="panel panel-default panel-intro">
+        {:build_heading()}
+        <div class="panel-body">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="one">
+                    <div class="widget-body no-padding">
+                        <div id="toolbar" class="toolbar">
+                            <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                            <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('fastflow/flow/bill/add')?'':'hide'}" title="新增业务单据" ><i class="fa fa-plus"></i> 新增业务单据</a>
+                        </div>
+                        <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                               data-operate-edit=""
+                               data-operate-del=""
+                               width="100%">
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

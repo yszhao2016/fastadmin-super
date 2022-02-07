@@ -1,0 +1,35 @@
+<div class="panel panel-default panel-intro">
+    <input id="schemeid" class="form-control" name="row[scheme_id]" type="hidden" value="{$scheme_id}">
+    <div class="panel-heading">
+   <div class="panel-lead"><em>字段管理</em>复选框后缀=>默认set类型,单选框后缀=>默认enum类型,图片类型后缀=>默认image,图片类型后缀=>默认image,
+        文件类型后缀=>默认file,files,日期时间后缀=>默认time ,开关后缀=>默认switch,城市选择后缀=>默认city,
+        动态下拉后缀(单)=>默认_id,动态下拉后缀(多)=>默认_ids,排序字段=>默认weigh,富文本编辑器=>默认content,
+        选项卡过滤字段=>默认status
+    </div>   
+   </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div id="toolbar" class="toolbar">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-success btn-add" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                        <a href="javascript:;" class="btn btn-info btn-release" title="{:__('Release')}" ><i class="fa fa-location-arrow"></i> {:__('Release')}</a>
+                       <a href="javascript:;" class="btn btn-default" style="font-size:14px;color:dodgerblue;">
+                            <i class="glyphicon glyphicon-align-justify"></i>
+                            <span class="extend">
+                                业务表：<span id="tableName">{$tableName}</span>
+                            </span>
+                        </a>
+                    </div>
+                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                           data-operate-edit="{:$auth->check('flow/bizscheme/edit')}" 
+                           data-operate-del="{:$auth->check('flow/bizscheme/del')}" 
+                           width="100%">
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

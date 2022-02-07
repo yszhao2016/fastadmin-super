@@ -1,0 +1,118 @@
+<style>
+    #selectworker table {
+        border: 1px solid #d2d2d2;
+        border-collapse: unset !important;
+        margin-bottom: 0px;
+    }
+    .alert{
+        padding: 10px;
+        display: block;
+        margin-bottom: 0px;
+    }
+</style>
+
+<form id="check-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
+      action="{:url('sign')}">
+    <input class="hidden" name="row[thread_id]" value="{$thread_id}">
+<!--    <div class="alert alert-success-light col-xs-12 col-sm-12">-->
+<!--        <b>提示：如果该步骤为联合审批，未审批的成员会自动失去审批权限</b>-->
+<!--    </div>-->
+    <div class="form-group" style="margin-bottom: 6px;">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class=" col-xs-12 col-sm-8">
+            <b class="alert alert-success-light">提示：如果该步骤为联合审批，未审批的成员会自动失去审批权限</b>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Checkcontent')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="checkcontent" class="form-control" name="row[checkcontent]" type="text"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Filename')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-file_name" class="form-control" name="row[file_name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('File')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-file" class="form-control" size="50" name="row[file]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="faupload-file" class="btn btn-danger faupload"
+                                  data-input-id="c-file" data-multiple="false" data-preview-id="p-file"><i
+                            class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-file" class="btn btn-primary fachoose"
+                                  data-input-id="c-file" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-file"></span>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-file"></ul>
+        </div>
+    </div>
+    <div id="selectworker" class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('SelectSignWorker')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th style="text-align: center">域</th>
+                    <th style="text-align: center">会签人员（分组）</th>
+                    <th>会签模式</th>
+                </tr>
+                <tr>
+                    <td>
+                        <select id="sign_scope" class="form-control" style="alignment: center" name="row[sign_scope]">
+                            {volist name='scope' id='item'}
+                            <option value="{$item['value']}">{$item['name']}</option>
+                            {/volist}
+                        </select>
+                    </td>
+                    <td>
+                        <span>
+                            <input id="sign_worker" data-source="fastflow/flow/run/getSelectpageWorkers" data-rule="required" data-field="name" data-primary-key="id" data-multiple="true" class="form-control selectpage" name="row[sign_worker]" type="text">
+                        </span>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            <label for="checkmode-1"><input id="checkmode-1" name="row[sign_checkmode]" type="radio" value="1" checked="">联合</label>
+                            <label for="checkmode-2"><input id="checkmode-2" name="row[sign_checkmode]" type="radio" value="2">任一</label>
+                        </div>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('BackAuth')}:</label>
+        <div class="radio col-sm-8">
+            <label for="canback-1"><input id="canback-1" name="row[sign_canback]" type="radio" value="1" checked="">允许驳回</label>
+            <label for="canback-2"><input id="canback-2" name="row[sign_canback]" type="radio" value="0">禁止驳回</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('SignAuth')}:</label>
+        <div class="radio col-sm-8">
+            <label for="cansign-1"><input id="cansign-1" name="row[sign_cansign]" type="radio" value="1" checked="">允许会签</label>
+            <label for="cansign-2"><input id="cansign-2" name="row[sign_cansign]" type="radio" value="0">禁止会签</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Viewer')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <iframe id="viewer" src="{:url('/fastflow/flow/flow/viewer',['flow_id'=>$flow_id])}" border="0"
+                    marginwidth="0" marginheight="0" scrolling-x="no" scrolling-y="auto" allowtransparency="yes"
+                    width="100%" style="height: calc(100vh - 207px);" frameborder="no"></iframe>
+            </iframe>
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

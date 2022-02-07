@@ -1,0 +1,107 @@
+<style>
+    legend {
+        padding-bottom: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        padding-left: 10px;
+        padding-right: 15px;
+        padding-top: 12px;
+        color: grey;
+    }
+    table tr th{
+        color: #4198d4;
+        text-align: center;
+    }
+    table tr td{
+        text-align: center;
+    }
+    .leftblank-area{
+        height: calc(38vh);
+        overflow: auto;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+    .leftblank-overview{
+        height: calc(10vh);
+        margin-bottom: 10px;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro">
+            <legend>数据统计</legend>
+            <div class="leftblank-overview">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th>已发起业务</th>
+                        <th class="text-warning">结束业务</th>
+                        <th class="text-danger">终止业务</th>
+                        <th class="text-success">运行业务</th>
+                    </tr>
+                    <tr>
+                        <td>{$totalData.total}</td>
+                        <td>{$totalData.finish}</td>
+                        <td>{$totalData.termination}</td>
+                        <td>{$totalData.run}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="chart" class="leftblank-area"></div>
+            <div class="leftblank-area">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th>单据</th>
+                        <th>已发起业务</th>
+                        <th class="text-warning">结束</th>
+                        <th class="text-danger">终止</th>
+                        <th class="text-success">运行</th>
+                    </tr>
+                    {volist name='statisticDataList' id='data'}
+                    <tr>
+                        <td>{$data.comment}<span style="color: #929292">({$key})</span></td>
+                        <td>{$data.total}</td>
+                        <td>{$data.finish}</td>
+                        <td>{$data.termination}</td>
+                        <td>{$data.run}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-8">
+        <div class="panel panel-default panel-intro">
+            <div class="panel-heading">
+                {:build_heading(null,FALSE)}
+                <ul class="nav nav-tabs" data-field="status">
+                    <li class="{:$Think.get.status === null ? 'active' : ''}"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
+                    {foreach name="statusList" item="vo"}
+                    <li class="{:$Think.get.status === (string)$key ? 'active' : ''}"><a href="#t-{$key}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div class="panel-body">
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="one">
+                        <div class="widget-body no-padding">
+                            <div id="toolbar" class="toolbar">
+                                <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                            </div>
+                            <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                                   data-operate-edit=""
+                                   data-operate-del=""
+                                   width="100%">
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

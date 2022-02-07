@@ -1,0 +1,333 @@
+{__NOLAYOUT__}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>流程表单设计器</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="__CDN__/assets/addons/flow/js/form/k-form-design.css">
+</head>
+<style>
+    .ant-input[disabled] {
+        color: black;
+    }
+
+    .ant-input-number-disabled {
+        color: black;
+    }
+</style>
+
+<body>
+    <div id="app" style="padding-top: 20px;">
+        <input type="hidden" id='jsondata' value='{$result}' disabled />
+        <div>
+            <k-form-build :value="jsonData" :config="config" ref="KFB" :default-value="defaultValue"
+                :disabled="disabledForm"  @change="handleChange"/>
+        </div>
+        <div class="ant-form ant-form-horizontal">
+            <div class="ant-row ant-form-item">
+                <div class="ant-col ant-col-4 ant-form-item-label">
+                </div>
+                <div class="ant-col ant-col-18 ant-form-item-control-wrapper">
+                    <a-textarea v-model="comment" placeholder="输入审批意见" :auto-size="{ minRows: 3, maxRows: 5 }"
+                        v-if="commentVisable" />
+                    </a-form-item>
+                </div>
+            </div>
+            <div class="ant-row ant-form-item">
+                <div class="ant-col ant-col-4 ant-form-item-label">
+                </div>
+                <div class="ant-col ant-col-18 ant-form-item-control-wrapper">
+                    <a-table bordered :columns="columns" :data-source="columnsData" size="small" :pagination="false"
+                        v-if="historyVisiable">
+                    </a-table>
+                    </a-form-item>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="__CDN__/assets/addons/flow/js/form/vue.min.js"></script>
+    <script src="__CDN__/assets/addons/flow/js/form/axios.min.js"></script>
+    <script src="__CDN__/assets/addons/flow/js/form/k-form-design.umd.min.js"></script>
+    <script>
+        debugger;
+        const columns = [
+            {
+                title: '审批人',
+                dataIndex: 'nickname',
+                key: 'nickname',
+                width: 150,
+            }, {
+                title: '审批步骤',
+                dataIndex: 'stepname',
+                key: 'stepname',
+                width: 150,
+            }, {
+                title: '审批意见',
+                dataIndex: 'comment',
+                key: 'comment',
+                width: 150,
+            },
+            {
+                title: '审批时间',
+                dataIndex: 'completedtime',
+                key: 'completedtime',
+                width: 150,
+            }]
+        let jsonData = document.getElementById('jsondata').value == '' ? {} : JSON.parse(document.getElementById('jsondata').value);
+        if (!jsonData.frmJson) {
+            alert('找不到表单信息,请联系管理员');
+        }
+        let frmJson = JSON.parse(jsonData.frmJson)
+        if (jsonData.mode == 'start') {
+            let index = frmJson.list.unshift({
+                "type": "input",
+                "label": "流程编号",
+                "options": {
+                    "type": "text",
+                    "width": "100%",
+                    "defaultValue": jsonData.serial_no,
+                    "placeholder": "请输入",
+                    "clearable": false,
+                    "maxLength": null,
+                    "hidden": false,
+                    "disabled": true
+                },
+                "model": "instancecode",
+                "key": "instancecode",
+                "rules": [
+                    {
+                        "required": false,
+                        "message": "必填项"
+                    }
+                ]
+            });
+        }
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                config: {
+                    uploadFile: jsonData.domain + "admin/flow/formbuild/upload", // 上传文件地址
+                    uploadImage: jsonData.domain + "admin/flow/formbuild/upload", // 上传图片地址
+                    domain:jsonData.domain,
+                    uploadFileName: "", // 上传文件name
+                    uploadImageName: "", // 上传图片name
+                    uploadFileData: { data: 223 }, // 上传文件额外参数
+                    uploadImageData: { data: 223 }, // 上传图片额外参数
+                    uploadFileHeaders: { data: 1545 }, // 上传文件请求头部
+                    uploadImageHeaders: { data: 1545 } // 上传图片请求头部
+                },
+                mode: jsonData.mode,
+                jsonData: frmJson,
+                fields: jsonData.cols,
+                ids: jsonData.schemeid,
+                defaultValue: jsonData.frmValue,
+                columns,
+                columnsData: jsonData.history,
+                historyVisiable: false,
+                commentVisable: false,
+                disabledForm: false,
+                comment: '',
+            },
+            methods: {
+                handleChange(value, key) {
+                    
+                },
+                handleReset() {
+                    // 重置表单
+                    this.$refs.kfb.reset();
+                },
+                importData() {
+
+                },
+                init() {
+                    if (this.mode == 'edit') {
+                        this.historyVisiable = true;
+                        this.commentVisable = true;
+                        //this.disabledForm = true;
+                    }
+                    if (this.mode == 'view') {
+                        this.historyVisiable = true;
+                        this.commentVisable = false;
+                        this.disabledForm = true;
+                    }
+                    if(this.mode == 'submit'){
+                        this.disabledForm = false;
+                    }
+                },
+                cancel(index,para) {
+                    var self = this;
+                    var url = 'cancel?ids=' + para;
+                    this.$refs.KFB.getData()
+                        .then(res => {
+                            var layerIndex =  parent.Layer.load(0);
+                            parent.$("#cancel").attr("disabled",true);
+                            axios.post(url, {
+                                data: res,
+                                comment: self.comment
+                            })
+                                .then(function (response) {
+                                    if (response.data.code == 200) {
+                                        parent.$("#table").bootstrapTable('refresh');
+                                        parent.Layer.closeAll()
+                                        parent.Toastr.success(response.data.msg);
+                                    }
+                                    else {
+                                        parent.Toastr.error(response.data.msg);
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                        })
+                        .catch(err => {
+                            console.log(err, "校验失败");
+                        });
+                },
+                refuse(index, para) {
+                    var self = this;
+                    var url = 'refuse' + para;
+                    this.$refs.KFB.getData()
+                        .then(res => {
+                            // 获取数据成功
+                            var layerIndex =  parent.Layer.load(0);
+                            parent.$("#refuse").attr("disabled",true);
+                            axios.post(url, {
+                                data: res,
+                                comment: self.comment
+                            })
+                                .then(function (response) {
+                                    if (response.data.code == 200) {
+                                        parent.$("#table").bootstrapTable('refresh');
+                                        parent.Layer.closeAll()
+                                        parent.Toastr.success(response.data.msg);
+                                    }
+                                    else {
+                                        parent.Toastr.error(response.data.msg);
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                        })
+                        .catch(err => {
+                            console.log(err, "校验失败");
+                        });
+                },
+                agree(index, para) {
+                    var self = this;
+                    var url = 'agree' + para;
+                    this.$refs.KFB.getData()
+                        .then(res => {
+                            // 获取数据成功
+                            var layerIndex =  parent.Layer.load(0);
+                            parent.$("#agree").attr("disabled",true);
+                            axios.post(url, {
+                                data: res,
+                                comment: self.comment
+                            })
+                                .then(function (response) {
+                                    if (response.data.code == 200) {
+                                        parent.$("#table").bootstrapTable('refresh');
+                                        parent.Layer.closeAll()
+                                        parent.Toastr.success(response.data.msg);
+                                    }
+                                    else {
+                                        parent.Toastr.error(response.data.msg);
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                        })
+                        .catch(err => {
+                            console.log(err, "校验失败");
+                        });
+                },
+                start(index) {
+                    var self = this;
+                    var url = 'start?ids=' + self.ids;
+                    this.$refs.KFB.getData()
+                        .then(res => {
+                            var layerIndex =  parent.Layer.load(0);
+                            parent.$("#start").attr("disabled",true);
+                            // 获取数据成功                        
+                            axios.post(url, {
+                                data: res
+                            })
+                                .then(function (response) {
+                                    if (response.data.code == 200) {
+                                        parent.Layer.closeAll()
+                                        parent.Toastr.success(response.data.msg);
+                                    }
+                                    else {
+                                        parent.Toastr.error(response.data.msg);
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                        })
+                        .catch(err => {
+                            debugger;
+                            console.log(err, "校验失败");
+                        });
+                },
+                save(index) {
+                    var self = this;
+                    var url = 'save?ids=' + self.ids;
+                    this.$refs.KFB.getData()
+                        .then(res => {
+                            var layerIndex =  parent.Layer.load(0);
+                            parent.$("#save").attr("disabled",true);
+                            // 获取数据成功                        
+                            axios.post(url, {
+                                data: res
+                            })
+                                .then(function (response) {
+                                    parent.Layer.closeAll()
+                                    parent.Toastr.success(response.data.msg);
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                        })
+                        .catch(err => {
+                            console.log(err, "校验失败");
+                        });
+                }
+            },
+            created() {
+                let self = this
+                window['start'] = (index) => {
+                    self.start(index)
+                },
+                    window['save'] = (index) => {
+                        self.save(index)
+                    },
+                    window['agree'] = (index, para) => {
+                        self.agree(index, para)
+                    },
+                    window['refuse'] = (index, para) => {
+                        self.refuse(index, para)
+                    },
+                    window['cancel'] = (index, para) => {
+                        self.cancel(index, para)
+                    }
+            },
+            mounted() {
+                this.init();
+            }
+        })
+    </script>
+</body>
+
+</html>

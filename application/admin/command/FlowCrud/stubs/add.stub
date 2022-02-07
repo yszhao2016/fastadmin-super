@@ -1,0 +1,16 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+<div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('流水号')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="instancecode"  class="form-control" name="row[instancecode]" type="text" value="{$serial_no}" readonly>
+        </div>
+    </div>
+{%addList%}
+    <div class="form-group layer-footer">
+        <div class="col-xs-12 col-sm-12" style="text-align: center;">
+            <button id='save' type="button" class="btn btn-success btn-embossed">保存</button>
+            <button id='add' type="submit" class="btn btn-info btn-embossed">提交</button>
+            <button type="button" id='flowchart' class="btn btn-warning btn-embossed">{:__('流程图')}</button>
+        </div>
+    </div>
+</form>

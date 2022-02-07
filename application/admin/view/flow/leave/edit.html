@@ -1,0 +1,52 @@
+{include file='common/flowheader' /}
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('流程标题')}:</label>
+            <div class="col-xs-12 col-sm-8">
+            <label class="control-label"><strong>{$scheme->flowname}_{$instance->instancecode}</strong></label>
+            </div>
+        </div>
+    
+          <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">申请人:</label>
+            <div class="col-xs-12 col-sm-8">          
+                 <label class="control-label"> {$originator->nickname}</label>
+            </div>
+          </div>
+          {if $fieldList.start_time.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Start_time')}:</label>
+        <div class="col-xs-12 col-sm-8 {if $fieldList.start_time.write==0}disablefield{/if}">
+            <input id="c-start_time" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[start_time]" type="text" value="{$row.start_time}">
+        </div>
+    </div>
+    {/if}
+    {if $fieldList.end_time.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('End_time')}:</label>
+        <div class="col-xs-12 col-sm-8 {if $fieldList.end_time.write==0}disablefield{/if}">
+            <input id="c-end_time" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[end_time]" type="text" value="{$row.end_time}">
+        </div>
+    </div>
+    {/if}
+    {if $fieldList.content.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
+        <div class="col-xs-12 col-sm-8 {if $fieldList.content.write==0}disablefield{/if}">
+            <input id="c-content" data-rule="required" class="form-control" name="row[content]" type="text" value="{$row.content}">
+        </div>
+    </div>
+    {/if}
+    {if $fieldList.day.read==1}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Day')}:</label>
+        <div class="col-xs-12 col-sm-8 {if $fieldList.day.write==0}disablefield{/if}">
+            <input id="c-day" data-rule="required" class="form-control" name="row[day]" type="number" value="{$row.day}">
+        </div>
+    </div>
+    {/if}
+   </div>
+{include file='common/flowtoolbar' /}
+    
+</form>

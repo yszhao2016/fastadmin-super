@@ -1,0 +1,78 @@
+{__NOLAYOUT__}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>流程表单设计器</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="__CDN__/assets/addons/flow/js/form/k-form-design.css">
+</head>
+
+<body>
+  <div id="app">
+    <input type="hidden" id='colJson' value='{$cols}' />
+    <input type="hidden" id='schemeid' value='{$schemeid}' />
+    <input type="hidden" id='jsondata' value='{$jsondata}' />
+    <k-form-design :showBtnList="[
+    'preview',
+    'importJson',
+    'exportJson',
+    'exportCode',
+    'reset',
+  ]" title="表单设计器 -自定义标题" @save="handleSave" :fieldList="fields" ref='kfd'></k-form-design>
+  </div>
+  <script src="__CDN__/assets/addons/flow/js/form/vue.min.js"></script>
+  <script src="__CDN__/assets/addons/flow/js/form/axios.min.js"></script>
+  <script src="__CDN__/assets/addons/flow/js/form/k-form-design.umd.min.js"></script>
+  <script>
+    debugger;
+    let columns = JSON.parse(document.getElementById('colJson').value);
+    let ids = document.getElementById('schemeid').value;
+    let jsonData = document.getElementById('jsondata').value == '' ? '' : JSON.parse(document.getElementById('jsondata').value);
+    let vm = new Vue({
+      el: '#app',
+      data: {
+        jsonData: jsonData,
+        fields: columns,
+        ids: ids,
+        config: {
+                    uploadFile: jsonData.domain + "admin/flow/formbuild/upload", // 上传文件地址
+                    uploadImage: jsonData.domain + "admin/flow/formbuild/upload", // 上传图片地址
+                    domain:jsonData.domain,
+                    uploadFileName: "", // 上传文件name
+                    uploadImageName: "", // 上传图片name
+                    uploadFileData: { data: 223 }, // 上传文件额外参数
+                    uploadImageData: { data: 223 }, // 上传图片额外参数
+                    uploadFileHeaders: { data: 1545 }, // 上传文件请求头部
+                    uploadImageHeaders: { data: 1545 } // 上传图片请求头部
+                },
+      },
+      methods: {
+        handleSave(values) {
+          axios.post('edit', {
+            ids: this.ids,
+            frmcode: values
+          })
+            .then(function (response) {
+              alert('保存成功')
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        importData() {
+          if (this.jsonData != '') {
+            this.$refs.kfd.handleSetData(this.jsonData)
+          }
+        }
+      },
+      mounted() {
+        this.importData()
+      }
+    })
+  </script>
+</body>
+
+</html>

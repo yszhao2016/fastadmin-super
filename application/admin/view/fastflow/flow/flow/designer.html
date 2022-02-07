@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>fastflow流程设计器</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="/assets/addons/fastflow/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/assets/addons/fastflow/plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="/assets/addons/fastflow/plugins/toastr/toastr.min.css">
+    <link rel="stylesheet" href="/assets/addons/fastflow/plugins/x6/x6.css">
+    <link rel="stylesheet" href="/assets/addons/fastflow/css/fastflow.css">
+
+    <style>
+        legend {padding-bottom:5px;font-size:14px;font-weight:600;padding-left: 15px;padding-right: 15px;padding-top: 15px;}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <!--左侧组件栏-->
+    <div class="leftblank">
+        <div id="module"></div>
+    </div>
+    <!--/左侧组件栏-->
+    <!--画布区域-->
+    <div class="workspace">
+        <div id="container"></div>
+    </div>
+    <!--/画布区域-->
+    <!--工具栏-->
+    <div class="xm-toolbar">
+        <div class="x6-toolbar x6-toolbar-big x6-toolbar-hover-effect">
+            <div class="x6-toolbar-content">
+                <div class="x6-toolbar-content-inner">
+                    <div class="x6-toolbar-group">
+                        <button id="toolabar-clear" type="button" class="x6-toolbar-item xmtooltip">
+                  <span class="x6-toolbar-item-icon">
+                      <span role="img" class="text-sm">
+                          <i class="fas fa-eraser"> 清空画布</i>
+                      </span>
+                  </span>
+                        </button>
+                    </div>
+                    <div class="x6-toolbar-group">
+                        <button id="toolabar-undo" type="button" class="x6-toolbar-item">
+                  <span class="x6-toolbar-item-icon">
+                      <span role="img" class="text-sm">
+                          <i class="fas fa-undo"> 撤销</i>
+                      </span>
+                  </span>
+                        </button>
+                        <button id="toolabar-redo" type="button" class="x6-toolbar-item">
+                <span class="x6-toolbar-item-icon">
+                  <span role="img" class="text-sm">
+                    <i class="fas fa-redo"> 重做</i>
+                  </span>
+                </span>
+                        </button>
+                    </div>
+                    <div class="x6-toolbar-group">
+                        <button id="toolabar-remove" type="button" class="x6-toolbar-item"
+                                style="height: 24px;margin-top: 8px">
+                <span class="x6-toolbar-item-icon">
+                  <span role="img" class="text-sm">
+                    <i class="fas fa-trash-alt"> 删除</i>
+                  </span>
+                </span>
+                        </button>
+                    </div>
+                    <div class="x6-toolbar-group">
+                        <button id="toolabar-exporttopng" type="button" class="x6-toolbar-item"
+                                style="height: 24px;margin-top: 8px;">
+                <span class="x6-toolbar-item-icon">
+                  <span role="img" class="text-sm">
+                    <i class="fas fa-photo-video"> 导出至PNG</i>
+                  </span>
+                </span>
+                        </button>
+                        <button id="toolabar-exporttosvg" type="button" class="x6-toolbar-item"
+                                style="height: 24px;margin-top: 8px;">
+                <span class="x6-toolbar-item-icon">
+                  <span role="img" class="text-sm">
+                    <i class="fas fa-file-image"> 导出至SVG</i>
+                  </span>
+                </span>
+                        </button>
+                    </div>
+                    <div class="x6-toolbar-group">
+                        <button id="toolabar-check" type="button" class="x6-toolbar-item"
+                                style="height: 24px;margin-top: 8px;">
+                <span class="x6-toolbar-item-icon">
+                  <span role="img" class="text-sm">
+                    <i class="fas fa-check"> 检查</i>
+                  </span>
+                </span>
+                        </button>
+                        <button id="toolabar-save" type="button" class="x6-toolbar-item"
+                                style="height: 24px;margin-top: 8px;">
+                <span class="x6-toolbar-item-icon">
+                  <span role="img" class="text-sm">
+                    <i class="fas fa-save text-info"> 保存</i>
+                  </span>
+                </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/工具栏-->
+    <!--右侧属性设置栏-->
+    <div class="attributeblank">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li id="attribute" class="active">
+                    <a id="a-attribute" href="#tab_attribute" data-toggle="tab" aria-expanded="true">节点属性</a>
+                </li>
+                <li id="flowset" class="hidden">
+                    <a id="a-flowset" href="#tab_flowset" data-toggle="tab" aria-expanded="false">流程设置</a>
+                </li>
+                <li id="conditionset" class="hidden">
+                    <a id="a-conditionset" href="#tab_conditionset" data-toggle="tab" aria-expanded="false">条件设置</a>
+                </li>
+                <li class="pull-right"><a href="https://doc.fastadmin.net/fastflow" class="text-muted btn btn-dialog"><i class="fa fa-question"></i></a></li>
+            </ul>
+            <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_attribute">
+                        <div class="form-group">
+                            <legend class="text-info">基本属性</legend>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-name" class="control-label col-xs-12 col-sm-3">节点名称:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="c-name" data-rule="required" class="form-control" name="row[name]" type="text" disabled="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-id" class="control-label col-xs-12 col-sm-3">节点ID:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="c-id" class="form-control" name="row[id]" type="text" disabled="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">节点类型:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="c-type" class="form-control" name="row[type]" type="text" disabled="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <legend class="text-info">样式设置</legend>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">宽度:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="node-width" class="form-control" type="number" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">高度:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="node-height" class="form-control" type="number" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">主体颜色:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <div id="body-colorpicker" class="input-group colorpicker-element">
+                                    <input type="text" class="form-control" disabled="">
+                                    <div class="input-group-addon">
+                                        <i style="background-color: rgb(55, 120, 172);"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">边框颜色:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <div id="stroke-colorpicker" class="input-group colorpicker-element">
+                                    <input type="text" class="form-control" disabled="">
+                                    <div class="input-group-addon">
+                                        <i style="background-color: rgb(55, 120, 172);"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">文字颜色:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <div id="label-colorpicker" class="input-group colorpicker-element">
+                                    <input type="text" class="form-control" disabled="">
+                                    <div class="input-group-addon">
+                                        <i style="background-color: rgb(55, 120, 172);"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-type" class="control-label col-xs-12 col-sm-3">边框宽度:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="node-strokeWidth" class="form-control" type="number" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="tab-pane hidden" id="tab_flowset">
+                        <div class="form-group">
+                            <legend class="text-info">权限设置</legend>
+                        </div>
+                        <div id="group-sign" class="form-group">
+                            <label class="control-label col-xs-12 col-sm-3">会签权限:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <div class="radio">
+                                    <label for="sign-switch1"><input id="sign-switch1" name="row[sign]" type="radio" value="1" checked=""> 允许会签</label>
+                                    <label for="sign-switch0"><input id="sign-switch0" name="row[sign]" type="radio" value="0"> 禁止会签</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="group-back" class="form-group">
+                            <label class="control-label col-xs-12 col-sm-3">驳回权限:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <div class="radio">
+                                    <label for="back-switch1"><input id="back-switch1" name="row[back]" type="radio" value="1" checked=""> 允许驳回</label>
+                                    <label for="back-switch0"><input id="back-switch0" name="row[back]" type="radio" value="0"> 禁止驳回</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <legend class="text-info">审批人员</legend>
+                        </div>
+                        <div class="form-group">
+                            <label for="c-scope" class="control-label col-xs-12 col-sm-3">范围选择:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <select id="c-scope" class="form-control" name="row[scope]">
+                                    {foreach name="scopeList" item="scope"}
+                                    <option value="{$scope['value']}">{$scope['name']}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="worker" class="form-group" style="margin-top: 4px">
+                            <label for="c-worker" class="control-label col-xs-12 col-sm-3">办理人员:</label>
+                            <div class="col-xs-12 col-sm-9">
+                                <input id="c-worker" data-rule="required"
+                                       data-source="{:url('getSelectpageWorkers',['flow_id'=>$flow_id])}"
+                                       data-field="name" data-primary-key="id" data-multiple="true"
+                                       class="form-control selectpage" name="row[worker]" type="text">
+                            </div>
+                        </div>
+                        <div id="mode-select">
+                            <div class="form-group">
+                                <legend class="text-info">模式选择</legend>
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-success-light" style="margin-top: 0px;">
+                                    提示：当成员只有一个时模式选择将被忽略
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3">模式选择:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="radio">
+                                        <label for="checkmode1"><input id="checkmode1" name="row[checkmode]" type="radio" value="1" checked=""> 联合审批</label>
+                                        <label for="checkmode2"><input id="checkmode2" name="row[checkmode]" type="radio" value="2"> 任一审批</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-9" style="margin-left: 12px;">
+                                    <div>
+                                        <label class="control-label text-success"><span class="label label-warning label-tips">联合审批</span><span style="vertical-align: middle">所以成员均需审批（默认）</span></label>
+                                        <label class="control-label text-success"><span class="label label-warning label-tips">任一审批</span><span style="vertical-align: middle">任一成员审批即可</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane hidden" id="tab_conditionset">
+                        <div id="flownone" class="alert alert-danger hidden">
+                            提示：该条件没有输出步骤，请先建立链接再进行设置
+                        </div>
+
+                        <div id="flowout" class="hidden">
+                            <div class="form-group">
+                                <legend class="text-info">条件转出</legend>
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-success-light" style="margin-top: 0px;">
+                                    <b>提示</b>：根据单据字段值选择性转出
+                                </div>
+                            </div>
+                            <div id="flowoutcondition" class="form-group">
+                                <div class="col-xs-12 col-sm-12">
+                                    <dl class="fieldlist" data-template="basictpl" data-name="row[flowoutcondition]">
+                                        <dd>
+                                            <ins class="text-center">单据字段</ins>
+                                            <ins class="text-center">运算符</ins>
+                                            <ins class="text-center">值</ins>
+                                            <ins class="text-center">步骤</ins>
+                                        </dd>
+                                        <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i> {:__('Append')}</a></dd>
+                                        <textarea  name="row[flowoutcondition]" class="form-control hidden" cols="30" rows="5">[{"column":"","operator":"","value":"","step":""}]</textarea>
+                                    </dl>
+                                    <script id="basictpl" type="text/html">
+                                        <dd class="form-inline">
+                                            <ins><input data-source="{:url('getSelectpageFieldsWithComment',['flow_id'=>$flow_id])}" data-field="name" data-primary-key="id" data-multiple="false" class="form-control selectpage" name="<%=name%>[<%=index%>][column]" type="text" value="<%=row.column%>"></ins>
+                                            <ins><input data-source="{:url('getSelectpageOperator')}" data-field="name" data-primary-key="id" data-multiple="false" class="form-control selectpage" name="<%=name%>[<%=index%>][operator]" type="text" value="<%=row.operator%>"></ins>
+                                            <ins><input type="text" name="<%=name%>[<%=index%>][value]" class="form-control" value="<%=row.value%>" placeholder="值"/></ins>
+                                            <ins>
+                                                <select class="form-control step-select" name="<%=name%>[<%=index%>][step]" data-value="<%=row.step%>">
+                                                </select>
+                                            </ins>
+
+                                            <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                                        </dd>
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <div class="col-xs-12 col-sm-8" style="margin-top: 10px">
+                <button id="btn-set" class="btn btn-success btn-embossed disabled">设置</button>
+            </div>
+        </div>
+    </div>
+    <!--/右侧属性设置栏-->
+</div>
+<footer class="main-footer">
+
+</footer>
+</body>
+</html>

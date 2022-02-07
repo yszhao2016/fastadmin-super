@@ -1,0 +1,109 @@
+<style>
+    legend {
+        padding-bottom: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        padding-left: 10px;
+        padding-right: 15px;
+        padding-top: 12px;
+    }
+
+    label {
+        font-weight: normal;
+    }
+
+    .form-control {
+        padding: 6px 8px;
+    }
+
+    .form-group {
+        margin-bottom: 6px;
+    }
+</style>
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="content" style="padding-top: 0px;">
+        <div class="row">
+            <legend>代理范围</legend>
+            <div class="col-xs-12 col-sm-4" style="padding-bottom: 12px;">
+                <label>{:__('Range')}:</label>
+                <div>
+                    <select id="c-range" class="form-control selectpicker" name="row[range]">
+                        {foreach name="rangeList" item="vo"}
+                        <option value="{$key}" {if $key==$row['range']}selected{/if}>{$vo}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div id="bill_area" class="col-xs-12 col-sm-4" style="padding-bottom: 12px;">
+                <label>{:__('Bill')}:</label>
+                <div>
+                    <select id="c-bill" class="form-control selectpicker" data-live-search="true" name="row[bill]">
+                        {volist name='bills' id='bill'}
+                        <option value="{$bill['bill_table']}" {if $bill['bill_table']==$row['bill']}selected{/if}>{$bill['bill_name']}({$bill['bill_table']})</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div id="bill_id_area" class="col-xs-12 col-sm-4" style="padding-bottom: 12px;">
+                <label for="c-billid">{:__('Bill_id')}:</label>
+                <div class="input-group input-groupp-md">
+                    <select id="c-billid" class="form-control selectpicker" data-live-search="true"
+                            name="row[bill_id]">
+                        <option value="{$row['bill_id']}" selected>{$row['bill_id']}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <legend>指定代理人(分组)</legend>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th style="text-align: center">代理类型</th>
+                    <th style="text-align: center">被代理人(分组)</th>
+                    <th style="text-align: center">代理人(分组)</th>
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle;text-align: center" class="text-success">
+                        <select id="c-scope" class="form-control selectpicker" name="row[scope]">
+                            {foreach name="ScopeList" item="vo"}
+                            <option value="{$key}" {if $key==$row['scope']}selected{/if}>{$vo}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td>
+                        <input id="c-principal_ids" data-rule="required"
+                               data-source="fastflow/flow/agency/getSelectpageWorkers" data-field="name"
+                               data-primary-key="id" class="form-control selectpage"
+                               name="row[principal_id]"
+                               type="text" value="{$row['principal_id']}">
+                    </td>
+                    <td>
+                        <input id="c-agent_ids" data-rule="required"
+                               data-source="fastflow/flow/agency/getSelectpageWorkers" data-field="name"
+                               data-primary-key="id" class="form-control selectpage" name="row[agent_id]" type="text" value="{$row['agent_id']}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <legend>{:__('Remark')}</legend>
+            <div class="col-xs-12 col-sm-12" style="padding:0 40px 0 40px;">
+                <div class="form-group">
+                    <div>
+                        <textarea id="c-remark" class="form-control" name="row[remark]" type="text">{$row['remark']}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

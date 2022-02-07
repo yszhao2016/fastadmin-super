@@ -1,0 +1,130 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Previd')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-previd" class="form-control" name="row[previd]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Prevstepid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-prevstepid" class="form-control" name="row[prevstepid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Stepid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-stepid" class="form-control" name="row[stepid]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Flowid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-flowid" class="form-control" name="row[flowid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Stepname')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-stepname" class="form-control" name="row[stepname]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Instanceid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-instanceid" class="form-control" name="row[instanceid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Groupid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-groupid" class="form-control" name="row[groupid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-type" class="form-control" name="row[type]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tittle')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tittle" class="form-control" name="row[tittle]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Senderid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-senderid" class="form-control" name="row[senderid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sendername')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sendername" class="form-control" name="row[sendername]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Receiveid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-receiveid" class="form-control" name="row[receiveid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Receivename')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-receivename" class="form-control" name="row[receivename]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Opentime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-opentIme" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[opentIme]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Completedtime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-completedtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[completedtime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Comment')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-comment" class="form-control" name="row[comment]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Issign')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-isSign" class="form-control" name="row[isSign]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-status" class="form-control" name="row[status]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note" class="form-control" name="row[note]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sort')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sort" class="form-control" name="row[sort]" type="text">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
