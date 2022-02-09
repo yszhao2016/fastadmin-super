@@ -17,4 +17,5 @@ return [
     'app\admin\command\Min',
     'app\admin\command\Addon',
     'app\admin\command\Api',
+    'app\hj212\command\Hj212Server'
 ];
