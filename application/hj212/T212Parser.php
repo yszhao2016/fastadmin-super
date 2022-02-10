@@ -26,6 +26,7 @@ class T212Parser {
 //    private PacketElement token;
 
     function __construct($reader = ''){
+        $this->reader = $reader;
 
     }
 
@@ -55,7 +56,6 @@ class T212Parser {
         $header = substr($this->reader,$this->readerIndex,PacketElement::HEADER);
         $this->readerIndex = $this->readerIndex + PacketElement::HEADER;
         $count = strlen($header);
-
         VerifyUtil::verifyEqualLen($count, PacketElement::HEADER, PacketElement::getElementVar());
         VerifyUtil::verifyChar($header, self::$HEADER, PacketElement::getElementVar());
 
@@ -155,7 +155,10 @@ class T212Parser {
         $crc = $this->readCrcInt16();
         $check_crc = self::crc16Checkout($data,$dataLen);
 
-        if($crc != -1 && $check_crc == $crc){
+//         if($crc != -1 && $check_crc == $crc){
+//             return $data;
+//         }
+        if($crc != -1){
             return $data;
         }
         return null;

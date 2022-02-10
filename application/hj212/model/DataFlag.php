@@ -29,7 +29,6 @@ class DataFlag {
 //    function DataFlag(){
 //        $this->bit = (1 << ordinal());
 //    }
-
     function DataFlag($bit){
         $this->bit = $bit;
     }
@@ -39,7 +38,7 @@ class DataFlag {
     }
 
     function isMarked($flags) {
-        return ($flags & $bit) != 0;
+        return ($flags & $this->bit) != 0;
     }
 
 //    function isMarked(DataFlag $flags) {
