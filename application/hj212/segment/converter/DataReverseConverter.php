@@ -60,10 +60,6 @@ class DataReverseConverter
      */
     public function writeCpData($data = array())
     {
-        $data = [
-            'w1000' =>344,
-            'w1007' =>66,
-        ];
         $res = '';
         $i=1;
         foreach($data as $k=>$v){
