@@ -1,8 +1,6 @@
 <?php
 namespace app\hj212\segment\converter;
 
-use ReflectionProperty;
-use Symfony\Component\VarExporter\Internal\Reference;
 
 class DataConverter
 {
@@ -14,9 +12,9 @@ class DataConverter
         $this->data = $data;
     }  
     /**
-                 * 分割 数据段
+     * 转换数据段
      */
-    public function explodeData()
+    public function convertData()
     {
         //切割CP数据区
         $result = substr($this->data, 0, strrpos($this->data, 'CP')-1);
@@ -65,9 +63,9 @@ class DataConverter
     }
     
     /**
-              * 分割数据区
+     * 转换数据区
      */
-    public function explodeCpData()
+    public function convertCpData()
     {
         //获取指令参数CP数据区
         $result = substr($this->data, stripos($this->data,'CP=&&')+5, -2);
