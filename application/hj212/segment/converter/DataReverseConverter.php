@@ -153,22 +153,24 @@ class DataReverseConverter
         
     }
     /**
-             * 生成CRC
+     * 生成CRC
      */
-    public function writeCrc($msg, int $length)
+    public function writeCrc($msg)
     {
-        $crc_reg = 0xFFFF;
-        for($i=0; $i<$length; $i++) {
-            $crc_reg = ($crc_reg>>8) ^ ord($msg[$i]);
-            for($j=0;$j<8;$j++) {
-                $check = $crc_reg & 0x0001;
-                $crc_reg >>= 1;
-                if ($check == 0x0001) {
-                    $crc_reg ^= 0xA001;
+        $crc = 0xFFFF;
+        for($i = 0; $i < strlen ($msg); $i ++) {
+            $crc = ($crc>>8) ^ ord ($msg[$i]);
+            for($j = 0; $j <8; $j++) {
+                if (($crc & 0x0001) != 0) {
+                    $crc >>= 1;
+                    $crc ^= 0xA001;
+                } else{
+                    $crc >>= 1;
                 }
             }
         }
-        return strtoupper(dechex($crc_reg));
+        return strtoupper(dechex($crc));
+           
     }
     /**
              * 生成包尾
