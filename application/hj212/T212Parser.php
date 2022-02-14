@@ -130,7 +130,7 @@ class T212Parser {
      */
     public function readCrcInt16() {
         $crc = substr($this->reader,$this->readerIndex, PacketElement::DATA_CRC);
-        $this->readerIndex = $this->readerIndex + PacketElement::DATA_CRC;
+//        $this->readerIndex = $this->readerIndex + PacketElement::DATA_CRC;
         $count = strlen($crc);
 
         if($count != 4){

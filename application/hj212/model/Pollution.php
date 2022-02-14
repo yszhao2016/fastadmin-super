@@ -1,13 +1,24 @@
 <?php
+
 namespace app\hj212\model;
+
+use think\Model;
 
 /**
  * 污染因子
  * Class Pollution
  * @package App\Model
  */
-class Pollution {
+class Pollution extends Model
+{
 
+    // 表名
+    protected $name = 'hj212_pollution';
+    // 自动写入时间戳字段
+    protected $autoWriteTimestamp = 'int';
+    // 定义时间戳字段名
+    protected $createTime = 'created_at';
+    protected $updateTime = 'updated_at';
     // SampleTime 污染物采样时间
     private $sampleTime;
 
@@ -60,7 +71,7 @@ class Pollution {
     private $lowValue;
 
     // Data 噪声监测日历史数据
-    private $data;
+    private $zdata;
 
     // DayData 噪声昼间历史数据
     private $dayData;
@@ -69,163 +80,203 @@ class Pollution {
     private $nightData;
 
 
-    function getSampleTime() {
+    function getSampleTime()
+    {
         return $this->sampleTime;
     }
 
-    function setSampleTime($sampleTime) {
+    function setSampleTime($sampleTime)
+    {
         $this->sampleTime = $sampleTime;
     }
 
-    function getRtd() {
+    function getRtd()
+    {
         return $this->rtd;
     }
 
-    function setRtd($rtd) {
+    function setRtd($rtd)
+    {
         $this->rtd = $rtd;
     }
 
-    function getMin() {
+    function getMin()
+    {
         return $this->min;
     }
 
-    function setMin($min) {
+    function setMin($min)
+    {
         $this->min = $min;
     }
 
-    function getAvg() {
+    function getAvg()
+    {
         return $this->avg;
     }
 
-    function setAvg($avg) {
+    function setAvg($avg)
+    {
         $this->avg = $avg;
     }
 
-    function getMax() {
+    function getMax()
+    {
         return $this->max;
     }
 
-    function setMax($max) {
+    function setMax($max)
+    {
         $this->max = $max;
     }
 
-    function getZsRtd() {
+    function getZsRtd()
+    {
         return $this->zsRtd;
     }
 
-    function setZsRtd($zsRtd) {
+    function setZsRtd($zsRtd)
+    {
         $this->zsRtd = $zsRtd;
     }
 
-    function getZsMin() {
+    function getZsMin()
+    {
         return $this->zsMin;
     }
 
-    function setZsMin($zsMin) {
+    function setZsMin($zsMin)
+    {
         $this->zsMin = $zsMin;
     }
 
-    function getZsAvg() {
+    function getZsAvg()
+    {
         return $this->zsAvg;
     }
 
-    function setZsAvg($zsAvg) {
+    function setZsAvg($zsAvg)
+    {
         $this->zsAvg = $zsAvg;
     }
 
-    function getZsMax() {
+    function getZsMax()
+    {
         return $this->zsMax;
     }
 
-    function setZsMax($zsMax) {
+    function setZsMax($zsMax)
+    {
         $this->zsMax = $zsMax;
     }
 
-    function getFlag() {
+    function getFlag()
+    {
         return $this->flag;
     }
 
-    function setFlag($flag) {
+    function setFlag($flag)
+    {
         $this->flag = $flag;
     }
 
-    function geteFlag() {
+    function geteFlag()
+    {
         return $this->eFlag;
     }
 
-    function seteFlag($eFlag) {
+    function seteFlag($eFlag)
+    {
         $this->eFlag = $eFlag;
     }
 
-    function getCou() {
+    function getCou()
+    {
         return $this->cou;
     }
 
-    function setCou($cou) {
+    function setCou($cou)
+    {
         $this->cou = $cou;
     }
 
-    function getRs() {
+    function getRs()
+    {
         return $this->rs;
     }
 
-    function setRs($rs) {
+    function setRs($rs)
+    {
         $this->rs = $rs;
     }
 
-    function getRt() {
+    function getRt()
+    {
         return $this->rt;
     }
 
-    function setRt($rt) {
+    function setRt($rt)
+    {
         $this->rt = $rt;
     }
 
-    function getAla() {
+    function getAla()
+    {
         return $this->ala;
     }
 
-    function setAla($ala) {
+    function setAla($ala)
+    {
         $this->ala = $ala;
     }
 
-    function getUpValue() {
+    function getUpValue()
+    {
         return $this->upValue;
     }
 
-    function setUpValue($upValue) {
+    function setUpValue($upValue)
+    {
         $this->upValue = $upValue;
     }
 
-    function getLowValue() {
+    function getLowValue()
+    {
         return $this->lowValue;
     }
 
-    function setLowValue($lowValue) {
+    function setLowValue($lowValue)
+    {
         $this->lowValue = $lowValue;
     }
 
-    function getData() {
-        return $this->data;
+    public function getZdata()
+    {
+        return $this->zdata;
     }
 
-    function setData($data) {
-        $this->data = data;
+    function setData($data)
+    {
+        $this->zdata = $data;
     }
 
-    function getDayData() {
+    function getDayData()
+    {
         return $this->dayData;
     }
 
-    function setDayData($dayData) {
+    function setDayData($dayData)
+    {
         $this->dayData = $dayData;
     }
 
-    function getNightData() {
+    function getNightData()
+    {
         return $this->nightData;
     }
 
-    function setNightData($nightData) {
+    function setNightData($nightData)
+    {
         $this->nightData = $nightData;
     }
 }
