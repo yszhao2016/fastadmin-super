@@ -155,10 +155,7 @@ class T212Parser {
         $crc = $this->readCrcInt16();
         $check_crc = self::crc16Checkout($data,$dataLen);
 
-//         if($crc != -1 && $check_crc == $crc){
-//             return $data;
-//         }
-        if($crc != -1){
+        if($crc != -1 && $check_crc == $crc){
             return $data;
         }
         return null;
