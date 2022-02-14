@@ -28,7 +28,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
                         {field: 'device_pwd', title: __('Device_pwd'), operate: 'LIKE'},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
+                                 buttons:[
+                                     {
+                                      'name':'bindsite',
+                                      'title':function(row){
+                                          return '绑定站点[ '+row.device_code+']';
+                                      },
+                                      'icon':'fa fa-pencil',
+                                      'text':'绑定站点',
+                                      'classname': 'btn btn-xs btn-info btn-dialog',
+                                      'url':'hj212/pollutionsite/index/deviceId/{ids}',
+                                      'extend': 'data-area=\'["95%","95%"]\''
+                                     },
+                                 ]}
                     ]
                 ]
             });

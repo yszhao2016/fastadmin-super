@@ -2,7 +2,7 @@
 
 return [
     'Deviceid'        => '设备Id',
-    'Site'            => '站点名称',
+    'SiteName'            => '站点名称',
     'Address'        => '站点地址',
     'Lon'             => '经度',
     'Lat'             => '纬度',
