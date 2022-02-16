@@ -36,18 +36,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'pnum', title: __('Pnum')},
                         {field: 'pno', title: __('Pno')},
                         {field: 'cp_datatime', title: __('Cp_datatime'), operate: 'LIKE'},
-                        {field: 'crc', title: __('Crc'), operate: 'LIKE'},
                         {field: 'is_forward', title: __('Is_forward'),searchList:{"0":__('No'),"1":__('YES')},formatter: Table.api.formatter.status },
 //                        {field: 'is_change', title: __('Is_change')},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                                  buttons:[
                                      {
                                          'name':'bindCp',
-                                         'title':function(row){
-                                         		return '查看数据区[ '+row.id+']';
-                                         },
-                                          'icon':'fa fa-pencil',
-	                                      'text':'数据查询',
+	                                      'text':'检测数据查询',
 	                                      'classname': 'btn btn-xs btn-info btn-dialog',
 	                                      'url':'hj212/pollution/index/data_id/{ids}',
 	                                      'extend': 'data-area=\'["95%","95%"]\''

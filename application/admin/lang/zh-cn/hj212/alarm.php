@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Codeid'     => '检测因子',
+    'Codeid'     => '检测因子编号',
     'Alarm_min'  => '报警最小值',
     'Alarm_max'  => '报警最大值',
     'Warn_min'   => '预警最小值',

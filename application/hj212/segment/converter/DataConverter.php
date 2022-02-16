@@ -25,9 +25,9 @@ class DataConverter
             //以等号进行分割
             $info = explode('=',$item);
             $list = $info[1];
-            if(strtolower($info[0]) == 'flag'){
-                $list = $this->explodeFlag($list);
-            }
+//             if(strtolower($info[0]) == 'flag'){
+//                 $list = $this->explodeFlag($list);
+//             }
             $data[strtolower($info[0])] = $list;
         }
         return $data;

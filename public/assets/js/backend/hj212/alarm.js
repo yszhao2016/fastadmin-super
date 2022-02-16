@@ -27,10 +27,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'codeId', title: __('Codeid')},
-                        {field: 'alarm_min', title: __('Alarm_min'), operate:'BETWEEN'},
-                        {field: 'alarm_max', title: __('Alarm_max'), operate:'BETWEEN'},
                         {field: 'warn_min', title: __('Warn_min'), operate:'BETWEEN'},
                         {field: 'warn_max', title: __('Warn_max'), operate:'BETWEEN'},
+                        {field: 'alarm_min', title: __('Alarm_min'), operate:'BETWEEN'},
+                        {field: 'alarm_max', title: __('Alarm_max'), operate:'BETWEEN'},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

@@ -60,22 +60,13 @@ class Data extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                         $this->model->validateFailException(true)->validate($validate);
                     }
-                    $data = new DataReverseConverter();
-                    
                     //获取设备密码
                     $device = \app\admin\model\hj212\Device::where('device_code',$params['mn'])->field('device_pwd')->find();
                     $params['pw'] = isset($device->device_pwd) ? $device->device_pwd : '';
                     //获取当前时间
                     $currentDate = date('YmdHis',time());
-                    //生成数据协议
-                    $msg = $this->generateHj212($params,$currentDate);
-                    //获取数据长度
-                    $dataLen = $data->writeDateLen($msg);
-                    //生成检验字段
-                    $crc = $data->writeCrc($msg);
                     $params['cp_datatime'] = $currentDate;
-                    $params['data_len'] = $dataLen;
-                    $params['crc'] = $crc;
+                    
                     $result = $this->model->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -135,15 +126,7 @@ class Data extends Backend
                     $params['pw'] = isset($device->device_pwd) ? $device->device_pwd : '';
                     //获取当前时间
                     $currentDate = date('YmdHis',time());
-                    //生成数据协议
-                    $msg = $this->generateHj212($params,$currentDate);
-                    //获取数据长度
-                    $dataLen = $data->writeDateLen($msg);
-                    //生成检验字段
-                    $crc = $data->writeCrc($msg);
                     $params['cp_datatime'] = $currentDate;
-                    $params['data_len'] = $dataLen;
-                    $params['crc'] = $crc;
                     
                     $result = $row->allowField(true)->save($params);
                     Db::commit();
@@ -167,32 +150,6 @@ class Data extends Backend
         }
         $this->view->assign("row", $row);
         return $this->view->fetch();
-    }
-    
-    /**
-              * 生成数据协议
-     * @param unknown $params
-     */
-    public function generateHj212($params,$currentDate)
-    {
-        $cpData = array();
-        //生成数据段
-        $data = new DataReverseConverter();
-        
-        $res = $data->writeData($params);
-        
-        //获取当前时间
-        $cpData['DataTime'] = $currentDate;
-        
-        if(!empty($res)){
-            $res.= ';CP=&&';
-        }else{
-            $res.= 'CP=&&';
-        }
-        $res.=$data->writeCpData($cpData);
-        $res.= '&&';
-        
-        return $res;
     }
     /**
               * 数据分析
@@ -218,7 +175,9 @@ class Data extends Backend
             ->join("fa_hj212_site site", "site.deviceId = device.id")
             ->where(['device.device_code'=>$device_code])
             ->find();
-            $site['mn'] = $device_code;
+            if($site){
+                $site['mn'] = $device_code;
+            }
             
             //获取检测因子信息
             $pollutionInfo = Db::name('hj212_pollution')->alias('p')
@@ -228,6 +187,7 @@ class Data extends Backend
             ->select();
             
         }
+        
         $this->view->assign('pollutionsite', $site);
         $this->view->assign('pollutionInfo', $pollutionInfo);
         
