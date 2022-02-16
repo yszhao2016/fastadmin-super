@@ -56,7 +56,7 @@ class DataReverseConverter
         
     }
     /**
-             * 生成数据区
+     * 生成数据区
      */
     public function writeCpData($data = array())
     {
@@ -64,16 +64,16 @@ class DataReverseConverter
         $i=1;
         foreach($data as $k=>$v){
             if($i == 1){
-                $res.=strtoupper($k).'='.$v;
+                $res.= $k.'='.$v;
             }else{
-                $res.=';'.strtoupper($k).'='.$v;
+                $res.=';'.$k.'='.$v;
             }
             $i++;
         }
         return $res;  
     }
     /**
-             * 生成污染因子
+     * 生成污染因子
      */
     public function writePollution($data = array())
     {

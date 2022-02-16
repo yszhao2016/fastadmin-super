@@ -1,0 +1,64 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Data_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-data_id" data-rule="required" data-source="data/index" class="form-control selectpage" name="row[data_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Code')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-code" data-rule="required" class="form-control" name="row[code]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Cou')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-cou" class="form-control" name="row[cou]" type="number" value="NULL">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Min')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-min" data-rule="required" class="form-control" name="row[min]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Avg')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-avg" data-rule="required" class="form-control" name="row[avg]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Max')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-max" data-rule="required" class="form-control" name="row[max]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Flag')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-flag" data-rule="required" class="form-control" name="row[flag]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Created_at')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-created_at" data-rule="required" class="form-control" name="row[created_at]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Updated_at')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-updated_at" data-rule="required" class="form-control" name="row[updated_at]" type="number">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

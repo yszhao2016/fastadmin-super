@@ -1,0 +1,82 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Qn')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-qn" data-rule="required" class="form-control" name="row[qn]" type="text" value="{$row.qn|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('St')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-st" data-rule="required" class="form-control" name="row[st]" type="text" value="{$row.st|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Cn')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-cn" data-rule="required" class="form-control" name="row[cn]" type="text" value="{$row.cn|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Mn')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-mn" data-rule="required" class="form-control selectpage" name="row[mn]" type="text" 
+            data-source="hj212/device/index" data-field="device_code" data-primary-key="device_code"value="{$row.mn|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Flag')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-flag" data-rule="required" class="form-control" name="row[flag]" type="text" value="{$row.flag|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pnum')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-pnum" class="form-control" name="row[pnum]" type="text" value="{$row.pnum|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pno')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-pno" class="form-control" name="row[pno]" type="text" value="{$row.pno|htmlentities}">
+        </div>
+    </div>
+<!--     <div class="form-group"> -->
+<!--         <label class="control-label col-xs-12 col-sm-2">{:__('Cp_datatime')}:</label> -->
+<!--         <div class="col-xs-12 col-sm-8"> -->
+<!--             <input id="c-cp_datatime" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[cp_datatime]" type="text" value="{:$row.cp_datatime}"> -->
+<!--         </div> -->
+<!--     </div> -->
+<!--     <div class="form-group"> -->
+<!--         <label class="control-label col-xs-12 col-sm-2">{:__('Crc')}:</label> -->
+<!--         <div class="col-xs-12 col-sm-8"> -->
+<!--             <input id="c-crc" data-rule="required" class="form-control" name="row[crc]" type="text" value="{$row.crc|htmlentities}" > -->
+<!--         </div> -->
+<!--     </div> -->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Is_forward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="radio">
+                {foreach name="statusList" item="vo"}
+                    <label for="row[is_forward]-{$key}">
+                    <input id="row[is_forward]-{$key}" name="row[is_forward]" type="radio" 
+                    value="{$key}" {in name="key" value="$row.is_forward"}checked{/in}>{$vo}</label>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+<!--     <div class="form-group"> -->
+<!--         <label class="control-label col-xs-12 col-sm-2">{:__('Is_change')}:</label> -->
+<!--         <div class="col-xs-12 col-sm-8"> -->
+<!--             <input id="c-is_change" data-rule="required" class="form-control" name="row[is_change]" type="number" value="{$row.is_change|htmlentities}"> -->
+<!--         </div> -->
+<!--     </div> -->
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
