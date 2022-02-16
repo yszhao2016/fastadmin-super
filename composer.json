@@ -30,7 +30,8 @@
         "ext-curl": "*",
         "ext-pdo": "*",
         "ext-bcmath": "*",
-        "txthinking/mailer": "^2.0"
+        "txthinking/mailer": "^2.0",
+        "ke/thinkphp-migration": "dev-master"
     },
     "config": {
         "preferred-install": "dist"
