@@ -1,0 +1,77 @@
+<style>
+    .panel-post {
+        position: relative;
+    }
+
+    .btn-post {
+        position: absolute;
+        right: 0;
+        bottom: 10px;
+    }
+
+    .img-border {
+        border-radius: 3px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .embed-responsive img {
+        position: absolute;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .comment-content {
+        padding: 15px;
+        background: #efefef;
+        color: #444;
+    }
+
+    .panel-user h4 {
+        font-weight: normal;
+        font-size: 14px;
+    }
+</style>
+<div class="container mt-20">
+    <div id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                {include file="common/sidenav" /}
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-user">
+                    <div class="panel-body">
+                        <div class="panel-post">
+                            <h2 class="page-header">我发表的评论</h2>
+                        </div>
+
+                        {volist name='commentList' id='item'}
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <a href="{$item.source.url|default='javascript:'}" target="_blank" class="img-thumb">
+                                    <div class="embed-responsive embed-responsive-4by3 img-zoom">
+                                        <img src="{$item.source.image|default=''}" class="embed-responsive-item" onerror="this.src='__CDN__/assets/addons/cms/img/noimage.jpg';this.onerror=null;">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-9">
+                                <h4>
+                                    <a href="{$item.source.url|default='javascript:'}" target="_blank">{$item.source.title|default='未知'}</a>
+                                </h4>
+                                <p class="comment-content">{$item.content}</p>
+                                <p class="text-muted">发表于 {$item.createtime|datetime}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        {/volist}
+                        {if $commentList->total()==0}
+                        未找到任何记录!
+                        {/if}
+                        <div class="pager">{$commentList->render()}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

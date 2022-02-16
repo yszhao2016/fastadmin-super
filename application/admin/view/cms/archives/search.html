@@ -1,0 +1,45 @@
+<style>
+    .autocomplete-searchtitle {
+        padding: 0px 8px;
+    }
+
+    .autocomplete-searchtitle .media {
+        border-bottom: 1px solid #eee;
+        margin-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .autocomplete-searchtitle .media:last-child {
+        border-bottom: 0;
+    }
+
+    .autocomplete-searchtitle .media:hover {
+        background: #fefefe;
+    }
+</style>
+
+<script type="text/html" id="headertpl">
+    <div class="px-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert" style="border-radius: 0;color: #0084ff; background: rgba(0, 132, 255, 0.1);margin-bottom:0;">
+                    共找到以下几篇相关文章:
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="itemtpl">
+    <div class="media">
+        <a class="" href="<%=item.url%>" target="_blank">
+            <div class="media-left">
+                <img src="<%=item.image%>" style="width: 50px; height: 50px;">
+            </div>
+
+            <div class="media-body">
+                <h4 class="media-heading"><%=#replace(item.title)%></h4>
+                <div class="text-muted">发布时间：<%=item.create_date%> 状态：<%=item.status_text%></div>
+            </div>
+        </a>
+    </div>
+</script>

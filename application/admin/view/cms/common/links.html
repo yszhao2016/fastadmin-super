@@ -1,0 +1,106 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        {:build_heading(null,FALSE)}
+        <ul class="nav nav-tabs" data-field="type">
+            <li class="active"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
+            {foreach name="typeList" item="vo"}
+            <li><a href="#t-{$key}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="one">
+                <div class="widget-body no-padding">
+                    <div id="toolbar" class="toolbar">
+                        {:build_toolbar('refresh')}
+
+                        <div class="dropdown btn-group">
+                            <a class="btn btn-success btn-more dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> {:__('Add')}</a>
+                            <ul class="dropdown-menu text-left" role="menu">
+                                <li><a class="btn btn-dialog {:$auth->check('cms/page/add')?'':'hide'}" href="cms/page/add" data-title="添加单页" data-window="parent"><i class="fa fa-file fa-fw"></i> {:__('添加单页')}</a></li>
+                                <li><a class="btn btn-dialog {:$auth->check('cms/special/add')?'':'hide'}" href="cms/special/add" data-title="添加专题" data-window="parent"><i class="fa fa-newspaper-o fa-fw"></i> {:__('添加专题')}</a></li>
+                                <li><a class="btn btn-dialog {:$auth->check('cms/diyform/add')?'':'hide'}" href="cms/diyform/add" data-title="添加自定义表单" data-window="parent"><i class="fa fa-list fa-fw"></i> {:__('添加自定义表单')}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <table id="table" class="table table-striped table-bordered table-hover"
+                           width="100%">
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    require.callback = function () {
+        define('backend/cms/ajax', ['jquery', 'bootstrap', 'backend', 'table', 'template'], function ($, undefined, Backend, Table, Template) {
+            var Controller = {
+                get_link_list: function () {
+                    // 初始化表格参数配置
+                    Table.api.init({});
+
+                    var table = $("#table");
+
+                    // 初始化表格
+                    table.bootstrapTable({
+                        url: 'cms/ajax/get_link_list',
+                        toolbar: ".toolbar", //工具栏
+                        search: false, //是否启用快速搜索
+                        cache: false,
+                        pageSize: 10,
+                        pagination: true,
+                        fixedColumns: true,
+                        fixedRightNumber: 1,
+                        pageList: [10, 15, 20, 25, 50, 'All'],
+                        columns: [{
+                            field: 'type',
+                            title: '类型',
+                            width: '100', table: table,
+                            searchList: {page: '单页', special: '专题', diyform: '自定义表单'},
+                            formatter: Table.api.formatter.status
+                        }, {
+                            field: 'url',
+                            title: '链接',
+                            width: '40%',
+                            formatter: Table.api.formatter.url
+                        }, {
+                            field: 'title',
+                            title: '标题',
+                            width: '45%',
+                            align: 'center',
+                            valign: 'middle',
+                        }, {
+                            field: 'operate',
+                            title: '操作',
+                            align: 'center',
+                            width: '80',
+                            valign: 'middle',
+                            table: table,
+                            buttons: [
+                                {
+                                    name: 'selectlink',
+                                    text: '选择',
+                                    classname: 'btn btn-xs btn-info btn-click',
+                                    icon: 'fa fa-check',
+                                    click: function (options, row, button) {
+                                        Fast.api.close(row);
+                                    }
+                                }
+                            ],
+                            formatter: Table.api.formatter.buttons
+                        }],
+                    });
+
+                    // 为表格绑定事件
+                    Table.api.bindevent(table);
+
+                }
+            };
+            return Controller;
+        });
+    }
+</script>

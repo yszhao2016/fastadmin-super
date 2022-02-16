@@ -1,0 +1,39 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="form-group">
+        <label for="c-name" class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" data-rule="required; length(~30)" class="form-control" name="row[name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-table" class="control-label col-xs-12 col-sm-2">{:__('Table')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-table" data-rule="required; length(5~20); tablename" class="form-control" name="row[table]" placeholder="建议以 cms_addonxxx 格式命名" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-channeltpl" class="control-label col-xs-12 col-sm-2">{:__('Channeltpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-channeltpl" data-rule="required; length(5~30)" class="form-control selectpage" name="row[channeltpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"channel"}' data-primary-key="name" data-field="name" type="text" placeholder="自定义模板文件必须以channel开头" value="channel.html">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-listtpl" class="control-label col-xs-12 col-sm-2">{:__('Listtpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-listtpl" data-rule="required; length(5~30)" class="form-control selectpage" name="row[listtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"list"}' data-primary-key="name" data-field="name" type="text" placeholder="自定义模板文件必须以list开头" value="list.html">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-showtpl" class="control-label col-xs-12 col-sm-2">{:__('Showtpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-showtpl" data-rule="required; length(5~30)" class="form-control selectpage" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"show"}' data-primary-key="name" data-field="name" type="text" placeholder="自定义模板文件必须以show开头" value="show.html">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

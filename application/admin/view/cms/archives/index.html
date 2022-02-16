@@ -1,0 +1,210 @@
+<style>
+    .form-commonsearch .form-group {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0;
+    }
+
+    form.form-commonsearch .control-label {
+        padding-right: 0;
+    }
+
+    .tdtitle {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    #channeltree {
+        margin-left: -6px;
+    }
+
+    #channelbar .panel-heading {
+        height: 55px;
+        line-height: 25px;
+        font-size: 14px;
+    }
+
+    @media (max-width: 1230px) {
+        .fixed-table-toolbar .search .form-control {
+            display: none;
+        }
+    }
+
+    @media (min-width: 1200px) {
+    }
+
+    .archives-label span.label {
+        font-weight: normal;
+    }
+
+    .archives-title {
+        width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .setflag label {
+        font-weight: 400;
+    }
+
+    .nav > li.toggle-channel {
+        display: none;
+    }
+
+    .col-full-width .nav > li.toggle-channel {
+        display: inline-block;
+    }
+
+</style>
+<div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm" id="channelbar" style="padding-right:0;">
+        <div class="panel panel-default panel-intro">
+            <div class="panel-heading">
+                <div class="panel-lead">
+                    <div class="pull-left">
+                        <em>{:__('Channel list')}</em>
+                    </div>
+                    <div class="pull-right">
+                        <a href="javascript:;" class="btn btn-link btn-xs btn-channel hidden-xs hidden-sm"><i class="fa fa-bars"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <span class="text-muted"><input type="checkbox" name="" id="checkall"/> <label for="checkall"><small>{:__('Check all')}</small></label></span>
+                <span class="text-muted"><input type="checkbox" name="" id="expandall" checked=""/> <label for="expandall"><small>{:__('Expand all')}</small></label></span>
+                <div id="channeltree">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-9" id="archivespanel">
+        <div class="panel panel-default panel-intro" style="background: #f1f4f6;padding-top: 0;padding-bottom: 0;box-shadow: none;">
+            <div class="panel-heading">
+                {:build_heading(null,FALSE)}
+                <ul class="nav nav-tabs" data-field="status">
+                    <li class="toggle-channel"><a href="javascript:;" class="btn-channel"><i class="fa fa-bars"></i></a></li>
+                    <li class="active"><a href="#t-all" data-value="" data-toggle="tab">{:__('All')}</a></li>
+                    {foreach name="statusList" item="vo"}
+                    <li><a href="#t-{$vo}" data-value="{$key}" data-toggle="tab">{$vo}</a></li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div id="myTabContent" class="tab-content" style="background:#fff;padding:15px;">
+                <div class="tab-pane fade active in" id="one">
+                    <div class="widget-body no-padding">
+                        <div id="toolbar" class="toolbar">
+                            {:build_toolbar('refresh,add,del')}
+                            <a class="btn btn-info btn-move dropdown-toggle btn-disabled disabled"><i class="fa fa-arrow-right"></i> {:__('Move')}</a>
+                            <div class="dropdown btn-group {:$auth->check('cms/archives/multi')?'':'hide'}">
+                                <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>
+                                <ul class="dropdown-menu text-left" role="menu">
+                                    <li><a class="btn btn-link btn-copyselected btn-disabled disabled" href="javascript:;"><i class="fa fa-copy"></i> {:__('Copy selected')}</a></li>
+                                    <li><a class="btn btn-link btn-setspecial btn-disabled disabled" href="javascript:;"><i class="fa fa-newspaper-o"></i> {:__('Join to special')}</a></li>
+                                    <li><a class="btn btn-link btn-settag btn-disabled disabled" href="javascript:;"><i class="fa fa-tags"></i> {:__('Join to tag')}</a></li>
+                                    <li><a class="btn btn-link btn-setflag btn-disabled disabled" href="javascript:;"><i class="fa fa-flag"></i> {:__('Set flag')}</a></li>
+                                    <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> {:__('Set to normal')}</a></li>
+                                    <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> {:__('Set to hidden')}</a></li>
+                                    <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=rejected"><i class="fa fa-exclamation-circle"></i> {:__('Set to rejected')}</a></li>
+                                    <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=pulloff"><i class="fa fa-arrow-circle-down"></i> {:__('Set to pulloff')}</a></li>
+                                </ul>
+                            </div>
+                            <a class="btn btn-success btn-recyclebin btn-dialog" href="cms/archives/recyclebin" title="{:__('Recycle bin')}"><i class="fa fa-recycle"></i> {:__('Recycle bin')}</a>
+
+                            <div class="dropdown btn-group {:$auth->check('cms/archives/content')?'':'hide'}">
+                                <a href="javascript:;" class="btn btn-primary dropdown-toggle" title="{:__('Addon list')}" data-toggle="dropdown"><i class="fa fa-file"></i> {:__('Addon list')}</a>
+                                <ul class="dropdown-menu text-left" role="menu">
+                                    {volist name="modelList" id="item"}
+                                    <li><a class="btn btn-link btn-addtabs" href="{:url('cms.archives/content')}/model_id/{$item.id}" title="{$item.name}"><i class="fa fa-file"></i> {$item.name}</a></li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                        </div>
+                        <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                               data-operate-edit="{:$auth->check('cms/archives/edit')}"
+                               data-operate-del="{:$auth->check('cms/archives/del')}"
+                               width="100%">
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script id="channeltpl" type="text/html">
+    <div class="">
+        <div class="alert alert-warning-light ui-sortable-handle" style="cursor: move;">
+            <b>{:__('Warning')}</b><br>
+            {:__('Move tips')}
+        </div>
+        <!-- /.box-body -->
+        <div class="text-black">
+            <div class="row">
+                <div class="col-sm-12">
+                    <select name="channel" class="form-control">
+                        <option value="0">{:__('Please select channel')}</option>
+                        {$channelOptions}
+                    </select>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+</script>
+<script id="specialtpl" type="text/html">
+    <div class="">
+        <div class="text-black">
+            <div class="row">
+                <div class="col-sm-12">
+                    <select name="special" class="form-control">
+                        <option value="0">{:__('Please select special')}</option>
+                        {foreach name="specialList" id="item"}
+                        <option value="{$item['id']}">{$item['title']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+</script>
+<script id="flagtpl" type="text/html">
+    <div class="setflag">
+        <div class="text-black">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p><b>标志：</b></p>
+                    <!--@formatter:off-->
+                        {foreach name="flagList" item="vo"}
+                        <label for="flag-{$key}"><input type="checkbox" id="flag-{$key}" value="{$key}" name="flag[]"> {$vo}</label>
+                        {/foreach}
+                    <!--@formatter:on-->
+                    <p><b>操作：</b></p>
+                    <p>
+                        <label for="type-add"><input type="radio" name="type" value="add" id="type-add" checked> 添加</label>
+                        <label for="type-remove"><input type="radio" name="type" value="del" id="type-remove"> 移除</label>
+                    </p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+</script>
+
+<script id="tagtpl" type="text/html">
+    <div class="">
+        <div class="text-black">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div style="margin-bottom:5px;">
+                        请输入一个或多个标签
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <input id="c-tags" data-rule="" class="form-control" placeholder="输入后空格确认" name="tags" type="text" value="">
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+</script>

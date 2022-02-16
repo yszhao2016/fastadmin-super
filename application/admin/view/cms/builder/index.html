@@ -1,0 +1,898 @@
+<style>
+    .builder-form .row > .col-sm-4 {
+        margin-bottom: 15px;
+    }
+
+    form.builder-form legend {
+        padding-bottom: 10px;
+    }
+
+    .builder-form label {
+        font-weight: normal;
+    }
+
+    #output, #result {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .config-list > div a {
+        margin-bottom: 5px;
+    }
+
+    .flash {
+        animation: flash 1s;
+    }
+    @keyframes flash {
+        50% {
+            background: rgba(255, 246, 210, 0.65);
+        }
+        100% {
+            background: transparent;
+        }
+    }
+</style>
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-heading">
+        {:build_heading(null,FALSE)}
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#config" data-toggle="tab" data-value="basic">站点配置</a></li>
+            <li class=""><a href="#arclist" data-toggle="tab" data-value="arclist">文章列表arclist</a></li>
+            <li class=""><a href="#channellist" data-toggle="tab" data-value="channellist">栏目列表channellist</a></li>
+            <li class=""><a href="#spagelist" data-toggle="tab" data-value="spagelist">单页列表spagelist</a></li>
+            <li class=""><a href="#speciallist" data-toggle="tab" data-value="speciallist">专题列表speciallist</a></li>
+            <li class=""><a href="#blocklist" data-toggle="tab" data-value="blocklist">区块列表blocklist</a></li>
+            <li class=""><a href="#userlist" data-toggle="tab" data-value="userlist">会员列表userlist</a></li>
+            <li class=""><a href="#diydatalist" data-toggle="tab" data-value="diydatalist">自定义表单数据列表diydatalist</a></li>
+            <li class=""><a href="#query" data-toggle="tab" data-value="query">万能查询query</a></li>
+        </ul>
+    </div>
+
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 tab-content">
+                    <div class="tab-pane fade active in" id="config">
+                        <form role="form" class="builder-form" id="config-form">
+                            <div class="form-group">
+                                <legend>基础配置</legend>
+                                <div class="row config-list">
+                                    {foreach name="configList" id="item"}
+                                    <div class="col-xs-6 col-sm-3">
+                                        <a href="javascript:" class="btn btn-default" data-name="{$item.name}" data-type="{$item.type}">{$item.title}</a>
+                                    </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>其它</legend>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label>默认值</label>
+                                        <input type="text" class="form-control" id="defaultvalue">
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label>处理函数</label>
+                                        <input type="text" class="form-control" id="func">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="arclist">
+                        <form role="form" class="builder-form" id="arclist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="fieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择模型</label>
+                                        <select name="model" id="model" class="form-control selectpicker">
+                                            <option value="">不限</option>
+                                            {foreach name="modelList" id="item"}
+                                            <option value="{$item.id}">{$item.name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择栏目</label>
+                                        <select name="channel" id="channel" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">不限</option>
+                                            {foreach name="channelList" id="item"}
+                                            <option value="{$item.id}" data-model="{$item.model_id}" data-type="{$item.type}" {if $item.type=='link'}disabled{/if}>{$item.name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>栏目类型</label>
+                                        <select name="type" id="channeltype" class="form-control selectpicker">
+                                            <option value="">默认</option>
+                                            <option value="son">(子集)仅栏目下文章</option>
+                                            <option value="sons">(子孙集)栏目下所有子级栏目文章</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>主表字段 <a href="javascript:" data-toggle="tooltip" data-title="如果指定字段则id/user_id/channel_id/title/diyname必须勾选"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">默认全部</option>
+                                            {foreach name="fieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="文章链接">url</option>
+                                            <option value="fullurl" data-subtext="文章链接(带http://)">fullurl</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>副表字段 <a href="javascript:" data-toggle="tooltip" data-title="必须指定模型或栏目才可以设定副表字段，如果所选择的栏目中包含了多个模型的栏目则不能设定"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="addon" id="addon" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">无</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>关联预载入 <a href="javascript:" data-toggle="tooltip" data-title="建议在需要读取栏目或会员信息时进行选中"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="with" id="with" class="form-control selectpicker" multiple>
+                                            <option value="channel">栏目信息</option>
+                                            <option value="user">会员信息</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>栏目字段 <a href="javascript:" data-toggle="tooltip" data-title="如果勾选栏目字段，建议开启预载入栏目信息"><i class="fa fa-info-circle"></i></a></label>
+                                        <select id="channelfield" class="form-control selectpicker" data-live-search="true" multiple>
+                                            {foreach name="channelFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="链接链接">url</option>
+                                            <option value="fullurl" data-subtext="栏目链接(带http://)">fullurl</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>会员字段 <a href="javascript:" data-toggle="tooltip" data-title="如果勾选栏目字段，建议开启预载入会员信息"><i class="fa fa-info-circle"></i></a></label>
+                                        <select id="userfield" class="form-control selectpicker" data-live-search="true" multiple>
+                                            {foreach name="userFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="会员主页链接">url</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="channellist">
+                        <form role="form" class="builder-form" id="channellist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="channelFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择模型</label>
+                                        <select name="model" id="model" class="form-control selectpicker">
+                                            <option value="">不限</option>
+                                            {foreach name="modelList" id="item"}
+                                            <option value="{$item.id}">{$item.name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择栏目</label>
+                                        <select name="typeid" id="typeid" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">不限</option>
+                                            {foreach name="channelList" id="item"}
+                                            <option value="{$item.id}" data-model="{$item.model_id}" data-type="{$item.type}" {if $item.type=='link'}disabled{/if}>{$item.name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>栏目类型</label>
+                                        <select name="type" id="channeltype" class="form-control selectpicker">
+                                            <option value="">默认</option>
+                                            <option value="top">顶级栏目</option>
+                                            <option value="brother">兄弟栏目</option>
+                                            <option value="son">(子集)仅栏目下文章</option>
+                                            <option value="sons">(子孙集)栏目下所有子级栏目文章</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>主表字段 <a href="javascript:" data-toggle="tooltip" data-title="如果指定字段则id/name/diyname必须勾选"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">默认全部</option>
+                                            {foreach name="channelFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="栏目链接">url</option>
+                                            <option value="fullurl" data-subtext="栏目链接(带http://)">fullurl</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="spagelist">
+                        <form role="form" class="builder-form" id="spagelist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="pageFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择类型</label>
+                                        <select name="type" id="type" class="form-control selectpicker">
+                                            <option value="">不限</option>
+                                            {foreach name="pageTypeList" id="item"}
+                                            <option value="{$item}">{$item}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>主表字段 <a href="javascript:" data-toggle="tooltip" data-title="如果指定字段则id/title/diyname必须勾选"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">默认全部</option>
+                                            {foreach name="pageFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="单页链接">url</option>
+                                            <option value="fullurl" data-subtext="单页链接(带http://)">fullurl</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="speciallist">
+                        <form role="form" class="builder-form" id="speciallist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="specialFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择类型</label>
+                                        <select name="type" id="type" class="form-control selectpicker">
+                                            <option value="">不限</option>
+                                            {foreach name="pageTypeList" id="item"}
+                                            <option value="{$item}">{$item}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>主表字段 <a href="javascript:" data-toggle="tooltip" data-title="如果指定字段则id/title/image/diyname必须勾选"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">默认全部</option>
+                                            {foreach name="specialFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="专题链接">url</option>
+                                            <option value="fullurl" data-subtext="专题链接(带http://)">fullurl</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="blocklist">
+                        <form role="form" class="builder-form" id="blocklist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="blockFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择类型</label>
+                                        <select name="type" id="type" class="form-control selectpicker">
+                                            <option value="">不限</option>
+                                            {foreach name="blockTypeList" id="item"}
+                                            <option value="{$item}">{$item}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择名称</label>
+                                        <select name="name" id="name" class="form-control selectpicker">
+                                            <option value="">不限</option>
+                                            {foreach name="blockNameList" id="item"}
+                                            <option value="{$item}">{$item}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>主表字段 <a href="javascript:" data-toggle="tooltip" data-title="如果指定字段则id/title/image/url/begintime/endtime必须勾选"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">默认全部</option>
+                                            {foreach name="blockFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="userlist">
+                        <form role="form" class="builder-form" id="userlist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="userFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>主表字段 <a href="javascript:" data-toggle="tooltip" data-title="如果指定字段则id/title/image/url/begintime/endtime必须勾选"><i class="fa fa-info-circle"></i></a></label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            <option value="">默认全部</option>
+                                            {foreach name="userFieldList" id="item"}
+                                            <option value="{$item.name}" data-subtext="{$item.title}">{$item.name}</option>
+                                            {/foreach}
+                                            <option value="url" data-subtext="会员主页链接">url</option>
+                                            <option value="textlink" data-subtext="文本链接(HTML)">textlink</option>
+                                            <option value="imglink" data-subtext="图片链接(HTML)">imglink</option>
+                                            <option value="img" data-subtext="图片(HTML)">img</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="diydatalist">
+                        <form role="form" class="builder-form" id="diydatalist-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>行数(row)</label>
+                                        <input type="number" name="row" id="row" class="form-control" placeholder="默认为10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序字段(orderby)</label>
+                                        <select name="orderby" id="orderby" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">默认</option>
+                                            {foreach name="diyformFieldList" id="item"}
+                                            {foreach name="item" key="subkey" id="field"}
+                                            <option class="hidden" data-id="{$key}" value="{$field.name}" data-subtext="{$field.title}">{$field.name}</option>
+                                            {/foreach}
+                                            {/foreach}
+                                            <option value="rand" data-subtext="随机">rand</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>排序方式(orderway)</label>
+                                        <select name="orderway" id="orderway" class="form-control selectpicker">
+                                            <option value="">默认为desc(降序)</option>
+                                            <option value="desc">desc(降序)</option>
+                                            <option value="asc">asc(升序)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>偏移值(limit)</label>
+                                        <input type="text" name="limit" class="form-control" placeholder="默认为空，例如：20,10">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>缓存时长(cache)(秒)</label>
+                                        <input type="text" name="cache" class="form-control" placeholder="默认为永久缓存">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择自定义表单</label>
+                                        <select name="diyform_id" id="diyform_id" class="form-control selectpicker" data-live-search="true">
+                                            <option value="">请选择</option>
+                                            {foreach name="diyformList" id="item"}
+                                            <option value="{$item.id}">{$item.title}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>请选择字段</label>
+                                        <select name="field" id="field" class="form-control selectpicker" data-live-search="true" multiple>
+                                            {foreach name="diyformFieldList" id="item"}
+                                                {foreach name="item" key="subkey" id="field"}
+                                                <option class="hidden" data-id="{$key}" value="{$field.name}" data-subtext="{$field.title}">{$field.name}</option>
+                                                {/foreach}
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="query">
+                        <form role="form" class="builder-form" id="query-form">
+                            <div class="form-group">
+                                <legend>全局参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>列表循环变量(id)</label>
+                                        <input type="text" name="id" id="id" class="form-control" placeholder="默认为item">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>为空提示(empty)</label>
+                                        <input type="text" name="empty" id="empty" class="form-control" placeholder="默认无提示">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>循环变量(key)</label>
+                                        <input type="text" name="key" id="key" class="form-control" placeholder="默认为变量i">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <label>取模值(mod)</label>
+                                        <input type="number" name="mod" id="mod" class="form-control" placeholder="默认为2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <legend>特有参数</legend>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <label>SQL语句</label>
+                                        <input name="sql" id="sql" class="form-control" placeholder="SQL查询语句,如果需要参数绑定,请使用?占位符" />
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12" style="margin-top:15px;">
+                                        <label>绑定参数</label>
+                                        <input name="bind" id="bind" class="form-control" placeholder="多个参数以,进行分隔,可以为空,如果是字符串请前后添加上单引号" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info btn-embossed btn-command">生成模板标签</button>
+                                <button type="reset" class="btn btn-danger btn-embossed">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <form role="form" class="builder-form" id="preview-form">
+                        <div class="form-group">
+                            <legend>标签预览</legend>
+                            <textarea name="" id="output" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success btn-embossed btn-result">渲染标签结果</button>
+                            <button type="button" class="btn btn-info btn-embossed btn-copy" id="copytag">复制标签</button>
+                        </div>
+                        <div class="form-group">
+                            <legend>执行结果</legend>
+                            <textarea name="" id="result" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--@formatter:off-->
+{literal}
+<script type="text/html" id="configtpl">
+{$Think.config.cms.<%=name%><%=#defaultvalue%><%=#func%>}
+</script>
+
+<script type="text/html" id="arclisttpl">
+{cms:arclist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:arclist}
+</script>
+
+<script type="text/html" id="channellisttpl">
+{cms:channellist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:channellist}
+</script>
+
+<script type="text/html" id="spagelisttpl">
+{cms:spagelist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:spagelist}
+</script>
+
+<script type="text/html" id="speciallisttpl">
+{cms:speciallist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:speciallist}
+</script>
+
+<script type="text/html" id="blocklisttpl">
+{cms:blocklist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:blocklist}
+</script>
+
+<script type="text/html" id="userlisttpl">
+{cms:userlist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:userlist}
+</script>
+
+<script type="text/html" id="diydatalisttpl">
+{cms:diydatalist <%=#attrs%>}
+<%for(var i=0;i < columns.length;i++){%>
+    <%=columns[i]%>
+<%}%>
+{/cms:diydatalist}
+</script>
+
+<script type="text/html" id="querytpl">
+{cms:query <%=#attrs%>}
+
+{/cms:query}
+</script>
+{/literal}
+<!--@formatter:on-->

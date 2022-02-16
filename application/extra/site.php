@@ -1,10 +1,10 @@
 <?php
 
 return array (
-  'name' => '工作流系统',
+  'name' => '淮安项目',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.4',
+  'version' => '1.0.1',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
