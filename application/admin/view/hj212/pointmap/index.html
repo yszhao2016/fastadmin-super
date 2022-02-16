@@ -1,0 +1,89 @@
+
+<link rel="stylesheet" href="/assets/css/gd-center.css?v=1.0.4">
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=e9d7427bbcaf1f6f415b4ae3a6f859a6"></script>
+<script type="text/javascript">
+    var map = new AMap.Map('main', {
+        resizeEnable: true,
+        center: [119, 33],
+        zoom: 13
+    });
+
+    function createInfoWindow(title, content) {
+        var info = document.createElement("div");
+        info.className = "custom-info input-card content-window-card";
+
+        //可以通过下面的方式修改自定义窗体的宽高
+        info.style.width = "250px";
+        // 定义顶部标题
+        var top = document.createElement("div");
+        var titleD = document.createElement("div");
+        var closeX = document.createElement("img");
+        top.className = "info-top";
+        titleD.innerHTML = title;
+        closeX.src = "https://webapi.amap.com/images/close2.gif";
+        closeX.onclick = closeInfoWindow;
+
+        top.appendChild(titleD);
+        top.appendChild(closeX);
+        info.appendChild(top);
+
+        // 定义中部内容
+        var middle = document.createElement("div");
+        middle.className = "info-middle";
+        middle.style.backgroundColor = 'white';
+        middle.innerHTML = content;
+        info.appendChild(middle);
+
+        // 定义底部内容
+        var bottom = document.createElement("div");
+        bottom.className = "info-bottom";
+        bottom.style.position = 'relative';
+        bottom.style.top = '0px';
+        bottom.style.margin = '0 auto';
+        var sharp = document.createElement("img");
+        sharp.src = "https://webapi.amap.com/images/sharp.png";
+        bottom.appendChild(sharp);
+        info.appendChild(bottom);
+        return info;
+    }
+
+    //关闭信息窗体
+    function closeInfoWindow() {
+        map.clearInfoWindow();
+    }
+    map.clearMap();  // 清除地图覆盖物
+
+
+    var markers = {$list};
+
+    // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
+    markers.forEach(function(marker) {
+
+        var point = new AMap.Marker({
+            map: map,
+            icon: marker.icon,
+            position: [marker.lon, marker.lat],
+            offset: new AMap.Pixel(-13, -30)
+        });
+        point.on('click', function () {
+            console.log(point.getPosition());
+            infoWindow.open(map, point.getPosition());
+        });
+
+        //实例化信息窗体
+        var title = marker.site_name,
+            content = [];
+        content.push("所属于区县:"+marker.address);
+        content.push("所属于园区:"+marker.industrial_park);
+        var infoWindow = new AMap.InfoWindow({
+            isCustom: true,  //使用自定义窗体
+            content: createInfoWindow(title, content.join("<br/>")),
+            offset: new AMap.Pixel(16, -45)
+        });
+
+    });
+
+    var center = map.getCenter();
+    map.setFitView();
+
+</script>

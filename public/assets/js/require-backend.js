@@ -51,9 +51,14 @@ require.config({
         'selectpage': '../libs/fastadmin-selectpage/selectpage',
         'citypicker': '../libs/fastadmin-citypicker/dist/js/city-picker.min',
         'citypicker-data': '../libs/fastadmin-citypicker/dist/js/city-picker.data',
+        'gdmap': 'https://webapi.amap.com/maps?v=1.4.15&key=e9d7427bbcaf1f6f415b4ae3a6f859a6',
     },
     // shim依赖配置
     shim: {
+        'gdmap':{
+            deps:['css!../css/gd-center.css'],
+            exports:'gdmap'
+        },
         'addons': ['backend'],
         'bootstrap': ['jquery'],
         'bootstrap-table': {
