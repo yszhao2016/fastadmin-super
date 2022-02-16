@@ -40,15 +40,22 @@ class DataReverseConverter
     /**
              * 生成数据段
      */
-    public function writeData($data = array())
+    public static function writeData($data = array())
     {
         $res = '';
-        $i=1;
-        foreach($data as $k=>$v){
-            if($i == 1){
-                $res.=strtoupper($k).'='.$v;
-            }else{
-                $res.=';'.strtoupper($k).'='.$v;
+        $i = 1;
+        foreach ($data as $k => $v) {
+            if (!$v) {
+                continue;
+            }
+            if ($i == 1) {
+                $res .= strtoupper($k) . '=' . $v;
+            } else if ($k == 'cp_datatime') {
+                $res .= ';CP=&&DataTime' . '=' . $v;
+            } else if($k == 'flag'){
+                $res .= ';' . ucfirst($k) . '=' . $v;
+            }else {
+                $res .= ';' . strtoupper($k) . '=' . $v;
             }
             $i++;
         }
@@ -75,29 +82,28 @@ class DataReverseConverter
     /**
      * 生成污染因子
      */
-    public function writePollution($data = array())
+    public static function writePollution($data = array())
     {
         $res = '';
         $j = 1;
-        foreach($data as $k1=>$v1){
-            if($j==1){
-                $res.= '';
-            }else{
-                $res.= ';';
-            }
+        foreach ($data as $k1 => $v1) {
+            $res = $j != 1 ? $res . ';' : $res;
             $i = 1;
-            foreach($v1 as $k2=>$v2){
-                if($i == 1){
-                    $res.= $k1.'-'.strtoupper($k2).'='.$v2;
-                }else{
-                    $res.= ','.$k1.'-'.strtoupper($k2).'='.$v2;
+            foreach ($v1 as $k2 => $v2) {
+                if (!$v2) {
+                    continue;
+                }
+                if ($i == 1) {
+                    $res .= $k1 . '-' . ucfirst($k2) . '=' . $v2;
+                } else {
+                    $res .= ',' . $k1 . '-' . ucfirst($k2) . '=' . $v2;
                 }
                 $i++;
             }
             $j++;
         }
         return $res;
-        
+
     }
     /**
               * 生成现场端

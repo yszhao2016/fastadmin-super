@@ -32,14 +32,11 @@ class Hj212Server extends Command
 
     protected function execute(Input $input, Output $output)
     {
+//        // 监听所有地址，监听端口f
+        $this->server = new SwooleServer('0.0.0.0', 65212);
 
-
-//        // 监听所有地址，监听端口
-        $this->server = new SwooleServer('192.168.100.230', 9503);
-
-
-        $this->server->set( array(
-            'worker_num'=> 5,
+        $this->server->set(array(
+            'worker_num' => 5,
 //            'task_worker_num' => 2,   //必须设置 on task
             'max_request' => 10000,
             'daemonize' => 0,
@@ -48,15 +45,10 @@ class Hj212Server extends Command
         ));
         $this->t212Parser = new T212Parser();
         $this->server->on('start', array($this, 'onStart'));
-//        $this->server->on('workerstart', array($this, 'onWorkerStart'));
-        // Task 回调的2个必须函数
+
         $this->server->on('connect', array($this, 'onConnect'));
         $this->server->on('receive', array($this, 'onReceive'));
-//         $this->serv->taskwait($data); 触发同步
-//        $this->server->on('task', array($this, 'onSyncTask'));
-        // $this->serv->task($data); 触发异步
-//        $this->serv->on('task', array($this, 'onAsynTask'));
-//        $this->server->on('finish', array($this, 'onFinish'));
+
         $this->server->on('close', array($this, 'onClose'));
         $this->server->start();
 
@@ -68,9 +60,6 @@ class Hj212Server extends Command
         echo "TCP Server is started at tcp://\n";
     }
 
-    public function onWorkerStart(){
-
-    }
 
     public function onConnect($serv, $fd)
     {
@@ -79,24 +68,25 @@ class Hj212Server extends Command
 
     public function onReceive($serv, $fd, $reactor_id, $data)
     {
+        file_put_contents('runtime/log/hj212receive.log', date('Y-m-d H;i;s') . "receive:  " . $data . PHP_EOL,FILE_APPEND);
         $sourceData = $data;
         $this->t212Parser->setReader($data);
-        $header = $this->t212Parser->readHeader();
+        $this->t212Parser->readHeader();
         $dataLen = $this->t212Parser->readDataLen();
         $data = $this->t212Parser->readDataAndCrc($dataLen);
-        $test = new DataConverter($data);
-        $insetdata = $test->convertData();
+        $dataConverter = new DataConverter($data);
+        $insetdata = $dataConverter->convertData();
         $insetdata['data_len'] = $dataLen;
         $insetdata['crc'] = $this->t212Parser->readCrcInt16();
         $insetdata['source_data'] = $sourceData;
-        $cpData = $test->convertCpData();
+        $cpData = $dataConverter->convertCpData();
         $insetdata['cp_datatime'] = $cpData['cpData']['datatime'];
         Db::startTrans();
-        try{
+        try {
             $dataModel = new Data($insetdata);
             $dataModel->save();
             $pollutionModel = new Pollution();
-            foreach($cpData['pollution'] as $k=>$val){
+            foreach ($cpData['pollution'] as $k => $val) {
                 $pModel = clone $pollutionModel;
                 $val['data_id'] = $dataModel->id;
                 $val['code'] = $k;
@@ -104,13 +94,13 @@ class Hj212Server extends Command
                 $pModel->save();
             }
             Db::commit();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Db::rollback();
         }
         $str = "QN={$insetdata['qn']};ST=91;CN=9014;PW={$insetdata['pw']};MN={$insetdata['mn']};Flag=4;CP=&&&&";
         $num = strlen($str);
-        $newNum = str_pad($num,4,"0",STR_PAD_LEFT);
-        $resStr = "##".$newNum.$str;
+        $newNum = str_pad($num, 4, "0", STR_PAD_LEFT);
+        $resStr = "##" . $newNum . $str;
         $this->server->send($fd, $resStr);
     }
 
