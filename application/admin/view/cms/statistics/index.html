@@ -1,0 +1,537 @@
+<style>
+    .panel-statistics h4 {
+        color: #444;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .panel-statistics h3 {
+        font-weight: 500;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .panel-statistics .statistics-value {
+        font-size:14px;
+        color: #666;
+    }
+
+    .panel-statistics em {
+        font-style: normal;
+    }
+
+    .panel-statistics .pull-right {
+        padding-right: 10px;
+    }
+
+    .panel-statistics .table thead tr th {
+        font-weight: normal;
+    }
+
+    .panel-statistics .table tbody tr td {
+        font-weight: normal;
+        vertical-align: middle;
+    }
+
+    .panel-statistics .table tbody tr td p {
+        margin: 0;
+    }
+
+    #echarts1 textarea {
+        display: block;
+    }
+
+    select.model_id {
+        min-width: 60px;
+    }
+</style>
+<div class="btn-refresh hidden" id="resetecharts"></div>
+<div class="row">
+    <div class="col-xs-6 col-sm-3">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <h4>总订单金额</h4>
+                    <h3>￥{$totalOrderAmount|sprintf='%.2f',###}</h3>
+                </div>
+
+                <div class="pull-right" style="color:#c8cfff;">
+                    <i class="fa fa-cny fa-4x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <h4>今日订单金额</h4>
+                    <h3>￥{$todayOrderAmount|sprintf='%.2f',###} <em data-toggle="tooltip" data-title="昨日：￥{$yesterdayOrderAmount|sprintf='%.2f',###}" class="text-{:$todayOrderRatio>=0?'success':'danger'}">{:$todayOrderRatio>=0?'+':''}{$todayOrderRatio}%</em></h3>
+                </div>
+
+                <div class="pull-right" style="color:#ffc8c8;">
+                    <i class="fa fa-calendar fa-4x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <h4>总用户数</h4>
+                    <h3>{$totalUser}</h3>
+                </div>
+
+                <div class="pull-right" style="color:#c8e3ff;">
+                    <i class="fa fa-users fa-4x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <h4>今日新增用户数</h4>
+                    <h3>{$todayUser} <em data-toggle="tooltip" data-title="昨日：{$yesterdayUser}" class="text-{:$todayUserRatio>=0?'success':'danger'}">{:$todayUserRatio>=0?'+':''}{$todayUserRatio}%</em></h3>
+                </div>
+
+                <div class="pull-right" style="color:#ffe9c8;">
+                    <i class="fa fa-user fa-4x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12 col-sm-6">
+        <div class="panel">
+            <div class="panel-body">
+                <div id="echarts1" style="height:360px;"></div>
+                <a href="javascript:" class="btn btn-refresh hidden" data-type="sale">订单统计</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <div class="panel">
+            <div class="panel-body">
+                <div id="echarts2" style="height:360px;"></div>
+                <a href="javascript:" class="btn btn-refresh hidden" data-type="percent">付费占比</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-3" style="margin-bottom:15px;">
+                <div class="panel panel-default panel-intro panel-statistics">
+                    <div class="panel-body">
+                        <h3>总文档数</h3>
+                        <span class="statistics-value">{$totalArchives} 篇</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3" style="margin-bottom:15px;">
+                <div class="panel panel-default panel-intro panel-statistics">
+                    <div class="panel-body">
+                        <h3>待审核文档</h3>
+                        <span class="statistics-value">{$unsettleArchives} 篇</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3" style="margin-bottom:15px;">
+                <div class="panel panel-default panel-intro panel-statistics">
+                    <div class="panel-body">
+                        <h3>总评论数</h3>
+                        <span class="statistics-value">{$totalComment} 条</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3" style="margin-bottom:15px;">
+                <div class="panel panel-default panel-intro panel-statistics">
+                    <div class="panel-body">
+                        <h3>待审核评论</h3>
+                        <span class="statistics-value">{$unsettleComment} 条</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--@formatter:off-->
+<div class="row" style="margin-top:5px;">
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>今日付费文章排行</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="60%">标题</th>
+                        <th width="20%" class="text-center">金额</th>
+                        <th class="text-center">占比</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="todayPaidList" id="item" empty="<tr><td colspan='3' class='text-center'>暂无数据</td></tr>"}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.archives.url}" target="_blank">{$item.archives.title}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="text-center">{$item.amount}</h5>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" data-toggle="tooltip" data-title="{$item['percent']}%" style="width: {$item['percent']}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>本周付费文章排行</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="60%">标题</th>
+                        <th width="20%" class="text-center">金额</th>
+                        <th class="text-center">占比</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="weekPaidList" id="item" empty="<tr><td colspan='3' class='text-center'>暂无数据</td></tr>"}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.archives.url}" target="_blank">{$item.archives.title}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="text-center">{$item.amount}</h5>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" data-toggle="tooltip" data-title="{$item['percent']}%" style="width: {$item['percent']}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>本月付费文章排行</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="60%">标题</th>
+                        <th width="20%" class="text-center">金额</th>
+                        <th class="text-center">占比</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="monthPaidList" id="item" empty="<tr><td colspan='3' class='text-center'>暂无数据</td></tr>"}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.archives.url}" target="_blank">{$item.archives.title}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="text-center">{$item.amount}</h5>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" data-toggle="tooltip" data-title="{$item['percent']}%" style="width: {$item['percent']}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--@formatter:on-->
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>热门搜索</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="80%">关键字</th>
+                        <th class="text-center">搜索次数</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="hotSearchList" id="item" empty="
+                    <tr>
+                        <td colspan='2' class='text-center'>暂无数据</td>
+                    </tr>
+                    "}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.url}" target="_blank">{$item.keywords}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="mb-0 text-center">{$item.nums}</h5>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>热门标签</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="80%">名称</th>
+                        <th width="20%" class="text-center">文档数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="hotTagList" id="item" empty="
+                    <tr>
+                        <td colspan='2' class='text-center'>暂无数据</td>
+                    </tr>
+                    "}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.url}" target="_blank">{$item.name}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="mb-0 text-center">{$item.nums}</h5>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>热门文章</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="80%">标题</th>
+                        <th width="20%" class="text-center">浏览量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="hotArchivesList" id="item" empty="
+                    <tr>
+                        <td colspan='2' class='text-center'>暂无数据</td>
+                    </tr>
+                    "}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.url}" target="_blank">{$item.title}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="mb-0 text-center">{$item.views}</h5>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:15px;">
+    <div class="col-xs-12">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>订单趋势</h4>
+                <div id="datefilter">
+                    <form id="form1" action="" role="form" novalidate class="form-inline">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh"><i class="fa fa-refresh"></i></a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Today')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Yesterday')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Last 7 Days')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Last 30 Days')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Last month')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('This month')}</a>
+                        <select name="model_id" class="form-control model_id">
+                            <option value="0">{:__('All')}</option>
+                            {foreach name="modelList" id="item"}
+                            <option value="{$item.id}">{$item.name}</option>
+                            {/foreach}
+                        </select>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control input-inline datetimerange" data-type="order" placeholder="指定日期" style="width:270px;"/>
+                        </div>
+                    </form>
+                </div>
+                <div id="echarts3" style="height:400px;width:100%;margin-top:15px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top:15px;">
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>今日投稿排行</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="60%">昵称</th>
+                        <th width="20%" class="text-center">数量</th>
+                        <th class="text-center">占比</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="todayContributeList" id="item" empty="
+                    <tr>
+                        <td colspan='3' class='text-center'>暂无数据</td>
+                    </tr>
+                    "}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.user.url}" target="_blank">{$item.user.nickname}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="text-center">{$item.nums}</h5>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" data-toggle="tooltip" data-title="{$item['percent']}%" style="width: {$item['percent']}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>本周投稿排行</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="60%">昵称</th>
+                        <th width="20%" class="text-center">数量</th>
+                        <th class="text-center">占比</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="weekContributeList" id="item" empty="
+                    <tr>
+                        <td colspan='3' class='text-center'>暂无数据</td>
+                    </tr>
+                    "}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.user.url}" target="_blank">{$item.user.nickname}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="text-center">{$item.nums}</h5>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" data-toggle="tooltip" data-title="{$item['percent']}%" style="width: {$item['percent']}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>本月投稿排行</h4>
+                <table class="table" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th width="60%">昵称</th>
+                        <th width="20%" class="text-center">数量</th>
+                        <th class="text-center">占比</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="monthContributeList" id="item" empty="
+                    <tr>
+                        <td colspan='3' class='text-center'>暂无数据</td>
+                    </tr>
+                    "}
+                    <tr>
+                        <td>
+                            <p><a href="{$item.user.url}" target="_blank">{$item.user.nickname}</a></p>
+                        </td>
+                        <td>
+                            <h5 class="text-center">{$item.nums}</h5>
+                        </td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" data-toggle="tooltip" data-title="{$item['percent']}%" style="width: {$item['percent']}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top:15px;">
+    <div class="col-xs-12">
+        <div class="panel panel-default panel-intro panel-statistics">
+            <div class="panel-body">
+                <h4>管理员发文趋势</h4>
+                <div class="datefilter">
+                    <form id="form2" action="" role="form" novalidate class="form-inline">
+                        <a href="javascript:;" class="btn btn-primary btn-refresh"><i class="fa fa-refresh"></i></a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Today')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Yesterday')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Last 7 Days')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Last 30 Days')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('Last month')}</a>
+                        <a href="javascript:;" class="btn btn-success btn-filter">{:__('This month')}</a>
+                        <select name="model_id" class="form-control model_id">
+                            <option value="0">{:__('All')}</option>
+                            {foreach name="modelList" id="item"}
+                            <option value="{$item.id}">{$item.name}</option>
+                            {/foreach}
+                        </select>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control input-inline datetimerange" data-type="archives" placeholder="指定日期" style="width:270px;"/>
+                        </div>
+                    </form>
+                </div>
+                <div id="echarts4" style="height:400px;width:100%;margin-top:15px;"></div>
+            </div>
+        </div>
+    </div>
+</div>

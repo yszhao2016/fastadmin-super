@@ -9,12 +9,13 @@ use fast\Random;
 use think\Config;
 use think\Validate;
 
+
 /**
  * 会员接口
  */
 class User extends Api
 {
-    protected $noNeedLogin = ['login', 'mobilelogin', 'register', 'resetpwd', 'changeemail', 'changemobile', 'third'];
+    protected $noNeedLogin = ['login', 'mobilelogin', 'register', 'resetpwd', 'changeemail', 'changemobile', 'third','userCheckStatus','registerHuaian'];
     protected $noNeedRight = '*';
 
     public function _initialize()
@@ -51,12 +52,62 @@ class User extends Api
         }
         $ret = $this->auth->login($account, $password);
         if ($ret) {
-            $data = ['userinfo' => $this->auth->getUserinfo()];
+            $userinfo=$this->auth->getUserinfo();
+            if($userinfo['is_shenhe']==0){
+                $this->error("请耐心等到管理员审核");
+            }elseif ($userinfo['is_shenhe']==2) {
+                $this->error("账号注册申请被驳回");
+            }
+            $data = ['userinfo' => $userinfo];
             $this->success(__('Logged in successful'), $data);
         } else {
             $this->error($this->auth->getError());
         }
     }
+    /*淮安电商园区
+     * 提交注册信息
+     * post
+     * mobile 手机号
+     * password 密码
+     */
+    public function registerHuaian() {
+        $mobile = $this->request->post('mobile');
+        $password = $this->request->post('password');
+
+        if (!$mobile || !$password) {
+            $this->error(__('Invalid parameters'));
+        }
+
+        if ($mobile && !Validate::regex($mobile, "^1\d{10}$")) {
+            $this->error(__('Mobile is incorrect'));
+        }
+        $ret = $this->auth->login($mobile, $password);
+        if($ret){
+            //登录成功
+            $data = ['userinfo' => $this->auth->getUserinfo()];
+            $this->success("登录成功",$data);
+        }else{
+            $user = \think\Db::name("user")->where(['mobile'=>$mobile])->find();
+
+            if($user){
+                $this->error($this->auth->getError());
+            }
+            //去注册
+            $email=time(). rand(100,999)."@qq.com";
+        
+            $rets = $this->auth->register($mobile, $password, $email, $mobile, []);
+            if($rets){
+                $this->auth->login($mobile, $password);
+                $data = ['userinfo' => $this->auth->getUserinfo()];
+                $this->success("注册成功，请等待管理员审核",$data);
+            }else{
+                 $this->error($this->auth->getError());
+            }
+        }
+        
+    }
+    
+    
 
     /**
      * 手机验证码登录

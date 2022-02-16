@@ -1,0 +1,104 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    {:token()}
+    <div class="form-group">
+        <label for="c-type" class="control-label col-xs-12 col-sm-2">{:__('Type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-type" data-rule="required" class="form-control selectpage" data-source="cms/block/selectpage_type" placeholder="类型为自定义,可任意输入,无需确认,自动添加" data-primary-key="type" data-field="type" name="row[type]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-name" class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" data-rule="required" class="form-control" name="row[name]" placeholder="用于模板中标签调用" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-title" class="control-label col-xs-12 col-sm-2">{:__('Title')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-title" data-rule="required" class="form-control" name="row[title]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-image" class="control-label col-xs-12 col-sm-2">{:__('Image')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-image" data-rule="" class="form-control" size="50" name="row[image]" type="text" value="">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-image" class="btn btn-danger faupload" data-input-id="c-image" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" data-multiple="true" data-max-files="2" data-preview-id="p-image"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-image" class="btn btn-primary fachoose" data-input-id="c-image" data-mimetype="image/*" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-image"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-image"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-url" class="control-label col-xs-12 col-sm-2">{:__('Url')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-url" class="form-control" name="row[url]" type="text" value="">
+                <span class="input-group-btn">
+                    <a href="javascript:" data-url="cms/ajax/get_link_list" class="btn btn-primary btn-select-link" title="选择链接" style="margin-left:3px;"><i class="fa fa-link"></i> 选择链接</a>
+                </span>
+                <span class="msg-box n-right"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-content" class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-content" data-rule="" class="form-control editor" rows="15" name="row[content]" cols="50"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Parsetpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input  id="c-parsetpl" name="row[parsetpl]" type="hidden" value="0">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-parsetpl" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal text-gray fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Begintime')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-8">
+            <div class='input-group date datetimepicker'>
+                <input type='text' name="row[begintime]" data-rule="" data-date-format="YYYY-MM-DD HH:mm:ss" value="" placeholder="可以留空，开始前将不显示" class="form-control datetimepicker"/>
+                <span class="input-group-addon">
+                    <span class="fa fa-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Endtime')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-8">
+            <div class='input-group date datetimepicker'>
+                <input type='text' name="row[endtime]" data-rule="" data-date-format="YYYY-MM-DD HH:mm:ss" value="" placeholder="可以留空，到期后将不显示" class="form-control datetimepicker"/>
+                <span class="input-group-addon">
+                    <span class="fa fa-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="extend">{include file="cms/common/fields"}</div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {foreach name="statusList" item="vo"}
+                <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="normal"}checked{/in} /> {$vo}</label>
+                {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

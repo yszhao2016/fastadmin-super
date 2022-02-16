@@ -1,0 +1,136 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <input type="hidden" id="diyform-id" value="{$row.id}">
+    <div class="form-group">
+        <label for="c-name" class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" data-rule="required; length(~30)" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-table" class="control-label col-xs-12 col-sm-2">{:__('Table')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-table" data-rule="required; length(5~30)" class="form-control" name="row[table]" readonly="" type="text" value="{$row.table}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-diyname" class="control-label col-xs-12 col-sm-2">{:__('Diyname')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-diyname" data-rule="required;diyname" class="form-control" name="row[diyname]" type="text" value="{$row.diyname|htmlentities}" data-tip="用于伪静态规则中[:diyname]替换">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-title" class="control-label col-xs-12 col-sm-2">{:__('Title')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-title" data-rule="required" class="form-control" name="row[title]" type="text" value="{$row.title|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-seotitle" class="control-label col-xs-12 col-sm-2">{:__('Seotitle')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-seotitle" data-rule="" class="form-control" name="row[seotitle]" type="text" value="{$row.seotitle|htmlentities}" placeholder="为空时将使用表单标题">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-keywords" class="control-label col-xs-12 col-sm-2">{:__('Keywords')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-keywords" data-rule="" class="form-control" name="row[keywords]" type="text" value="{$row.keywords|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-description" class="control-label col-xs-12 col-sm-2">{:__('Description')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-description" cols="60" rows="5" data-rule="" class="form-control" name="row[description]">{$row.description|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-successtips" class="control-label col-xs-12 col-sm-2">{:__('Successtips')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-successtips" data-rule="" class="form-control" name="row[successtips]" value="{$row.successtips|htmlentities}" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-redirecturl" class="control-label col-xs-12 col-sm-2">{:__('Redirecturl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-redirecturl" data-rule="" class="form-control" name="row[redirecturl]" placeholder="{:__('Redirecturl tips')}" type="text" value="{$row.redirecturl|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-posttpl" class="control-label col-xs-12 col-sm-2">{:__('Posttpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-posttpl" data-rule="" class="form-control selectpage" value="{$row['posttpl']}" name="row[posttpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"diyform_post"}' data-primary-key="name" data-field="name" type="text" placeholder="自定义模板文件必须以diyform_post开头">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-listtpl" class="control-label col-xs-12 col-sm-2">{:__('Listtpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-listtpl" data-rule="" class="form-control selectpage" value="{$row['listtpl']}" name="row[listtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"diyform_list"}' data-primary-key="name" data-field="name" type="text" placeholder="自定义模板文件必须以diyform_list开头">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-showtpl" class="control-label col-xs-12 col-sm-2">{:__('Showtpl')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-showtpl" data-rule="" class="form-control selectpage" value="{$row['showtpl']}" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"diyform_show"}' data-primary-key="name" data-field="name" type="text" placeholder="自定义模板文件必须以diyform_show开头">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('isedit')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input  id="c-isedit" name="row[isedit]" type="hidden" value="{$row['isedit']}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isedit" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal {eq name="$row.isedit" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('iscaptcha')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input  id="c-iscaptcha" name="row[iscaptcha]" type="hidden" value="{$row['iscaptcha']}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-iscaptcha" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal {eq name="$row.iscaptcha" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('isguest')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input  id="c-isguest" name="row[isguest]" type="hidden" value="{$row['isguest']}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isguest" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal {eq name="$row.isguest" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Needlogin')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input  id="c-needlogin" name="row[needlogin]" type="hidden" value="{$row['needlogin']}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-needlogin" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal {eq name="$row.needlogin" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Usermode')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:Form::radios("row[usermode]", ['all'=>'全部', 'user'=>'仅用户本人数据'], $row['usermode'])}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Statusmode')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:Form::radios("row[statusmode]", ['all'=>'全部', 'normal'=>'仅已审核数据(状态正常)'], $row['statusmode'])}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:Form::radios("row[status]", $statusList, $row['status'])}
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

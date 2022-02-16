@@ -1,0 +1,83 @@
+<style>
+    .panel-post {
+        position: relative;
+    }
+
+    .btn-post {
+        position: absolute;
+        right: 0;
+        bottom: 10px;
+    }
+
+    .img-border {
+        border-radius: 3px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .embed-responsive img {
+        position: absolute;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .channel-list li a {
+        color: #2c3e50;
+    }
+
+    .channel-list li.active a, .channel-list li a:hover {
+        color: #3c8dbc;
+    }
+
+    .channel-list li.active a {
+        font-weight: bold;
+    }
+
+    .panel-user h4 {
+        font-weight: normal;
+        font-size: 14px;
+    }
+</style>
+<div class="container mt-20">
+    <div id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                {include file="common/sidenav" /}
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-user">
+                    <div class="panel-body">
+                        <div class="panel-post">
+                            <h2 class="page-header">我的消费订单</h2>
+                        </div>
+
+                        {volist name='orderList' id='item'}
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <a href="{$item.archives.url}" target="_blank" class="img-thumb">
+                                    <div class="embed-responsive embed-responsive-4by3 img-zoom">
+                                        <img src="{$item.archives.image}" class="embed-responsive-item" onerror="this.src='__CDN__/assets/addons/cms/img/noimage.jpg';this.onerror=null;">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-9">
+                                <h4>
+                                    <a href="{$item.archives.url}" target="_blank">{$item.title}</a>
+                                </h4>
+                                <p class="text-danger">支付金额：￥{$item.payamount}元</p>
+                                <p class="text-muted">支付时间：{$item.paytime|datetime}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        {/volist}
+                        {if $orderList->total()==0}
+                        未找到任何记录!
+                        {/if}
+                        <div class="pager">{$orderList->render()}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

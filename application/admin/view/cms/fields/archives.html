@@ -1,0 +1,60 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="form-group">
+        <label for="c-name" class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-name" data-rule="required" class="form-control" readonly name="row[name]" type="text" value="{$row.name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-title" class="control-label col-xs-12 col-sm-2">{:__('Title')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-title" data-rule="required" class="form-control" name="row[title]" type="text" value="{$row.title}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Isfilter')}:</label>
+
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-isfilter" name="row[isfilter]" type="hidden" value="{$row.isfilter}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isfilter" data-yes="1" data-no="0">
+                <i class="fa fa-toggle-on text-success {eq name=" $row.isfilter" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group {if !$row.isfilter}hidden{/if}" id="filterdom">
+        <label for="c-filterlist" class="control-label col-xs-12 col-sm-2">{:__('Filterlist')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-filterlist" class="form-control" rows="10" name="row[filterlist]" placeholder="一行一条记录,格式:搜索值|显示值">{$row.filterlist|htmlentities}</textarea>
+            <div style="margin-top:5px;" class="text-muted"><span class="hidden tf tf-radio tf-checkbox tf-select tf-selects tf-array">为空时将使用数据列表，</span>用于前台列表筛选使用</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Isorder')}:</label>
+
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-isorder" name="row[isorder]" type="hidden" value="{$row.isorder}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isorder" data-yes="1" data-no="0">
+                <i class="fa fa-toggle-on text-success {eq name=" $row.isorder" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    {if in_array($row.name, ["channel_ids", "image", "images", "tags", "price", "outlink", "content", "keywords", "description"])}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Iscontribute')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-iscontribute" name="row[iscontribute]" type="hidden" value="{$row.iscontribute}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-iscontribute" data-yes="1" data-no="0">
+                <i class="fa fa-toggle-on text-success {eq name=" $row.iscontribute" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    {/if}
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

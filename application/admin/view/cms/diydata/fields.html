@@ -1,0 +1,102 @@
+{foreach $fields as $item}
+
+<div class="form-group">
+    <div class="control-label col-xs-12 col-sm-2">{$item.title}</div>
+    <div class="col-xs-12 col-sm-8">
+        {switch $item.type}
+        {case string}
+        <input type="text" name="row[{$item.name}]" id="c-{$item.name}" value="{$item.value|htmlentities}" class="form-control" data-rule="{$item.rule}" data-tip="{$item.tip}" {$item.extend} />
+        {/case}
+        {case value="text" break="0"}{/case}
+        {case editor}
+        <textarea name="row[{$item.name}]" id="c-{$item.name}" class="form-control {eq name='$item.type' value='editor'}editor{/eq}" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}" {$item.extend}>{$item.value|htmlentities}</textarea>
+        {/case}
+        {case array}
+        {php}$arrList=isset($values[$item['name']])?(array)json_decode($item['value'],true):$item['content_list'];{/php}
+        <dl class="fieldlist" rel="{$arrList|count}" data-name="row[{$item.name}]">
+            <dd>
+                <ins>{:__('Array key')}</ins>
+                <ins>{:__('Array value')}</ins>
+            </dd>
+
+            {foreach $arrList as $key => $vo}
+            <dd class="form-inline">
+                <input type="text" name="row[{$item.name}][field][{$key}]" class="form-control" value="{$key}" size="10" />
+                <input type="text" name="row[{$item.name}][value][{$key}]" class="form-control" value="{$vo}" />
+                <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+            </dd>
+            {/foreach}
+            <dd><a href="javascript:;" class="append btn btn-sm btn-success"><i class="fa fa-plus"></i> {:__('Append')}</a></dd>
+        </dl>
+        {/case}
+        {case date}
+        <input type="text" name="row[{$item.name}]" id="c-{$item.name}" value="{$item.value}" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-tip="{$item.tip}" data-rule="{$item.rule}" {$item.extend} />
+        {/case}
+        {case time}
+        <input type="text" name="row[{$item.name}]" id="c-{$item.name}" value="{$item.value}" class="form-control datetimepicker" data-date-format="HH:mm:ss" data-tip="{$item.tip}" data-rule="{$item.rule}" {$item.extend} />
+        {/case}
+        {case datetime}
+        <input type="text" name="row[{$item.name}]" id="c-{$item.name}" value="{$item.value}" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-tip="{$item.tip}" data-rule="{$item.rule}" {$item.extend} />
+        {/case}
+        {case number}
+        <input type="number" name="row[{$item.name}]" id="c-{$item.name}" value="{$item.value}" class="form-control" data-tip="{$item.tip}" data-rule="{$item.rule}" {$item.extend} />
+        {/case}
+        {case checkbox}
+        {foreach name="item.content_list" item="vo"}
+        <label for="row[{$item.name}][]-{$key}"><input id="row[{$item.name}][]-{$key}" name="row[{$item.name}][]" type="checkbox" value="{$key}" data-rule="{$item.rule}" data-tip="{$item.tip}" {in name="key" value="$item.value"}checked{/in} /> {$vo}</label>
+        {/foreach}
+        {/case}
+        {case radio}
+        {foreach name="item.content_list" item="vo"}
+        <label for="row[{$item.name}]-{$key}"><input id="row[{$item.name}]-{$key}" name="row[{$item.name}]" type="radio" value="{$key}" data-rule="{$item.rule}" data-tip="{$item.tip}" {in name="key" value="$item.value"}checked{/in} /> {$vo}</label>
+        {/foreach}
+        {/case}
+        {case value="select" break="0"}{/case}
+        {case value="selects"}
+        <select name="row[{$item.name}]{$item.type=='selects'?'[]':''}" class="form-control selectpicker" data-rule="{$item.rule}" data-tip="{$item.tip}" {$item.extend} {$item.type=='selects'?'multiple':''}>
+            {foreach name="item.content_list" item="vo"}
+            <option value="{$key}" {in name="key" value="$item.value"}selected{/in}>{$vo}</option>
+            {/foreach}
+        </select>
+        {/case}
+        {case value="image" break="0"}{/case}
+        {case value="images"}
+        <div class="input-group">
+            <input id="c-{$item.name}" class="form-control" name="row[{$item.name}]" type="text" value="{$item.value|htmlentities}" data-rule="{$item.rule}" data-tip="{$item.tip}">
+            <div class="input-group-addon no-border no-padding">
+                <span><button type="button" id="plupload-{$item.name}" class="btn btn-danger plupload" data-input-id="c-{$item.name}" data-preview-id="p-{$item.name}" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" data-multiple="{$item.type=='file'?'false':'true'}" {if $item.maximum}data-maxcount="{$item.maximum}"{/if}><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                <span><button type="button" id="fachoose-{$item.name}" class="btn btn-primary fachoose" data-input-id="c-{$item.name}" data-preview-id="p-{$item.name}" data-mimetype="image/*" data-multiple="{$item.type=='file'?'false':'true'}" {if $item.maximum}data-maxcount="{$item.maximum}"{/if}><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+            </div>
+            <span class="msg-box n-right" for="c-{$item.name}"></span>
+        </div>
+        <ul class="row list-inline plupload-preview" id="p-{$item.name}"></ul>
+        {/case}
+        {case value="file" break="0"}{/case}
+        {case value="files"}
+        <div class="input-group">
+            <input id="c-{$item.name}" class="form-control" name="row[{$item.name}]" type="text" value="{$item.value|htmlentities}" data-rule="{$item.rule}" data-tip="{$item.tip}">
+            <div class="input-group-addon no-border no-padding">
+                <span><button type="button" id="plupload-{$item.name}" class="btn btn-danger plupload" data-input-id="c-{$item.name}" data-multiple="{$item.type=='file'?'false':'true'}" {if $item.maximum}data-maxcount="{$item.maximum}"{/if}><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                <span><button type="button" id="fachoose-{$item.name}" class="btn btn-primary fachoose" data-input-id="c-{$item.name}" data-multiple="{$item.type=='file'?'false':'true'}" {if $item.maximum}data-maxcount="{$item.maximum}"{/if}><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+            </div>
+            <span class="msg-box n-right" for="c-{$item.name}"></span>
+        </div>
+        {/case}
+        {case switch}
+        <input id="c-{$item.name}" name="row[{$item.name}]" type="hidden" value="{:$item.value?1:0}">
+        <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-{$item.name}" data-yes="1" data-no="0" >
+            <i class="fa fa-toggle-on text-success {if !$item.value}fa-flip-horizontal text-gray{/if} fa-2x"></i>
+        </a>
+        {/case}
+        {case bool}
+        <label for="row[{$item.name}]-yes"><input id="row[{$item.name}]-yes" name="row[{$item.name}]" type="radio" value="1" {$item.value?'checked':''} data-tip="{$item.tip}" /> {:__('Yes')}</label>
+        <label for="row[{$item.name}]-no"><input id="row[{$item.name}]-no" name="row[{$item.name}]" type="radio" value="0" {$item.value?'':'checked'} data-tip="{$item.tip}" /> {:__('No')}</label>
+        {/case}
+        {case custom}
+        {$item.content}
+        {/case}
+        {/switch}
+    </div>
+</div>
+{/foreach}

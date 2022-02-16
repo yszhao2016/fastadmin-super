@@ -1,0 +1,207 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <input type="hidden" value="{$row.id}" id="channel-id"/>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="radio">
+                {foreach name="typeList" item="vo"}
+                <label for="row[type]-{$key}"><input id="row[type]-{$key}" name="row[type]" type="radio" value="{$key}" {in name="key" value="$row.type" }checked{/in} /> {$vo}</label>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    <div class="form-group tf tf-list tf-channel tf-link">
+        <label for="c-model_id" class="control-label col-xs-12 col-sm-2">{:__('Model_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <!--@formatter:off-->
+            <select name="row[model_id]" id="c-model_id" class="form-control" {if $hasArchives}disabled{/if}>
+                {foreach name="modelList" item="vo"}
+                    <option {in name="vo.id" value="$row.model_id" }selected="selected" {/in} value="{$vo.id}" data-channeltpl="{$vo.channeltpl}" data-listtpl="{$vo.listtpl}" data-showtpl="{$vo.showtpl}">{$vo.name}{if $hasArchives && $row.model_id==$vo.id} (当栏目下有文档时将无法变更模型){/if}</option>
+                {/foreach}
+            </select>
+            <!--@formatter:on-->
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="parent_id" class="control-label col-xs-12 col-sm-2">{:__('上级栏目')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <!--@formatter:off-->
+            <select name="row[parent_id]" data-rule="required" id="parent_id" class="form-control">
+                <option value="0">{:__('None')}</option>
+                {foreach name="channelList" item="vo"}
+                <option value="{$vo.id}" {in name="vo.id" value="$childrenIds" }disabled{/in} {if $vo.type!=='link'}data-model="{$vo.model_id}"{/if} {if $vo.id==$row.parent_id} selected{/if}>{$vo.name}</option>
+                {/foreach}
+            </select>
+            <!--@formatter:on-->
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-name" class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-name" data-rule="required" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-image" class="control-label col-xs-12 col-sm-2">{:__('Image')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-image" data-rule="" class="form-control" size="50" name="row[image]" type="text" value="{$row.image|htmlentities}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-image" class="btn btn-danger plupload" data-input-id="c-image" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" data-multiple="false" data-preview-id="p-image"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-image" class="btn btn-primary fachoose" data-input-id="c-image" data-mimetype="image/*" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-image"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-image"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-seotitle" class="control-label col-xs-12 col-sm-2">{:__('Seotitle')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-seotitle" data-rule="" class="form-control" name="row[seotitle]" type="text" value="{$row.seotitle|htmlentities}" placeholder="为空时将使用栏目名称">
+        </div>
+    </div>
+    <div class="form-group tf tf-channel tf tf-list">
+        <label for="c-keywords" class="control-label col-xs-12 col-sm-2">{:__('Keywords')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-keywords" data-rule="" class="form-control" name="row[keywords]" type="text" value="{$row.keywords|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group tf tf-channel tf tf-list">
+        <label for="c-description" class="control-label col-xs-12 col-sm-2">{:__('Description')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-description" data-rule="" class="form-control" name="row[description]">{$row.description|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-diyname" class="control-label col-xs-12 col-sm-2">{:__('Diyname')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-diyname" data-rule="required; diyname" class="form-control" name="row[diyname]" type="text" value="{$row.diyname|htmlentities}" data-tip="用于伪静态规则中[:diyname]替换">
+        </div>
+    </div>
+    <div class="form-group tf tf-link">
+        <label for="c-outlink" class="control-label col-xs-12 col-sm-2">{:__('Outlink')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-outlink" data-rule="required" class="form-control" name="row[outlink]" type="text" value="{$row.outlink|htmlentities}">
+                <span class="input-group-btn">
+                    <a href="javascript:" data-url="cms/ajax/get_link_list" class="btn btn-primary btn-select-link" title="选择链接" style="margin-left:3px;"><i class="fa fa-link"></i> 选择链接</a>
+                </span>
+                <span class="msg-box n-right"></span>
+            </div>
+            <div id="outlink-extend"></div>
+            <input type="hidden" name="row[linktype]" value="{$row.linktype|default=''|htmlentities}"/>
+            <input type="hidden" name="row[linkid]" value="{$row.linkid|default=0|htmlentities}"/>
+        </div>
+    </div>
+    <div style="background:#fcf8e3;padding:15px 0 5px 0;margin-bottom:15px;">
+        <div class="form-group tf tf-channel tf-list">
+            <label for="c-channeltpl" class="control-label col-xs-12 col-sm-2">{:__('Channeltpl')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                <input id="c-channeltpl" data-rule="required" class="form-control selectpage" name="row[channeltpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"channel"}' data-primary-key="name" data-field="name" type="text" value="{$row.channeltpl}" placeholder="自定义模板文件必须以channel开头">
+            </div>
+        </div>
+        <div class="form-group tf tf-channel tf-list">
+            <label for="c-listtpl" class="control-label col-xs-12 col-sm-2">{:__('Listtpl')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                <input id="c-listtpl" data-rule="required" class="form-control selectpage" name="row[listtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"list"}' data-primary-key="name" data-field="name" type="text" value="{$row.listtpl}" placeholder="自定义模板文件必须以list开头">
+            </div>
+        </div>
+        <div class="form-group tf tf-channel tf-list">
+            <label for="c-showtpl" class="control-label col-xs-12 col-sm-2">{:__('Showtpl')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                <input id="c-showtpl" data-rule="required" class="form-control selectpage" name="row[showtpl]" data-source="cms/ajax/get_template_list" data-params='{"type":"show"}' data-primary-key="name" data-field="name" type="text" value="{$row.showtpl}" placeholder="自定义模板文件必须以show开头">
+            </div>
+        </div>
+        <div class="form-group tf tf-list tf-channel">
+            <label for="c-listtype" class="control-label col-xs-12 col-sm-2">{:__('Listtype')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                <select name="row[listtype]" id="c-listtype" class="form-control">
+                    {foreach name="listtypeList" item="vo"}
+                    <option value="{$key}" {:$key==$row.listtype?'selected':''}>{$vo}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group tf tf-channel tf-list">
+            <label for="c-pagesize" class="control-label col-xs-12 col-sm-2">{:__('Pagesize')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                <input id="c-pagesize" data-rule="required" class="form-control" name="row[pagesize]" type="number" value="{$row.pagesize}" data-tip="用于前台列表页分页">
+            </div>
+        </div>
+        <div class="form-group tf tf-channel tf-list">
+            <label for="c-vip" class="control-label col-xs-12 col-sm-2">{:__('VIP Limit')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                {if $vipList}
+                <select name="row[vip]" id="c-vip" class="form-control">
+                    <option value="0">不限制</option>
+                    {foreach name="vipList" id="item"}
+                    <option value="{$item.level}" {:$item.level==$row.vip?'selected':''}>{$item.name} Lv:{$item.level}</option>
+                    {/foreach}
+                </select>
+                {else/}
+                <div class="alert alert-warning-light" style="margin-bottom:0;">未安装或未配置VIP会员插件</div>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group tf tf-channel tf-list">
+            <label for="c-pagesize" class="control-label col-xs-12 col-sm-2">{:__('配置同步')}:</label>
+            <div class="col-xs-12 col-sm-4">
+                <div style="margin-top:5px;"><label for="syncconfig" style="font-weight:normal;"><input type="checkbox" name="row[syncconfig]" id="syncconfig" /> 同步高亮区域配置到所有子栏目</label></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-weigh" class="control-label col-xs-12 col-sm-2">{:__('Weigh')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-weigh" data-rule="required" class="form-control" name="row[weigh]" type="number" value="{$row.weigh}" data-tip="权重越大越靠前">
+        </div>
+    </div>
+    <div class="form-group tf tf-channel tf-list">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Iscontribute')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-iscontribute" name="row[iscontribute]" type="hidden" value="{$row.iscontribute}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-iscontribute" data-yes="1" data-no="0">
+                <i class="fa fa-toggle-on text-success {eq name=" $row.iscontribute" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Isnav')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-isnav" name="row[isnav]" type="hidden" value="{$row.isnav}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isnav" data-yes="1" data-no="0">
+                <i class="fa fa-toggle-on text-success {eq name=" $row.isnav" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div id="extend">{include file="cms/common/fields"}</div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {foreach name="statusList" item="vo"}
+                <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status" }checked{/in} /> {$vo}</label>
+                {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/html" id="outlinktpl">
+    <div class="alert alert-info-light" style="margin-bottom:0;position:relative;margin-top:10px;">
+        类型：<%=type=='page'?'单页':(type=='special'?'专题':'自定义表单')%><br>
+        标题：<%=title%><br>
+        链接：<a href="<%=url%>" target="_blank"><%=url%></a><br>
+        <a href="javascript:" class="btn btn-info btn-remove-link" style="position:absolute;right:10px;top:10px;color:#fff;text-decoration: none;"><i class="fa fa-close"></i> 移除</a>
+    </div>
+</script>
