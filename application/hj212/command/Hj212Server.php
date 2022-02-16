@@ -68,7 +68,7 @@ class Hj212Server extends Command
 
     public function onReceive($serv, $fd, $reactor_id, $data)
     {
-        file_put_contents('runtime/log/hj212receive.log', date('Y-m-d H;i;s') . "receive:  " . $data . PHP_EOL,FILE_APPEND);
+        file_put_contents('runtime/log/hj212receive.log', date('Y-m-d H;i;s') . "receive:  " . $data . PHP_EOL, FILE_APPEND);
         $sourceData = $data;
         $this->t212Parser->setReader($data);
         $this->t212Parser->readHeader();
