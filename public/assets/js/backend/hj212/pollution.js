@@ -34,6 +34,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'avg', title: __('Avg'), operate:'BETWEEN'},
                         {field: 'max', title: __('Max'), operate:'BETWEEN'},
                         {field: 'flag', title: __('Flag'), operate: 'LIKE', formatter: Table.api.formatter.flag},
+                        {field: 'is_alarm', title: __('Is_alarm'),searchList:{"0":__('Normal'),"1":__('Is_alarm')},
+                            formatter: function(val){
+                                if(val == '0'){
+                                    return "<span style=\"text-info\"><i class=\"fa fa-circle\"></i>正常</span>";
+                                }else if(val == '1'){
+                                    return "<span class=\"text-danger\"><i class=\"fa fa-circle\"></i>报警</span>";
+                                }
+                            }
+                        },
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

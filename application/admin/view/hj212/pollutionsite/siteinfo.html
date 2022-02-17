@@ -26,6 +26,7 @@
 </style>
 <form id="analysis-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <div class="form-header">
+    {if !empty($pollutionsite)}
     <h3>站点信息</h3>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('SiteName')}:</label>
@@ -63,5 +64,8 @@
             <label class="control-label">{$pollutionsite.contact}</label>
         </div>
     </div>
+    {else if}
+    <p class=" text-center">不存在站点信息</p>
+    {/if}
     </div>
 </form>

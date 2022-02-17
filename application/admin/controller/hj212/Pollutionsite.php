@@ -39,14 +39,16 @@ class Pollutionsite extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         $siteId= $this->request->param('site_id', 0);
-        
-        $list = $this->model
-        ->where(function ($query) use ($siteId) {
-            if ($siteId) {
-                $query->where('id', $siteId);
-            }
-        })
-        ->find();
+        $list = '';
+        if($siteId){
+            $list = $this->model
+            ->where(function ($query) use ($siteId) {
+                if ($siteId) {
+                    $query->where('id', $siteId);
+                }
+            })
+            ->find();
+        }
         
         $this->view->assign('pollutionsite',$list);
         return $this->view->fetch();
