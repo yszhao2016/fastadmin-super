@@ -31,7 +31,7 @@
         "ext-pdo": "*",
         "ext-bcmath": "*",
         "txthinking/mailer": "^2.0",
-        "ke/thinkphp-migration": "dev-master"
+        "topthink/think-migration": "1.*"
     },
     "config": {
         "preferred-install": "dist"
