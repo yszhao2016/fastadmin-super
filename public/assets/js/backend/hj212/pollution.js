@@ -28,7 +28,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'data_id', title: __('Data_id')},
-                        {field: 'code', title: __('Code'), operate: 'LIKE'},
+                        {field: 'code_nm', title: __('Code'), operate: 'LIKE'},
 //                        {field: 'cou', title: __('Cou'), operate:'BETWEEN'},
                         {field: 'min', title: __('Min'), operate:'BETWEEN'},
                         {field: 'avg', title: __('Avg'), operate:'BETWEEN'},

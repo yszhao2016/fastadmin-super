@@ -61,7 +61,18 @@ class Pollution extends Backend
             ->order($sort, $order)
             ->paginate($limit);
             
-            $result = array("total" => $list->total(), "rows" => $list->items());
+            $rows = $list->items();
+            foreach($rows as $v){
+                //获取检测因子信息
+                $code = \app\admin\model\hj212\PollutionCode::where(['code'=>$v['code']])->find();
+                if($code){
+                    $v['code_nm'] = $code['name'];
+                }else{
+                    $v['code_nm'] = $v['code'];
+                }
+            }
+            
+            $result = array("total" => $list->total(), "rows" => $rows);
             
             return json($result);
         }

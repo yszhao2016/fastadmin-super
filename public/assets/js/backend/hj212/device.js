@@ -28,17 +28,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
                         {field: 'device_pwd', title: __('Device_pwd'), operate: 'LIKE'},
+                        {field: 'site', title: __('SiteName'), operate: 'LIKE'},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                                  buttons:[
                                      {
                                       'name':'bindsite',
                                       'title':function(row){
-                                          return '绑定站点[ '+row.device_code+']';
+                                          return '更换站点[ '+row.device_code+']';
                                       },
                                       'icon':'fa fa-pencil',
-                                      'text':'绑定站点',
+                                      'text':'更换站点',
                                       'classname': 'btn btn-xs btn-info btn-dialog',
-                                      'url':'hj212/pollutionsite/index/deviceId/{ids}',
+                                      'url':'hj212/device/bindsite/deviceId/{ids}',
+                                      'extend': 'data-area=\'["95%","95%"]\''
+                                     },
+                                     {
+                                      'name':'siteInfo',
+                                      'title':function(row){
+                                          return '站点信息[ '+row.site+']';
+                                      },
+                                      'text':'站点信息',
+                                      'classname': 'btn btn-xs btn-primary btn-dialog',
+                                      'url':function(row){
+                                          return 'hj212/pollutionsite/siteinfo/site_id/'+row.site_id;
+                                       },
                                       'extend': 'data-area=\'["95%","95%"]\''
                                      },
                                  ]}
@@ -55,8 +68,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        bindsite:function(){
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
+	                $.validator.config({
+                    rules: {
+                        checksite: function (element) {
+                            return $.ajax({
+                                url: 'hj212/device/checksite',
+                                type: 'POST',
+                                data: {id: $("#c-site_id").val(), name: element.name, value: element.value},
+                                dataType: 'json'
+                            });
+                        },
+                    }
+                });
                 Form.api.bindevent($("form[role=form]"));
             }
         }

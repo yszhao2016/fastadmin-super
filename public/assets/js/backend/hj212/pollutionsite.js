@@ -5,7 +5,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'hj212/pollutionsite/index/deviceId/'+Config.deviceId + location.search,
+                    index_url: 'hj212/pollutionsite/index/site_id/'+Config.id + location.search,
                     add_url: 'hj212/pollutionsite/add',
                     edit_url: 'hj212/pollutionsite/edit',
                     del_url: 'hj212/pollutionsite/del',
@@ -27,7 +27,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'deviceId', title: __('Deviceid')},
                         {field: 'site_name', title: __('SiteName'), operate: 'LIKE'},
                         {field: 'address', title: __('Address'), operate: 'LIKE'},
                         {field: 'lon', title: __('Lon'), operate: 'LIKE'},

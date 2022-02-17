@@ -84,7 +84,11 @@ class DataConverter
                     //污染因子
                     $pollution[$info[0]] = $info[1];
                 } else {
-                    $cpData[strtolower($info[0])] = $info[1];
+                    $v = $info[1];
+                    if(strtolower($info[0]) == 'datatime'){
+                        $v = strtotime($v);
+                    }
+                    $cpData[strtolower($info[0])] = $v;
                 }
 
             }

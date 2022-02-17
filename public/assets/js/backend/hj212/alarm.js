@@ -26,7 +26,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'codeId', title: __('Codeid')},
+                        {field: 'code', title: __('Code')},
                         {field: 'warn_min', title: __('Warn_min'), operate:'BETWEEN'},
                         {field: 'warn_max', title: __('Warn_max'), operate:'BETWEEN'},
                         {field: 'alarm_min', title: __('Alarm_min'), operate:'BETWEEN'},

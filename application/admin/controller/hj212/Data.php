@@ -182,7 +182,7 @@ class Data extends Backend
             //获取检测因子信息
             $pollutionInfo = Db::name('hj212_pollution')->alias('p')
             ->join("hj212_pollution_code c","c.code = p.code","LEFT")
-            ->join("hj212_alarm a","a.codeId = c.id","LEFT")
+            ->join("hj212_alarm a","a.code = c.code","LEFT")
             ->where(['p.data_id'=>$list['id']])
             ->select();
             
