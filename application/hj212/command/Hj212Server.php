@@ -68,7 +68,7 @@ class Hj212Server extends Command
 
     public function onReceive($serv, $fd, $reactor_id, $data)
     {
-        file_put_contents('runtime/log/hj212receive.log', date('Y-m-d H;i;s') . "receive:  " . $data . PHP_EOL, FILE_APPEND);
+        file_put_contents('runtime/log/hj212receive.log', date('Y-m-d H:i:s') . "receive:  " . $data . PHP_EOL, FILE_APPEND);
         $sourceData = $data;
         $this->t212Parser->setReader($data);
         $this->t212Parser->readHeader();
@@ -97,7 +97,7 @@ class Hj212Server extends Command
         } catch (Exception $e) {
             Db::rollback();
         }
-        $str = "QN={$insetdata['qn']};ST=91;CN=9014;PW={$insetdata['pw']};MN={$insetdata['mn']};Flag=4;CP=&&&&";
+        $str = "QN={$insetdata['qn']};ST=91;CN=9014;PW={$insetdata['pw']};MN={$insetdata['mn']};Flag=4;CP=&&&&\r\n";
         $num = strlen($str);
         $newNum = str_pad($num, 4, "0", STR_PAD_LEFT);
         $resStr = "##" . $newNum . $str;

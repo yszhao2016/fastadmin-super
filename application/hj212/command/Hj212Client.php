@@ -37,6 +37,9 @@ class Hj212Client extends Command
                         echo "connect failed. Error: {$client->errCode}\n";
                     }
                     foreach ($data as $model) {
+                        if (!$this->checkData($model->id)) {
+                            continue;
+                        }
                         if ($model->is_change) {
                             $sendData = $this->dealChangeData($model);
                             $client->send($sendData);
@@ -77,7 +80,23 @@ class Hj212Client extends Command
         $datastr = $res . ';' . $pollutionstr . '&&';
         $crc = DataReverseConverter::writeCrc($datastr);
         $len = DataReverseConverter::writeDateLen($datastr);
-        $sendData = '##' . $len . $datastr . $crc;
+        $sendData = '##' . $len . $datastr . $crc . "\r\n";
         return $sendData;
+    }
+
+
+    protected function checkData($dataId)
+    {
+        $pollutionData = Pollution::field('code,cou,min,max,avg,flag')
+            ->with('Alarm')
+            ->where('data_id', $dataId)
+            ->select();
+        $data = collection($pollutionData)->toArray();
+        foreach ($data as $item) {
+            if ($item['max'] > $item['alarm']['alarm_max'] || $item['avg'] > $item['alarm']['alarm_max']) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace app\hj212\model;
 
+use app\admin\model\cms\Bank;
+use app\admin\model\hj212\Alarm;
 use think\Model;
 
 /**
@@ -79,6 +81,11 @@ class Pollution extends Model
     // NightData 噪声夜间历史数据
     private $nightData;
 
+    public function Alarm()
+    {
+        return $this->hasOne(Alarm::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
+
+    }
 
     function getSampleTime()
     {
