@@ -78,20 +78,20 @@
     {foreach name="pollutionInfo" item="vo"}
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-1">{:__('Code')}:</label>
-        <div class="col-xs-12 col-sm-2">
+        <div class="col-xs-12 col-sm-2" style="padding-left: 0;padding-right: 0">
             <label class="control-label">{$vo.name}</label>
         </div>
-        <label class="control-label col-xs-12 col-sm-1">{:__('Max')}:</label>
-        <div class="col-xs-12 col-sm-2">
-            <label class="control-label">{$vo.max}{$vo.measures}</label>
+        <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">{:__('Max')}:</label>
+        <div class="col-xs-12 col-sm-2" style="padding-right: 0">
+            <label class="control-label" style="text-align:left">{$vo.max}{$vo.measures}</label>
         </div>
-        <label class="control-label col-xs-12 col-sm-1">{:__('Warn')}:</label>
-        <div class="col-xs-12 col-sm-2">
-            <label class="control-label">{if !empty($vo.warn_min) || !empty($vo.warn_max) }{$vo.warn_min} ~ {$vo.warn_max} {$vo.measures}{/if}</label>
+        <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">{:__('Warn')}:</label>
+        <div class="col-xs-12 col-sm-2" style="padding-right: 0">
+            <label class="control-label" style="text-align:left">{if !empty($vo.warn_min) || !empty($vo.warn_max) }{$vo.warn_min} ~ {$vo.warn_max} {$vo.measures}{/if}</label>
         </div>
-        <label class="control-label col-xs-12 col-sm-1">{:__('Alarm')}:</label>
-        <div class="col-xs-12 col-sm-2">
-            <label class="control-label">{if !empty($vo.alarm_min) || !empty($vo.alarm_max) }{$vo.alarm_min} ~ {$vo.alarm_max} {$vo.measures}{/if}</label>
+        <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">{:__('Alarm')}:</label>
+        <div class="col-xs-12 col-sm-2" style="padding-right: 0">
+            <label class="control-label" style="text-align:left">{if !empty($vo.alarm_min) || !empty($vo.alarm_max) }{$vo.alarm_min} ~ {$vo.alarm_max} {$vo.measures}{/if}</label>
         </div>
     </div>
     {/foreach}
