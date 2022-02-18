@@ -56,9 +56,9 @@ class Alarm extends Backend
                 //获取检测因子信息
                 $code = \app\admin\model\hj212\PollutionCode::where(['code'=>$v['code']])->find();
                 if($code){
-                    $v['code'] = $code['name'];
+                    $v['codeNm'] = $code['name'];
                 }else{
-                    $v['code'] = $v['code'];
+                    $v['codeNm'] = $v['code'];
                 }
             }
             $result = array("total" => $list->total(), "rows" => $list->items());

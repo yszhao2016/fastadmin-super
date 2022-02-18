@@ -29,10 +29,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'code',
                             title: __('Code'),
+                            visible:false,
                             addclass: 'selectpage',
                             extend: 'data-source="hj212/pollutioncode/index" data-field="name" data-primary-key="code"',
                             operate: 'in',
                             formatter: Table.api.formatter.search
+                        },
+                        {
+                            field: 'codeNm',
+                            title: __('Code'),
+                            operate: false,
                         },
                         {field: 'warn_min', title: __('Warn_min'), operate:false},
                         {field: 'warn_max', title: __('Warn_max'), operate:false},

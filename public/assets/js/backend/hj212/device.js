@@ -27,7 +27,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
-                        {field: 'site', title: __('SiteName'), operate: 'LIKE'},
+                        {
+                            field: 'site_id',
+                            visible: false,
+                            title: __('SiteName'),
+                            addclass: 'selectpage',
+                            extend: 'data-source="hj212/pollutionsite/index" data-field="site_name" data-primary-key="id"',
+                            operate: '=',
+                            formatter: Table.api.formatter.search
+                        },
+                        {
+                            field: 'site',
+                            title: __('SiteName'),
+                            operate: false,
+                        },
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                                  buttons:[
                                      {
