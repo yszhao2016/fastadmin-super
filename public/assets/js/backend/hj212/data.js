@@ -38,6 +38,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate: false},
+                        {field: 'qn', title: __('Qn'),operate: 'LIKE'},
                         {field: 'cn', title: __('Cn')},
                         {field: 'mn', title: __('Mn')},
                         {field: 'cp_datatime', title: __('Cp_datatime'),
@@ -57,6 +58,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             }
                         },
+                        {field: 'created_at', title: __('Created_at'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                                  buttons:[
                                      {

@@ -29,4 +29,5 @@ return [
     'Code'=>'检测因子',
     'Is_alarm'=>'报警',
     'Max'=>'检测时间内最大值',
+    'Created_at'=>'发送时间',
 ];
