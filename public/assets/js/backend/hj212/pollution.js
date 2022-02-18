@@ -24,6 +24,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortName: 'id',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                rowStyle:function(row,index){
+                    var style = {};
+                    style = { css: {'background-color' : '#FFFAF0','color':'red'}}
+
+                    if(row.is_alarm == 1){
+                        return style;
+                    }else{
+                        return false;
+                    }
+                },
                 columns: [
                     [
                         {checkbox: true},

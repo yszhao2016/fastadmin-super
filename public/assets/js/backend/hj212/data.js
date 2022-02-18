@@ -24,11 +24,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortName: 'id',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                rowStyle:function(row,index){
+                    var style = {};
+                    style = { css: {'background-color' : '#FFFAF0','color':'red'}}
+
+                    if(row.is_alarm == 1){
+                        return style;
+                    }else{
+                        return false;
+                    }
+                },
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate: false},
-                        {field: 'qn', title: __('Qn'),operate: false},
                         {field: 'cn', title: __('Cn')},
                         {field: 'mn', title: __('Mn')},
                         {field: 'cp_datatime', title: __('Cp_datatime'),
@@ -36,7 +45,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime},
                         {field: 'is_forward', title: __('Is_forward'),searchList:{"0":__('No'),"1":__('YES')},formatter: Table.api.formatter.status },
-                        {field: 'is_alarm', title: __('Is_alarm'),searchList:{"0":__('Normal'),"1":__('Is_alarm')},
+                        {
+                            field: 'is_alarm',
+                            title: __('Is_alarm'),
+                            searchList:{"0":__('Normal'),"1":__('Is_alarm')},
                             formatter: function(val){
                                 if(val == '0'){
                                     return "<span style=\"text-info\"><i class=\"fa fa-circle\"></i>正常</span>";
@@ -63,7 +75,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 	                                },
                                  ]}
                     ]
-                ]
+                ],
+
             });
 
             // 为表格绑定事件
