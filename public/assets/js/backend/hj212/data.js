@@ -6,8 +6,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'hj212/data/index' + location.search,
-                    add_url: 'hj212/data/add',
-                    edit_url: 'hj212/data/edit',
+/*                    add_url: 'hj212/data/add',
+                    edit_url: 'hj212/data/edit',*/
                     del_url: 'hj212/data/del',
                     multi_url: 'hj212/data/multi',
                     import_url: 'hj212/data/import',
@@ -27,8 +27,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'qn', title: __('Qn')},
+                        {field: 'id', title: __('Id'),operate: false},
+                        {field: 'qn', title: __('Qn'),operate: false},
                         {field: 'cn', title: __('Cn')},
                         {field: 'mn', title: __('Mn')},
                         {field: 'cp_datatime', title: __('Cp_datatime'),
@@ -69,47 +69,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
-//		analysisdata: function () {
-//			
-//            // 初始化表格参数配置
-//            Table.api.init({
-//                extend: {
-//                    index_url: 'hj212/data/analysisdata/data_id/'+Config.data_id + location.search,
-//                    table: 'hj212_data',
-//                }
-//            });
-//
-//            var table = $("#analysisdata");
-//
-//            // 初始化表格
-//            table.bootstrapTable({
-//                url: $.fn.bootstrapTable.defaults.extend.index_url,
-//                pk: 'id',
-//                sortName: 'id',
-//                fixedColumns: true,
-//                fixedRightNumber: 1,
-//                columns: [
-//                    [
-//                        {checkbox: true},
-//                        {field: 'mn', title: __('Mn')},
-//                        {field: 'site.site_name', title: __('SiteName'), operate: 'LIKE'},
-//                        {field: 'site.address', title: __('Address'), operate: 'LIKE'},
-//                        {field: 'site.lon', title: __('Lon'), operate: 'LIKE'},
-//                        {field: 'site.lat', title: __('Lat'), operate: 'LIKE'},
-//                        {field: 'site.industrial_park', title: __('Industrial_park'), operate: 'LIKE'},
-//                        {field: 'site.contact', title: __('Contact'), operate: 'LIKE'},
-//                    ]
-//                ]
-//            });
-//            // 为表格绑定事件
-//            Table.api.bindevent(table);
-//        },
-        add: function () {
+/*        add: function () {
             Controller.api.bindevent();
         },
         edit: function () {
             Controller.api.bindevent();
-        },
+        },*/
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));

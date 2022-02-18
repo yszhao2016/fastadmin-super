@@ -25,9 +25,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
-                        {field: 'device_pwd', title: __('Device_pwd'), operate: 'LIKE'},
                         {field: 'site', title: __('SiteName'), operate: 'LIKE'},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                                  buttons:[

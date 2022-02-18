@@ -25,12 +25,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate: false},
                         {field: 'code', title: __('Code'), operate: 'LIKE'},
                         {field: 'name', title: __('Name'), operate: 'LIKE'},
-                        {field: 'measures', title: __('Measures'), operate: 'LIKE'},
-                        {field: 'emissions', title: __('Emissions'), operate: 'LIKE'},
-                        {field: 'type', title: __('Type'), operate: 'LIKE'},
+                        {field: 'measures', title: __('Measures'), operate: false},
+                        {field: 'emissions', title: __('Emissions'), operate: false},
+                        {field: 'type', title: __('Type'), operate: false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

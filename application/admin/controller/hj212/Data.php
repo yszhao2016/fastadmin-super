@@ -25,11 +25,14 @@ class Data extends Backend
 
     public function _initialize()
     {
+
         parent::_initialize();
         $this->model = new \app\admin\model\hj212\Data;
         $this->view->assign("statusList", $this->model->getStatusList());
         $data_id = $this->request->param('data_id', 0);
         $this->assignconfig('data_id', $data_id);
+
+
     }
 
 
@@ -172,7 +175,7 @@ class Data extends Backend
         if($list){
             $device_code = $list['mn'];
             $site = Db::name('hj212_device')->alias("device")
-            ->join("fa_hj212_site site", "site.deviceId = device.id")
+            ->join("fa_hj212_site site", "site.id = device.site_id")
             ->where(['device.device_code'=>$device_code])
             ->find();
             if($site){

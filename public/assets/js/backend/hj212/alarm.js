@@ -25,12 +25,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'code', title: __('Code')},
-                        {field: 'warn_min', title: __('Warn_min'), operate:'BETWEEN'},
-                        {field: 'warn_max', title: __('Warn_max'), operate:'BETWEEN'},
-                        {field: 'alarm_min', title: __('Alarm_min'), operate:'BETWEEN'},
-                        {field: 'alarm_max', title: __('Alarm_max'), operate:'BETWEEN'},
+                        {field: 'id', title: __('Id'),operate:false},
+                        {
+                            field: 'code',
+                            title: __('Code'),
+                            addclass: 'selectpage',
+                            extend: 'data-source="hj212/pollutioncode/index" data-field="name" data-primary-key="code"',
+                            operate: 'in',
+                            formatter: Table.api.formatter.search
+                        },
+                        {field: 'warn_min', title: __('Warn_min'), operate:false},
+                        {field: 'warn_max', title: __('Warn_max'), operate:false},
+                        {field: 'alarm_min', title: __('Alarm_min'), operate:false},
+                        {field: 'alarm_max', title: __('Alarm_max'), operate:false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
