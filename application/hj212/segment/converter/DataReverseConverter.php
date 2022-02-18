@@ -30,7 +30,7 @@ class DataReverseConverter
     /**
      * 生成数据段长度
      */
-    public function writeDateLen($data = "")
+    public static function writeDateLen($data = "")
     {
         $count = strlen($data);
         $len = (string)$count;
@@ -170,7 +170,7 @@ class DataReverseConverter
     /**
      * 生成CRC
      */
-    public function writeCrc($msg)
+    public static function writeCrc($msg)
     {
         $crc = 0xFFFF;
         for ($i = 0; $i < strlen($msg); $i++) {

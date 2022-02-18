@@ -8,6 +8,7 @@
 namespace app\hj212\command;
 
 
+use app\common\model\Config;
 use app\hj212\model\Data;
 use app\hj212\model\Pollution;
 use app\hj212\segment\converter\DataReverseConverter;
@@ -17,6 +18,7 @@ use think\console\Output;
 use Swoole\Client as swooleClient;
 use Swoole\Coroutine as Co;
 use think\Exception;
+use think\Log;
 
 class Hj212Client extends Command
 {
@@ -27,34 +29,53 @@ class Hj212Client extends Command
 
     protected function execute(Input $input, Output $output)
     {
+        Log::init(['type' => 'File', 'path' => ROOT_PATH . '/runtime/log/hjclient/']);
         do {
             $data = Data::field('id,source_data,qn,st,cn,pw,mn,flag,pnum,pno,cp_datatime,is_forward,is_change')
                 ->where('is_forward', 0)->select();
             if ($data) {
-                try {
-                    $client = new swooleClient(SWOOLE_SOCK_TCP);
-                    if (!$client->connect('192.168.100.230', 9503, 1)) {
-                        echo "connect failed. Error: {$client->errCode}\n";
-                    }
-                    foreach ($data as $model) {
-                        if (!$this->checkData($model->id)) {
+                $serverInfo = Config::where('group', 'hj212')
+                    ->where('name', 'push_server_info')
+                    ->find();
+                $serverInfoarr = json_decode($serverInfo->value);
+                $client = new swooleClient(SWOOLE_SOCK_TCP);
+                foreach ($serverInfoarr as $info) {
+                    try {
+                        $isConnect = "";
+                        $isConnect = $client->connect(trim($info->ip), trim($info->port), 1);
+                        if (!$isConnect) {
+                            Log::write("{$info->ip}:{$info->port}connect failed. Error: {$client->errCode}\n");
                             continue;
                         }
-                        if ($model->is_change) {
-                            $sendData = $this->dealChangeData($model);
+                        foreach ($data as $model) {
+                            //检查数据 是否能发送
+                            if (!$this->checkData($model->id)) {
+                                continue;
+                            }
+                            //改动的数据
+                            if ($model->is_change) {
+                                $sendData = $this->dealChangeData($model);
+                                $client->send($sendData);
+                            } else {
+                                $sendData = $model->source_data;
+                            }
                             $client->send($sendData);
-                        } else {
-                            $client->send($model->source_data);
+                            Log::write("{$model->qn}--send data: {$sendData}\n");
+                            $receive = $client->recv();
+                            if ($receive) {
+                                $model->is_forward = 1;
+                                $res = $model->save();
+                                Log::write("{$model->qn}--receive data: {$receive}\n");
+                            }
                         }
-                        if ($client->recv()) {
-                            $model->is_forward = 1;
-                            $res = $model->save();
-                        }
+                    } catch (Exception $e) {
+                        Log::write("异常: {$e->getMessage()}\n");
                     }
-                } catch (Exception $e) {
-                    var_dump($e->getMessage());
                 }
-                $client->close();
+                if($isConnect){
+                    $client->close();
+                }
+
             }
             sleep(30);
         } while (true);
@@ -87,13 +108,14 @@ class Hj212Client extends Command
 
     protected function checkData($dataId)
     {
+        //根据数据id 查询出 关联最大值比对
         $pollutionData = Pollution::field('code,cou,min,max,avg,flag')
             ->with('Alarm')
             ->where('data_id', $dataId)
             ->select();
         $data = collection($pollutionData)->toArray();
         foreach ($data as $item) {
-            if ($item['max'] > $item['alarm']['alarm_max'] || $item['avg'] > $item['alarm']['alarm_max']) {
+            if ($item['alarm']['alarm_max'] && ($item['max'] > $item['alarm']['alarm_max'] || $item['avg'] > $item['alarm']['alarm_max'])) {
                 return false;
             }
         }

@@ -1,0 +1,63 @@
+<style>
+    .fieldlist dd ins {
+        width: 200px;
+    }
+
+    .fieldlist dd input:first-child {
+        width: 200px;
+    }
+</style>
+<div id="myTabContent" class="tab-content">
+    <form id="config-form" class="form-horizontal" role="form" method="POST" action="{:url('hj212/config/add')}">
+        {foreach name="hjconfig" item="item"}
+        {if $item.type=='array'}
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{$item->title}</label>
+            <div class="col-xs-12 col-sm-4">
+                <dl class="fieldlist" data-name="{$item->name}" data-template="serverinfotpl">
+                    <dd>
+                        <ins>IP地址</ins>
+                        <ins>端口</ins>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i>添加</a>
+                    </dd>
+                    <textarea name="{$item->name}" class="form-control hide" cols="30" rows="5">
+                                {$item->value}
+                     </textarea>
+                </dl>
+                <!--定义模板-->
+                <script type="text/html" id="serverinfotpl">
+                    <dd class="form-inline">
+                        <input type="text" name="row[<%=name%>][<%=index%>][ip]" class="form-control"
+                               value="<%=row['ip']%>" size="30" placeholder="ip地址">
+                        <input type="text" name="row[<%=name%>][<%=index%>][port]" class="form-control"
+                               value="<%=row['port']%>" size="10" placeholder="端口">
+                        <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span> <span
+                            class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+                    </dd>
+                </script>
+            </div>
+        </div>
+        {else if $item.type=='string'}
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{$item->title}</label>
+            <input type="text" value="{$item->value}">
+        </div>
+        {/if}
+        {/foreach}
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2"></label>
+            <div class="col-xs-12 col-sm-4">
+                {if !$Think.config.app_debug}
+                <button type="button" class="btn btn-primary disabled">{:__('Only work at development
+                    environment')}
+                </button>
+                {else/}
+                <button type="submit" class="btn btn-primary btn-embossed">{:__('OK')}</button>
+                <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+                {/if}
+            </div>
+        </div>
+    </form>
+</div>
