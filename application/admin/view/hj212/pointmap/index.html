@@ -66,10 +66,19 @@
             offset: new AMap.Pixel(-13, -30)
         });
         point.on('click', function () {
-            console.log(point.getPosition());
             infoWindow.open(map, point.getPosition());
         });
 
+        // 设置鼠标划过点标记显示的文字提示
+        point.setTitle('marker.site_name');
+
+        // 设置label标签
+        // label默认蓝框白底左上角显示，样式className为：amap-marker-label
+        point.setLabel({
+            direction:'right',
+            offset: new AMap.Pixel(0, 0),  //设置文本标注偏移量
+            content: "<div style='font-weight: bold'>"+marker.site_name+"</div>", //设置文本标注内容
+        });
         //实例化信息窗体
         var title = marker.site_name,
             content = [];

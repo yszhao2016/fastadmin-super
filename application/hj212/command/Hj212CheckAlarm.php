@@ -32,7 +32,7 @@ class Hj212CheckAlarm extends Command
                 ->where('data_id', $item->id)
                 ->select();
             foreach ($pollutionData as $val) {
-                if ($val->max > $item->alarm->alarm_max || $val->avg > $item->alarm->alarm_max) {
+                if ($item['alarm']['alarm_max'] && ($val->max > $item->alarm->alarm_max || $val->avg > $item->alarm->alarm_max)) {
                     $val->is_alarm = 1;
                     $val->save();
                     $item->is_alarm = 1;
