@@ -10,7 +10,6 @@ namespace app\hj212\command;
 
 use app\hj212\model\Data;
 use app\hj212\model\Pollution;
-use function EasyWeChat\Kernel\data_get;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
