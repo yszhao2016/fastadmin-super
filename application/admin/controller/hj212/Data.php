@@ -187,6 +187,7 @@ class Data extends Backend
             ->join("hj212_pollution_code c","c.code = p.code","LEFT")
             ->join("hj212_alarm a","a.code = c.code","LEFT")
             ->where(['p.data_id'=>$list['id']])
+            ->field('p.code,a.*,c.*,p.max')
             ->select();
             
         }
