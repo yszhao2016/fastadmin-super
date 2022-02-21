@@ -39,4 +39,9 @@ class Data extends Model
     {
         return ["0"=>__('No'), "1"=>__('Yes')];
     }
+
+    public function Device()
+    {
+        return $this->hasOne(Device::class,"device_code","mn",[],'LEFT')->setEagerlyType(0);
+    }
 }

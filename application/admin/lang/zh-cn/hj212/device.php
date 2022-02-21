@@ -6,4 +6,5 @@ return [
     'Created_at' => '创建时间',
     'SiteName'            => '站点名称',
     'bindSite'            => '绑定站点名称',
+    'Contact' => '联系方式'
 ];
