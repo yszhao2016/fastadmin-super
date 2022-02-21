@@ -129,10 +129,15 @@ class Device extends Backend
      */
     public function checksite()
     {
-        $site_id = $this->request->param('id',0);
+        $site_id = $this->request->post('site_id',0);
+        $id = $this->request->post('id',0);
         //获取站点信息
         if($site_id){
-            $site = $this->model->where(['site_id' => $site_id])->find();
+            $site = Db::name("hj212_device")
+                ->where("site_id =".$site_id)
+                ->where('id !='.$id)
+                ->find();
+
             if($site){
                 $this->error("站点已绑定");
             }else{
@@ -168,7 +173,9 @@ class Device extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                         $this->model->validateFailException(true)->validate($validate);
                     }
-                    $params['contact'] = json_encode($params['contact'] );
+                    if(isset($params['contact'])){
+                        $params['contact'] = json_encode($params['contact'] );
+                    }
                     $result = $this->model->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -219,7 +226,9 @@ class Device extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
                         $row->validateFailException(true)->validate($validate);
                     }
-                    $params['contact'] = json_encode($params['contact'] );
+                    if(isset($params['contact'])){
+                        $params['contact'] = json_encode($params['contact'] );
+                    }
                     $result = $row->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {

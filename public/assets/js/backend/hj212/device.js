@@ -91,7 +91,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             return $.ajax({
                                 url: 'hj212/device/checksite',
                                 type: 'POST',
-                                data: {id: $("#c-site_id").val(), name: element.name, value: element.value},
+                                data: {
+                                    site_id: $("#c-site_id").val(),
+                                    id:$("#c-id").val()
+                                },
                                 dataType: 'json'
                             });
                         },
