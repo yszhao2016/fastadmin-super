@@ -22,4 +22,14 @@ class Pollution extends Model
     protected $append = [
 
     ];
+    public function Alarm()
+    {
+        return $this->hasOne(Alarm::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
+
+    }
+    public function PollutionCode()
+    {
+        return $this->hasOne(PollutionCode::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
+
+    }
 }

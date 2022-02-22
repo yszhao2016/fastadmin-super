@@ -23,6 +23,8 @@ class Data extends Backend
      */
     protected $model = null;
 
+    protected $siteList = array();
+
     public function _initialize()
     {
 
@@ -30,6 +32,16 @@ class Data extends Backend
         $this->model = new \app\admin\model\hj212\Data;
         $this->view->assign("statusList", $this->model->getStatusList());
         $data_id = $this->request->param('data_id', 0);
+
+        //设置站点列表
+        $list = Db::name('hj212_site')->select();
+        $site = collection($list)->toArray();
+        $siteArr = array();
+        foreach($site as $v){
+            $siteArr[$v['id']]= $v['site_name'];
+        }
+        $this->siteList = $siteArr;
+        $this->assignconfig('siteList',$this->siteList);
         $this->assignconfig('data_id', $data_id);
 
 
@@ -49,6 +61,8 @@ class Data extends Backend
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
+        $siteArr = $this->siteList;
+
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
@@ -66,15 +80,8 @@ class Data extends Backend
 
             foreach($rows as $v){
                 //获取站点信息
-                $site_id = $v['device']->site_id ?? 0;
-                $site = Db::name("hj212_site")
-                    ->where(['id' => $site_id])
-                    ->find();
-                if($site){
-                    $v['site_id'] =$site['site_name'];
-                }else{
-                    $v['site_id'] = '-';
-                }
+                $siteId = $v['device']->site_id ?? 0;
+                $v['site_id'] = $siteArr[$siteId]?? '-';
             }
             $result = array("total" => $list->total(), "rows" => $rows);
 

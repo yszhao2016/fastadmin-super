@@ -3,6 +3,7 @@
 namespace app\admin\controller\hj212;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 
@@ -66,6 +67,30 @@ class Alarm extends Backend
             return json($result);
         }
         return $this->view->fetch();
+    }
+
+    /**
+     * 判断是否已经注册
+     * @return void
+     */
+    public function checkalarm()
+    {
+        $code = $this->request->post('code',0);
+        $id = $this->request->post('id',0);
+        //获取站点信息
+        if($code){
+            $site = Db::name("hj212_alarm")
+                ->where(['code'=>$code])
+                ->where('id !='.$id)
+                ->find();
+
+            if($site){
+                $this->error("监测因子已设置，请重新选择");
+            }else{
+                $this->success();
+            }
+        }
+        $this->success();
     }
 
 }

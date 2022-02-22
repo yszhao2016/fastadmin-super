@@ -40,8 +40,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: __('Code'),
                             operate: false,
                         },
-                        {field: 'warn_min', title: __('Warn_min'), operate:false},
-                        {field: 'warn_max', title: __('Warn_max'), operate:false},
+                        {field: 'avg_min', title: __('Avg_min'), operate:false},
+                        {field: 'avg_max', title: __('Avg_max'), operate:false},
                         {field: 'alarm_min', title: __('Alarm_min'), operate:false},
                         {field: 'alarm_max', title: __('Alarm_max'), operate:false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
@@ -60,6 +60,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         api: {
             bindevent: function () {
+                $.validator.config({
+                    rules: {
+                        checkalarm: function (element) {
+                            return $.ajax({
+                                url: 'hj212/alarm/checkalarm',
+                                type: 'POST',
+                                data: {
+                                    code:$("#c-code").val(),
+                                    id:$("#c-id").val()
+                                },
+                                dataType: 'json'
+                            });
+                        },
+                    }
+                });
                 Form.api.bindevent($("form[role=form]"));
             }
         }

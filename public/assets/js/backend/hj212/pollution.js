@@ -38,8 +38,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'data_id', title: __('Data_id')},
-                        {field: 'code_nm', title: __('Code'), operate: 'LIKE'},
-//                        {field: 'cou', title: __('Cou'), operate:'BETWEEN'},
+                        {
+                            field: 'code',
+                            title: __('Code'),
+                            searchList: Config.codelist
+                        },
                         {field: 'min', title: __('Min'), operate:'BETWEEN'},
                         {field: 'avg', title: __('Avg'), operate:'BETWEEN'},
                         {field: 'max', title: __('Max'), operate:'BETWEEN'},
@@ -69,6 +72,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         api: {
             bindevent: function () {
+                $("#c-code").change(function(e){
+                    $.get('hj212/pollution/getAlarm/code/'+$("#c-code").val(), function (data) {
+                        if(data.code == 0){
+                            var avg_min = (typeof(data.data.avg_min) !== 'undefined') ? data.data.avg_min : 0;
+                            var avg_max = (typeof(data.data.avg_max) !== 'undefined') ? data.data.avg_max : 0;
+                            var measures = (typeof(data.data.measures) !== 'undefined') ? data.data.measures : '';
+
+                            $("#avg-notice").html("* 检测时间内平均值范围 "+avg_min+'~'+avg_max+''+measures);
+                        }
+                        console.log(data);
+                    });
+                })
                 Form.api.bindevent($("form[role=form]"));
             }
         }
