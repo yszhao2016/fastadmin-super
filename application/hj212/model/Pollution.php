@@ -4,6 +4,7 @@ namespace app\hj212\model;
 
 use app\admin\model\cms\Bank;
 use app\admin\model\hj212\Alarm;
+use app\admin\model\hj212\PollutionCode;
 use think\Model;
 
 /**
@@ -84,6 +85,12 @@ class Pollution extends Model
     public function Alarm()
     {
         return $this->hasOne(Alarm::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
+
+    }
+
+    public function Info()
+    {
+        return $this->hasOne(PollutionCode::class, 'code', 'code')->setEagerlyType(0);
 
     }
 

@@ -5,7 +5,7 @@ namespace app\admin\model\hj212;
 use think\Model;
 
 
-class Pollutionsite extends Model
+class PollutionSite extends Model
 {
 
     // 表名
