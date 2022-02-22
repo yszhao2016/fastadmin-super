@@ -25,10 +25,10 @@ return [
     'Industrial_park' => '园区名称',
     'Contact'         => '厂家联系方式',
     'Alarm'=>'报警阈值',
-    'Warn'=>'预警阈值',
+    'Avg'=>'平均值',
     'Code'=>'检测因子',
     'Is_alarm'=>'报警',
-    'Max'=>'检测时间内最大值',
+    'Max'=>'最大值',
     'Created_at'=>'发送时间',
     'SiteName'=>'绑定站点'
 ];

@@ -3,6 +3,7 @@
 namespace app\admin\controller\hj212;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 
@@ -17,6 +18,7 @@ class Pollution extends Backend
      * @var \app\admin\model\hj212\Pollution
      */
     protected $model = null;
+    protected $codelist = array();
 
     public function _initialize()
     {
@@ -25,6 +27,26 @@ class Pollution extends Backend
         $data_id = $this->request->param('data_id', 0);
         $this->assignconfig('data_id', $data_id);
 
+        //检测因子信息
+        $list = Db::name('hj212_pollution_code')->select();
+        $codeArr = collection($list)->toArray();
+
+        $arr = array();
+        foreach($codeArr as $v){
+            $arr[$v['code']] = $v['name'];
+        }
+        $this->codelist = $arr ;
+        $this->assignconfig('codelist', $this->codelist);
+
+        $ids = $this->request->param('ids',0);
+        if($ids){
+            //获取检测报警信息
+            $alarmInfo =  $this->model->with('Alarm')->find($ids);
+            $codeInfo =  $this->model->with('PollutionCode')->find($ids);
+
+            $this->assign('alarm',$alarmInfo['alarm']);
+            $this->assign('code',$alarmInfo['pollutioncode']);
+        }
     }
 
 
@@ -61,14 +83,9 @@ class Pollution extends Backend
             ->paginate($limit);
             
             $rows = $list->items();
+            $arr = $this->codelist;
             foreach($rows as $v){
-                //获取检测因子信息
-                $code = \app\admin\model\hj212\PollutionCode::where(['code'=>$v['code']])->find();
-                if($code){
-                    $v['code_nm'] = $code['name'];
-                }else{
-                    $v['code_nm'] = $v['code'];
-                }
+                $v['code'] = $arr[$v['code']];
             }
             
             $result = array("total" => $list->total(), "rows" => $rows);
@@ -119,8 +136,32 @@ class Pollution extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+
         $data_id = $this->request->param('data_id',0);
         $this->view->assign("data_id", $data_id);
         return $this->view->fetch();
+    }
+
+    /**
+     * 获取报警信息
+     * @return void
+     */
+    public function getAlarm()
+    {
+        try{
+            if($this->request->isAjax()){
+                $code = $this->request->param('code',0);
+                $alarm = Db::name("hj212_alarm")->where(['code'=>$code])->find();
+                $code = Db::name('hj212_pollution_code')->where(['code'=>$code])->find();
+                if($code){
+                    $alarm['measures'] = $code['measures'];
+                }else{
+                    $alarm['measures'] = '';
+                }
+                return json(['code'=>0, 'data'=>$alarm, 'msg'=>'']);
+            }
+        }catch(\Exception $e){
+            return json(['code'=>1,'msg'=>$e->getMessage()]);
+        }
     }
 }
