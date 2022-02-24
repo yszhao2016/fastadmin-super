@@ -64,6 +64,8 @@ class Hj212Client extends Command
                             $receive = $client->recv();
                             if ($receive) {
                                 $model->is_forward = 1;
+                                //报警的  修改后 转发  恢复is_alarm字段
+                                $model->is_alarm = 0;
                                 $res = $model->save();
                                 Log::write("{$model->qn}--receive data: {$receive}\n");
                             }
@@ -72,7 +74,7 @@ class Hj212Client extends Command
                         Log::write("异常: {$e->getMessage()}\n");
                     }
                 }
-                if($isConnect){
+                if ($isConnect) {
                     $client->close();
                 }
 

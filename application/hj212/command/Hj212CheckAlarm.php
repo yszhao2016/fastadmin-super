@@ -28,13 +28,18 @@ class Hj212CheckAlarm extends Command
 
     protected function sendMessage($sitemn, $msg)
     {
+        Log::init(['type' => 'File', 'path' => ROOT_PATH . '/runtime/log/sms/']);
         $device = Device::with('Site')->where('device_code', $sitemn)->find();
-        $sms = new UtoooSms('200207','RtGZi6');
+        $sms = new UtoooSms('200207', 'RtGZi6');
         $contact = json_decode($device->contact, true);
         $mobile = implode(',', array_column($contact, 'tel'));
-        Log::init(['type' => 'File', 'path' => ROOT_PATH . '/runtime/log/sms/']);
-        $sms->send($mobile, '【环境系统 报警信息】'.'【站点 '.$device->site->site_name.'】'.$msg);
-        Log::write($mobile . '-----' . $msg);
+        if (!cache($device->site->id)) {
+            cache($device->site->id, true, 3600);
+            $sms->send($mobile, '【环境系统 报警信息】' . '【站点 ' . $device->site->site_name . '】' . $msg);
+            Log::write($mobile . '-----' . $msg);
+        }
+
+
     }
 
     protected function execute(Input $input, Output $output)
@@ -55,10 +60,10 @@ class Hj212CheckAlarm extends Command
                 if ($val->alarm->alarm_max && $val->avg > $val->alarm->alarm_max) {
                     Db::startTrans();
                     try {
-//                        Pollution::where('id', $val->id)->update(['is_alarm' => 1]);
-//                        $item->is_alarm = 1;
-//                        $item->save();
-                          $msg .= $val->Info->name . '为' . $val->avg . '已经超出报警值'."\n";
+                        Pollution::where('id', $val->id)->update(['is_alarm' => 1]);
+                        $item->is_alarm = 1;
+                        $item->save();
+                        $msg .= $val->Info->name . '为' . $val->avg . '已经超出报警值' . "\n";
 
                     } catch (Exception $e) {
                         Db::rollback();
@@ -69,7 +74,7 @@ class Hj212CheckAlarm extends Command
                 }
 
             }
-            if($msg){
+            if ($msg) {
                 $this->sendMessage($item->mn, $msg);
             }
 
