@@ -1,0 +1,15 @@
+{
+    "name": "openswoole/ide-helper",
+    "type": "library",
+    "description": "IDE help files for Open Swoole.",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Open Swoole Group",
+            "email": "hello@swoole.co.uk"
+        }
+    ],
+    "require": {
+        "friendsofphp/php-cs-fixer": "^3.3"
+    }
+}

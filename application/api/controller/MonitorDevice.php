@@ -21,7 +21,7 @@ class MonitorDevice extends Api
 
     public function  list()
     {
-
+        file_put_contents("0118.txt",$request->getContent(),8);
         $page = $this->request->param('page', 1);
         $pagesize = $this->request->param('pagesize', 10);
         $list = Device::with('Site')->order('id desc')->paginate($pagesize, false, ['page' => $page]);
