@@ -26,7 +26,7 @@ class Common extends Model
 
     public function getCreateUserNameAttr($value, $data)
     {
-        $createUserId = $data['uid'];
+        $createUserId = $data['admin_id'];
         $user = Admin::find($createUserId);
         if ($user) {
             return $user['nickname'];
@@ -42,7 +42,7 @@ class Common extends Model
     public function getFlowAuthAttr($value, $data)
     {
         $bill = Config::get('database')['prefix'] . $this->name;
-        return (new api())->getBillAuthInfo($data['uid'], $bill, $data['id']);
+        return (new api())->getBillAuthInfo($data['admin_id'], $bill, $data['id']);
     }
 
     public function getRunthreadInfoAttr($value, $data)

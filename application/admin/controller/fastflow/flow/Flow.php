@@ -3,9 +3,9 @@
 namespace app\admin\controller\fastflow\flow;
 
 use app\common\controller\Backend;
+use think\Loader;
 use think\Session;
 use fastflow\api;
-use fastflow\lib\lib;
 
 /**
  * 流程管理
@@ -18,7 +18,7 @@ class Flow extends Backend
      * @var \app\admin\model\Flow
      */
     protected $model = null;
-    protected $noNeedRight = ['viewer', 'detail', 'getSelectpageWorkers', 'getSelectpageFieldsWithComment', 'getSelectpageOperator'];
+    protected $noNeedRight = ['flowDiagram', 'preview', 'detail', 'getSelectpageWorkers', 'getSelectpageFieldsWithComment', 'getSelectpageOperator'];
 
     public function _initialize()
     {
@@ -38,7 +38,7 @@ class Flow extends Backend
     public function add()
     {
         $tableList = (new \app\admin\model\fastflow\flow\Bill())->select();
-        $this->view->assign(["tableList" => $tableList, 'uid' => Session::get('admin')['id']]);
+        $this->view->assign(["tableList" => $tableList, 'admin_id' => Session::get('admin')['id']]);
         return parent::add();
     }
 
@@ -91,7 +91,7 @@ class Flow extends Backend
      */
     public function designer()
     {
-        $api=new api();
+        $api = new api();
         $flow_id = input('flow_id');
         $flow = $api->getFlow($flow_id);
         $this->assignconfig(['flow' => $flow]);
@@ -102,21 +102,75 @@ class Flow extends Backend
     /**
      * 流程图预览
      */
-    public function viewer()
+    public function preview()
     {
-        $api=new api();
         if (input('flow_id')) {
+            $api = new api();
             $flow_id = input('flow_id');
             $flow = $api->getFlow($flow_id);
+            $this->view->assign(['image' => $flow['image']]);
+            return $this->view->fetch();
         }
-        elseif (input('bill') && input('bill_id')) {
+    }
+
+    /**
+     * 流程图
+     */
+    public function flowDiagram()
+    {
+        if (input('bill') && input('bill_id')) {
+            $api = new api();
             $bill = input('bill');
             $bill_id = input('bill_id');
             $process = $api->getProcessByBill($bill, $bill_id);
+            if(!$process){
+                $this->error('该单据未发起流程或流程发生错误，请联系管理员','');
+            }
             $flow = $api->getFlow($process['flow_id']);
+            if (!$flow){
+                $this->error('未找到流程，请确认流程是否已被删除','');
+            }
+            $nodes = $api->getAllNodes($process['flow_id']);
+            if (!$nodes){
+                $this->error('流程图不能为空，请完善流程设计','');
+            }
+            $nodes_data = [];
+            $condition_data = [];
+            foreach ($nodes as $node) {
+                $data = $node['data'];
+                if ($data['type'] != 'condition') {
+                    if ($data['type'] == 'step') {
+                        $data['worker'] = $api->getWorkerNameStr(explode(',', $data['worker']), $data['scope']);
+                    }
+                    else if ($data['type'] == 'start' || $data['type'] == 'end') {
+                        $data['sign'] = '';
+                        $data['back'] = '';
+                        $data['checkmode'] = '';
+                        $data['worker'] = '';
+
+                    }
+                    $nodes_data [] = $data;
+                }
+                else {
+                    $data['flowoutcondition'] = json_decode($data['flowoutcondition'], true);
+                    $data['conditioncount'] = count($data['flowoutcondition']);
+                    foreach ($data['flowoutcondition'] as &$row) {
+                        if (isset($row['step']) && $row['step'] != '') {
+                            $step = $api->getNodeById($flow['id'], $row['step']);
+                            if ($step) {
+                                $row['step'] = $step['data']['name'];
+                            }
+                            else {
+                                $row['step'] = false;
+                            }
+                        }
+                    }
+                    $condition_data[] = $data;
+                }
+            }
+            $this->view->assign(['image' => $flow['image'], 'flow_name'=>$flow['name'], 'nodes' => $nodes_data, 'conditions' => $condition_data]);
+            return $this->view->fetch();
         }
-        $this->view->assign(['image' => $flow['image']]);
-        return $this->view->fetch();
     }
 
     /**
@@ -124,8 +178,13 @@ class Flow extends Backend
      */
     public function detail()
     {
-        $thread_logs = (new lib())->getThreadLog(input('bill'), input('bill_id'));
+        $api = new api();
+        $thread_logs = $api->getThreadLog(input('bill'), input('bill_id'));
         $this->view->assign(['logs' => $thread_logs]);
+        $this->assignconfig([
+            'bill_id' => input('bill_id'),
+            'controller_url' => $this->getBillControllerUrl(input('bill')),
+        ]);
         return $this->view->fetch();
     }
 
@@ -151,5 +210,13 @@ class Flow extends Backend
     public function saveGraph()
     {
         return (new api())->saveGraph();
+    }
+
+    private function getBillControllerUrl($bill)
+    {
+        $flowBillRow = (new \app\admin\model\fastflow\flow\Bill())->where(['bill_table' => $bill])->find();
+        $url = Loader::parseName($flowBillRow['controller'], 0);
+        $url = str_replace('/_', '/', $url);
+        return $url;
     }
 }

@@ -18,9 +18,9 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => true,//Env::get('app.debug', false),
+    'app_debug'              => Env::get('app.debug', true),
     // 应用Trace
-    'app_trace'              => Env::get('app.trace', false),
+    'app_trace'              => Env::get('app.trace', true),
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -59,7 +59,7 @@ return [
     // 默认模块名
     'default_module'         => 'index',
     // 禁止访问模块
-    'deny_module_list'       => ['common'],
+    'deny_module_list'       => ['common', 'admin'],
     // 默认控制器名
     'default_controller'     => 'Index',
     // 默认操作名
@@ -251,7 +251,7 @@ return [
         // 驱动方式
         'type'     => 'Mysql',
         // 缓存前缀
-        'key'      => '0zU8OYrdsCVRAGL7BZfncv6DwIteHpbW',
+        'key'      => 'i3d6o32wo8fvs1fvdpwens',
         // 加密方式
         'hashalgo' => 'ripemd160',
         // 缓存有效期 0表示永久缓存
@@ -277,6 +277,8 @@ return [
         'multiplenav'           => false,
         //是否开启多选项卡(仅在开启多级菜单时起作用)
         'multipletab'           => true,
+        //是否默认展示子菜单
+        'show_submenu'          => false,
         //后台皮肤,为空时表示使用skin-black-blue
         'adminskin'             => '',
         //后台是否启用面包屑
@@ -292,7 +294,7 @@ return [
         //允许跨域的域名,多个以,分隔
         'cors_request_domain'   => 'localhost,127.0.0.1',
         //版本号
-        'version'               => '1.3.2.20220113',
+        'version'               => '1.3.3.20220121',
         //API接口地址
         'api_url'               => 'https://api.fastadmin.net',
     ],

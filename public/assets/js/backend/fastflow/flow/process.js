@@ -7,7 +7,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts'], function 
 
     var Controller = {
         index: function () {
-            
+
             Table.api.init({
                 extend: {
                     index_url: 'fastflow/flow/process/index' + location.search,
@@ -22,7 +22,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts'], function 
 
             var table = $("#table");
 
-            
+
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -31,13 +31,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts'], function 
                     [
                         {field: 'id', title: __('Id')},
                         {field: 'bill', title: __('Bill'), operate: 'LIKE', formatter: Table.api.formatter.normal},
+                        {field: 'bill_name', title: __('Bill_name'), operate: false},
                         {
                             field: 'bill_id', title: __('Bill_id'), formatter: function (value, row, index) {
                                 return '<span class="text-info">' + value + '</span>';
                             }
                         },
                         {
-                            field: 'flow_name', title: __('FlowName'), formatter: function (value, row, index) {
+                            field: 'bill_status',
+                            title: __('Bill_status'),
+                            operate: false,
+                            searchList: {"0": __('Bill_status 0'), "1": __('Bill_status 1')},
+                            formatter: Table.api.formatter.label,
+                            custom: {"0": "danger", "1": "success"}
+                        },
+                        {
+                            field: 'flow_name', title: __('FlowName'), operate: false, formatter: function (value, row, index) {
                                 return '<span class="text-success">' + value + '</span>';
                             }
                         },
@@ -47,7 +56,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts'], function 
                             }
                         },
                         {field: 'createusername', title: __('流程发起人'), operate: false},
-                        {field: 'flow_progress', title: __('流程进度'), operate: false, formatter: Controller.api.formatter.progress},
+                        {
+                            field: 'flow_progress',
+                            title: __('流程进度'),
+                            operate: false,
+                            formatter: Controller.api.formatter.progress
+                        },
                         {
                             field: 'status',
                             title: __('Status'),
@@ -77,16 +91,37 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts'], function 
                 xAxis: {type: 'value'},
                 yAxis: {type: 'category', data: Config.chartData.yAxis_data},
                 series: [
-                    {name: '结束', type: 'bar', stack: 'total', label: {show: true}, emphasis: {focus: 'series'}, data: Config.chartData.finish_data},
-                    {name: '终止', type: 'bar', stack: 'total', label: {show: true}, emphasis: {focus: 'series'}, data: Config.chartData.termination_data},
-                    {name: '运行', type: 'bar', stack: 'total', label: {show: true}, emphasis: {focus: 'series'}, data: Config.chartData.run_data},
+                    {
+                        name: '结束',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {show: true},
+                        emphasis: {focus: 'series'},
+                        data: Config.chartData.finish_data
+                    },
+                    {
+                        name: '终止',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {show: true},
+                        emphasis: {focus: 'series'},
+                        data: Config.chartData.termination_data
+                    },
+                    {
+                        name: '运行',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {show: true},
+                        emphasis: {focus: 'series'},
+                        data: Config.chartData.run_data
+                    },
                 ]
             };
             option && myChart.setOption(option);
             window.onresize = function () {
                 myChart.resize();
             };
-            
+
             Table.api.bindevent(table);
         },
         add: function () {

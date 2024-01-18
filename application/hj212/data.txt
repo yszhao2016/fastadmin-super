@@ -1,0 +1,52 @@
+{
+      "code": "a21026",
+      "remark": "SO2"
+    },
+    {
+      "code": "a21002",
+      "remark": "NOX"
+    },
+    {
+      "code": "a21004",
+      "remark": "NO2"
+    },
+    {
+      "code": "a21003",
+      "remark": "NO"
+    },
+    {
+      "code": "a21005",
+      "remark": "CO"
+    },
+    {
+      "code": "a05024",
+      "remark": "O3"
+    },
+    {
+      "code": "a34002",
+      "remark": "PM10"
+    },
+    {
+      "code": "a34004",
+      "remark": "PM25"
+    },
+    {
+      "code": "a01007",
+      "remark": "风速"
+    },
+    {
+      "code": "a01008",
+      "remark": "风向"
+    },
+    {
+      "code": "a01001",
+      "remark": "温度"
+    },
+    {
+      "code": "a01002",
+      "remark": "湿度"
+    },
+    {
+      "code": "a01006",
+      "remark": "大气压"
+    }

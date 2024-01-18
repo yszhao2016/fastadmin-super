@@ -3,94 +3,159 @@
         border: 1px solid #d2d2d2;
         border-collapse: unset !important;
     }
+    legend {
+        padding-bottom:8px;
+        font-size:14px;
+        font-weight:600;
+        padding-left: 10px;
+        padding-right: 15px;
+        padding-top: 8px;
+        background: #f4f4f4;
+        margin-bottom: 4px;
+    }
+    form {
+        padding: 8px;
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+    }
 </style>
-
-<form id="check-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
-      action="{:url('agree')}">
-    <input class="hidden" name="row[thread_id]" value="{$thread_id}">
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Checkcontent')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="checkcontent" class="form-control" name="row[checkcontent]" type="text"></textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Filename')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-file_name" class="form-control" name="row[file_name]" type="text">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('File')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-file" class="form-control" size="50" name="row[file]" type="text">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="faupload-file" class="btn btn-danger faupload"
-                                  data-input-id="c-file" data-multiple="false" data-preview-id="p-file"><i
-                            class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-file" class="btn btn-primary fachoose"
-                                  data-input-id="c-file" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+<div class="row">
+    <div class="col-md-6 col-lg-6 col-sm-6" style="margin-bottom: 16px;">
+        <legend class="text-info">审批：
+            <span class="label label-success">同意</span>
+        </legend>
+        <form id="fastflow-agree-form" class="form-horizontal" role="form" data-toggle="validator" method="POST"
+              action="{:url('agree')}">
+            <input class="hidden" name="row[thread_id]" value="{$thread_id}">
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('Checkcontent')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <textarea class="form-control" name="row[checkcontent]" type="text"></textarea>
                 </div>
-                <span class="msg-box n-right" for="c-file"></span>
             </div>
-            <ul class="row list-inline faupload-preview" id="p-file"></ul>
-        </div>
-    </div>
-    {if $have_dynamic==true}
-    <div id="selectworker" class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('SelectWorker')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th style="text-align: center">步骤</th>
-                        <th style="text-align: center">域</th>
-                        <th style="text-align: center">审批人员（分组）</th>
-                        <th>审批模式</th>
-                    </tr>
-                    {volist name='dynamic_step_data' id='data'}
-                    <tr>
-                        <td style="vertical-align: middle;text-align: center" class="text-success">{$data['name']}</td>
-                        <td>
-                            <select id="scope-{$data['id']}" class="form-control" style="alignment: center" name="row[scope][{$data['id']}]">
-                                {volist name='scope' id='item'}
-                                <option value="{$item['value']}">{$item['name']}</option>
-                                {/volist}
-                            </select>
-                        </td>
-                        <td>
-                            <span id="span-{$data['id']}">
-                                <input id="worker-{$data['id']}" data-source="fastflow/flow/run/getSelectpageWorkers" data-field="name" data-primary-key="id" data-multiple="true" class="form-control selectpage" name="row[worker][{$data['id']}]" type="text">
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('Filename')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input id="fastflow-c-file_name" class="form-control" name="row[file_name]" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('File')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input id="fastflow-c-file" class="form-control" size="50" name="row[file]" type="text">
+                        <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="fastflow-faupload-file" class="btn btn-danger faupload"
+                                  data-input-id="fastflow-c-file" data-multiple="false" data-preview-id="fastflow-p-file"><i
+                            class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                            <span><button type="button" id="fastflow-fachoose-file" class="btn btn-primary fachoose"
+                                          data-input-id="fastflow-c-file" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                        </div>
+                        <span class="msg-box n-right" for="fastflow-c-file"></span>
+                    </div>
+                    <ul class="row list-inline faupload-preview" id="fastflow-p-file"></ul>
+                </div>
+            </div>
+            {if $have_dynamic==true}
+            <div id="fastflow-selectworker" class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('SelectWorker')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th style="text-align: center">步骤</th>
+                            <th style="text-align: center">域</th>
+                            <th style="text-align: center">审批人员（分组）</th>
+                            <th>审批模式</th>
+                        </tr>
+                        {volist name='dynamic_step_data' id='data'}
+                        <tr>
+                            <td style="vertical-align: middle;text-align: center" class="text-success">{$data['name']}</td>
+                            <td>
+                                <select id="fastflow-scope-{$data['id']}" class="form-control" style="alignment: center" name="row[scope][{$data['id']}]">
+                                    {volist name='scope' id='item'}
+                                    <option value="{$item['value']}">{$item['name']}</option>
+                                    {/volist}
+                                </select>
+                            </td>
+                            <td>
+                            <span id="fastflow-span-{$data['id']}">
+                                <input id="fastflow-worker-{$data['id']}" data-source="fastflow/flow/run/getSelectpageWorkers" data-field="name" data-primary-key="id" data-multiple="true" class="form-control selectpage" name="row[worker][{$data['id']}]" type="text">
                             </span>
-                        </td>
-                        <td>
-                            <div class="radio">
-                                <label for="checkmode-{$data['id']}-1"><input id="checkmode-{$data['id']}-1" name="row[checkmode][{$data['id']}]" type="radio" value="1" checked="">联合</label>
-                                <label for="checkmode-{$data['id']}-2"><input id="checkmode-{$data['id']}-2" name="row[checkmode][{$data['id']}]" type="radio" value="2">任一</label>
-                            </div>
-                        </td>
-                    </tr>
-                    {/volist}
-                </tbody>
-            </table>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    <label for="fastflow-checkmode-{$data['id']}-1"><input id="fastflow-checkmode-{$data['id']}-1" name="row[checkmode][{$data['id']}]" type="radio" value="1" checked="">联合</label>
+                                    <label for="fastflow-checkmode-{$data['id']}-2"><input id="fastflow-checkmode-{$data['id']}-2" name="row[checkmode][{$data['id']}]" type="radio" value="2">任一</label>
+                                </div>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {/if}
+            <div id="fastflow-carbon-select" class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">抄送:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th style="text-align: center">域</th>
+                            <th style="text-align: center">接收人（分组）</th>
+                            <th>抄送范围</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="fastflow-carbon_scope" class="form-control" style="alignment: center" name="row[carbon_scope]">
+                                    {volist name='carbon_scope' id='item'}
+                                    <option value="{$item['value']}">{$item['name']}</option>
+                                    {/volist}
+                                </select>
+                            </td>
+                            <td>
+                        <span>
+                            <input id="fastflow-carbon_receiver" data-source="fastflow/flow/run/getSelectpageWorkers"  data-field="name" data-primary-key="id" data-multiple="true" class="form-control selectpage" name="row[carbon_receiver]" type="text">
+                        </span>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    <label for="fastflow-carbon_range-1"><input id="fastflow-carbon_range-1" name="row[carbon_range]" type="radio" value="1" checked="">当前</label>
+                                    <label for="fastflow-carbon_range-2"><input id="fastflow-carbon_range-2" name="row[carbon_range]" type="radio" value="2">全部</label>
+                                </div>
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-2">{:__('Preview')}:</label>
+                <div class="col-xs-12 col-sm-8">
+                    <iframe id="fastflow-viewer" src="{:url('/fastflow/flow/flow/preview',['flow_id'=>$flow_id])}" border="0"
+                            marginwidth="0" marginheight="0" scrolling-x="no" scrolling-y="auto" allowtransparency="yes"
+                            width="100%" style="height: calc(100vh - 207px);" frameborder="no"></iframe>
+                    </iframe>
+                </div>
+            </div>
+            <div class="form-group layer-footer">
+                <label class="control-label col-xs-12 col-sm-2"></label>
+                <div class="col-xs-12 col-sm-8">
+                    <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+                    <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="fastflow-edit-content" class="col-md-6 col-lg-6 col-sm-6">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#bill-edit" data-toggle="tab" aria-expanded="true">表单编辑</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="bill-edit"></div>
+            </div>
         </div>
     </div>
-    {/if}
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Viewer')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <iframe id="viewer" src="{:url('/fastflow/flow/flow/viewer',['flow_id'=>$flow_id])}" border="0"
-                    marginwidth="0" marginheight="0" scrolling-x="no" scrolling-y="auto" allowtransparency="yes"
-                    width="100%" style="height: calc(100vh - 207px);" frameborder="no"></iframe>
-            </iframe>
-        </div>
-    </div>
-    <div class="form-group layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
-            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
-        </div>
-    </div>
-</form>
+</div>
+

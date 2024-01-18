@@ -1,25 +1,34 @@
 define([], function () {
     require.config({
     paths: {
-        'jquery-colorpicker': '../addons/cms/js/jquery.colorpicker.min',
-        'jquery-autocomplete': '../addons/cms/js/jquery.autocomplete',
-        'jquery-tagsinput': '../addons/cms/js/jquery.tagsinput',
-        'clipboard': '../addons/cms/js/clipboard.min',
+        'fastflow': "../addons/fastflow/js/fastflow",
+		'fastflowbase': "../addons/fastflow/js/fastflowbase",
+        'fastflow-fixed-columns': "../addons/fastflow/js/fastflow-fixed-columns",
     },
     shim: {
-        'jquery-colorpicker': {
-            deps: ['jquery'],
-            exports: '$.fn.extend'
+        'fastflow': {
+            exports: 'fastflow'
         },
-        'jquery-autocomplete': {
-            deps: ['jquery'],
-            exports: '$.fn.extend'
-        },
-        'jquery-tagsinput': {
-            deps: ['jquery', 'jquery-autocomplete', 'css!../addons/cms/css/jquery.tagsinput.min.css'],
-            exports: '$.fn.extend'
+    }
+});
+
+$.ajax({
+    type: "POST",
+    url: "fastflow/flow/bill/getBadge",
+    data: {},
+    dataType: "json",
+    success: function (data) {
+        if (data['code'] == 1) {
+            data['data'].forEach(function (item) {
+                if (item['count'] > 0) {
+                    $('a[addtabs=' + item['id'] + ']').append('<span class="pull-right-container fastflow-badge" style="margin-right: 20px"> <small class="' + item['shape'] + ' pull-right ' + item['color'] + '">' + item['show'] + '</small></span>');
+                }
+            });
         }
     }
 });
+
+
+
 
 });

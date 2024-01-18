@@ -122,15 +122,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     fastflow.createStepSelectOption();
                 });
             });
-            $('.layui-layer-close', window.parent.document).click(function (e) {
-                $('#toolabar-save').trigger('click');
-                parent.Toastr.success('流程已自动保存');
-            });
+
             Form.api.bindevent($("form[role=form]"));
             Controller.api.bindevent();
         },
         detail:function(){
-
+            let index = layer.load();
+            $.ajax({
+                type: "get",
+                url: Config.controller_url + "/edit",
+                data: {ids: Config.bill_id, way: 'detail'},
+                success: function (data) {
+                    $('#fastflow-right-content #bill-edit').append($('#edit-form',data));
+                    $('[name^="row"]',$('#edit-form','#fastflow-right-content')).attr('disabled','disabled');
+                    $('button',$('#edit-form','#fastflow-right-content')).addClass('hidden');
+                    Form.api.bindevent($("#edit-form"));
+                    $('a.btn',$('#edit-form','#fastflow-right-content')).addClass('hidden');
+                    layer.close(index);
+                },
+                error:function (e) {
+                    layer.close(index);
+                }
+            });
         },
         viewer:function(){
             

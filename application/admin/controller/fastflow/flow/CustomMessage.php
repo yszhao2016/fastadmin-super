@@ -25,7 +25,7 @@ class CustomMessage extends Backend
     //billId            单据id
     //billName          单据注释
     //agency            是否为代理
-    //agentId           代理人id
+    //agentIds          代理人ids
     //agentName         代理人名称
     //principalIds      被代理人id
     //principalName     被代理人名称

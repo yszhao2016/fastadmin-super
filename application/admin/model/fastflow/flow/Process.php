@@ -31,6 +31,8 @@ class Process extends Model
         'bill_comment',
         'flow_progress',
         'createusername',
+        'bill_status',
+        'bill_name',
     ];
 
 
@@ -50,6 +52,9 @@ class Process extends Model
     public function getFlowNameAttr($value, $data)
     {
         $flow = (new Flow())->find($data['flow_id']);
+        if (!$flow) {
+            return '-';
+        }
         return $flow['name'];
     }
 
@@ -74,12 +79,29 @@ class Process extends Model
     public function getCreateUserNameAttr($value, $data)
     {
         $bill_row = (new api())->getBillRow($data['bill'], $data['bill_id']);
-        $createUserId = $bill_row['uid'];
+        if (!$bill_row) {
+            return '';
+        }
+        $createUserId = $bill_row['admin_id'];
         $user = Admin::find($createUserId);
         if ($user) {
             return $user['nickname'];
         }
         return '';
+    }
+
+    public function getBillStatusAttr($value, $data)
+    {
+        $bill_row = (new api())->getBillRow($data['bill'], $data['bill_id']);
+        if (!$bill_row) {
+            return 0;
+        }
+        return 1;
+    }
+
+    public function getBillNameAttr($value, $data)
+    {
+        return (new api())->getTableComment($data['bill']);
     }
 
     public function getStatisticData()

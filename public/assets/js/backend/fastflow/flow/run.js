@@ -1,12 +1,12 @@
 define(['jquery', 'bootstrap', 'backend', 'form'], function ($, undefined, Backend, Form) {
     var Controller = {
         start: function () {
-            $('#c-flow_id').on('change', function (e) {
-                src = $('#viewer').attr('src');
+            $('#fastflow-c-flow_id').on('change', function (e) {
+                src = $('#fastflow-viewer').attr('src');
                 src = src.replace(/(?<=flow_id=)\d*/, $(this).val());
-                $('#viewer').attr('src', src);
+                $('#fastflow-viewer').attr('src', src);
             });
-            $('#c-flow_id').on('change', function (e) {
+            $('#fastflow-c-flow_id').on('change', function (e) {
                 $.ajax({
                     type: "POST",
                     url: 'fastflow/flow/run/getStartDynamicSteps',
@@ -15,10 +15,10 @@ define(['jquery', 'bootstrap', 'backend', 'form'], function ($, undefined, Backe
                     success: function (data) {
                         if (data['code'] == 1) {
                             if (data['data'].length > 0) {
-                                $('#selectworker').removeClass('hidden');
+                                $('#fastflow-fastflow-selectworker').removeClass('hidden');
                                 Controller.api.methods.addDynamicStepItem(data['data']);
                             } else {
-                                $('#selectworker').addClass('hidden');
+                                $('#fastflow-fastflow-selectworker').addClass('hidden');
                             }
                         } else if (data['code'] == 0) {
                             Toastr.error(data['msg']);
@@ -26,37 +26,66 @@ define(['jquery', 'bootstrap', 'backend', 'form'], function ($, undefined, Backe
 
                     }
                 });
-            })
+            });
+            $('#fastflow-carbon_receiver').data("params", function (obj) {
+                return {"scope": $('#fastflow-carbon_scope').val()};
+            });
+            $('#fastflow-carbon_scope').change(function () {
+                $('#fastflow-carbon_receiver').selectPageClear();
+            });
             Form.api.bindevent($("form[role=form]"));
+            Controller.api.methods.buildBillEdit();
         },
         agree: function () {
             Form.api.bindevent($("form[role=form]"));
             let data = Config.dynamic_step_data;
             for (let index in data) {
-                $('#scope-' + data[index]['id']).on('change', function () {
+                $('#fastflow-scope-' + data[index]['id']).on('change', function () {
                     if ($(this).val() == 5) {
-                        $('#span-' + data[index]['id']).addClass('hidden');
+                        $('#fastflow-span-' + data[index]['id']).addClass('hidden');
                     } else {
-                        $('#span-' + data[index]['id']).removeClass('hidden');
-                        $('#worker-' + data[index]['id']).selectPageClear();
+                        $('#fastflow-span-' + data[index]['id']).removeClass('hidden');
+                        $('#fastflow-worker-' + data[index]['id']).selectPageClear();
                     }
                 })
-                $('#worker-' + data[index]['id']).data("params", function (obj) {
-                    return {"scope": $('#scope-' + data[index]['id']).val()};
+                $('#fastflow-worker-' + data[index]['id']).data("params", function (obj) {
+                    return {"scope": $('#fastflow-scope-' + data[index]['id']).val()};
                 });
             }
+            $('#fastflow-carbon_receiver').data("params", function (obj) {
+                return {"scope": $('#fastflow-carbon_scope').val()};
+            });
+            $('#fastflow-carbon_scope').change(function () {
+                $('#fastflow-carbon_receiver').selectPageClear();
+            });
+
+            Controller.api.methods.buildBillEdit();
         },
         sign: function () {
             Form.api.bindevent($("form[role=form]"));
-            $('#sign_worker').data("params", function (obj) {
-                return {"scope": $('#sign_scope').val()};
+            $('#fastflow-sign_worker').data("params", function (obj) {
+                return {"scope": $('#fastflow-sign_scope').val()};
             });
-            $('#sign_scope').change(function () {
-                $('#sign_worker').selectPageClear();
+            $('#fastflow-sign_scope').change(function () {
+                $('#fastflow-sign_worker').selectPageClear();
             });
+            $('#fastflow-carbon_receiver').data("params", function (obj) {
+                return {"scope": $('#fastflow-carbon_scope').val()};
+            });
+            $('#fastflow-carbon_scope').change(function () {
+                $('#fastflow-carbon_receiver').selectPageClear();
+            });
+            Controller.api.methods.buildBillEdit();
         },
         back: function () {
             Form.api.bindevent($("form[role=form]"));
+            $('#fastflow-carbon_receiver').data("params", function (obj) {
+                return {"scope": $('#fastflow-carbon_scope').val()};
+            });
+            $('#fastflow-carbon_scope').change(function () {
+                $('#fastflow-carbon_receiver').selectPageClear();
+            });
+            Controller.api.methods.buildBillEdit();
         },
         api: {
             bindevent: function () {
@@ -65,19 +94,19 @@ define(['jquery', 'bootstrap', 'backend', 'form'], function ($, undefined, Backe
             events: {},
             methods: {
                 addDynamicStepItem: function (data) {
-                    $('#selectworker table tbody tr:gt(0)').remove();
+                    $('#fastflow-selectworker table tbody tr:gt(0)').remove();
                     for (let index in data) {
-                        $('#selectworker table tbody').append(
+                        $('#fastflow-selectworker table tbody').append(
                             '<tr>\n' +
                             '    <td style="vertical-align: middle;text-align: center" class="text-success">' + data[index]['name'] + '</td>\n' +
                             '    <td>' +
-                            '        <select id="scope-' + data[index]['id'] + '" class="form-control" style="alignment: center" name="row[scope][' + data[index]['id'] + ']">\n' +
+                            '        <select id="fastflow-scope-' + data[index]['id'] + '" class="form-control" style="alignment: center" name="row[scope][' + data[index]['id'] + ']">\n' +
                             Controller.api.methods.addScope() +
                             '        </select>' +
                             '    </td>\n' +
                             '    <td>\n' +
-                            '        <span id="span-' + data[index]['id'] + '">' +
-                            '            <input id="worker-' + data[index]['id'] + '" ' +
+                            '        <span id="fastflow-span-' + data[index]['id'] + '">' +
+                            '            <input id="fastflow-worker-' + data[index]['id'] + '" ' +
                             '                               data-source="fastflow/flow/run/getSelectpageWorkers"\n' +
                             '                               data-field="name" data-primary-key="id" data-multiple="true"\n' +
                             '                               class="form-control selectpage" name="row[worker][' + data[index]['id'] + ']" type="text">\n' +
@@ -85,21 +114,21 @@ define(['jquery', 'bootstrap', 'backend', 'form'], function ($, undefined, Backe
                             '     </td>\n' +
                             '     <td>\n' +
                             '         <div class="radio">\n' +
-                            '              <label for="checkmode-' + data[index]['id'] + '-1"><input id="checkmode-' + data[index]['id'] + '-1" name="row[checkmode][' + data[index]['id'] + ']" type="radio" value="1" checked="">联合</label>\n' +
-                            '              <label for="checkmode-' + data[index]['id'] + '-2"><input id="checkmode-' + data[index]['id'] + '-2" name="row[checkmode][' + data[index]['id'] + ']" type="radio" value="2">任一</label>\n' +
+                            '              <label for="fastflow-checkmode-' + data[index]['id'] + '-1"><input id="fastflow-checkmode-' + data[index]['id'] + '-1" name="row[checkmode][' + data[index]['id'] + ']" type="radio" value="1" checked="">联合</label>\n' +
+                            '              <label for="fastflow-checkmode-' + data[index]['id'] + '-2"><input id="fastflow-checkmode-' + data[index]['id'] + '-2" name="row[checkmode][' + data[index]['id'] + ']" type="radio" value="2">任一</label>\n' +
                             '         </div>\n' +
                             '     </td>\n' +
                             '</tr>'
                         );
-                        $('#scope-' + data[index]['id']).on('change', function () {
+                        $('#fastflow-scope-' + data[index]['id']).on('change', function () {
                             if ($(this).val() == 5) {
-                                $('#span-' + data[index]['id']).addClass('hidden');
+                                $('#fastflow-span-' + data[index]['id']).addClass('hidden');
                             } else {
-                                $('#span-' + data[index]['id']).removeClass('hidden');
+                                $('#fastflow-span-' + data[index]['id']).removeClass('hidden');
                             }
                         })
-                        $('#worker-' + data[index]['id']).data("params", function (obj) {
-                            return {"scope": $('#scope-' + data[index]['id']).val()};
+                        $('#fastflow-worker-' + data[index]['id']).data("params", function (obj) {
+                            return {"scope": $('#fastflow-scope-' + data[index]['id']).val()};
                         });
                     }
                     Form.api.bindevent($("form[role=form]"));
@@ -111,6 +140,46 @@ define(['jquery', 'bootstrap', 'backend', 'form'], function ($, undefined, Backe
                         result += '<option value="' + scope[i]['value'] + '">' + scope[i]['name'] + '</option>';
                     }
                     return result;
+                },
+                buildBillEdit: function () {
+                    let index = layer.load();
+                    $.ajax({
+                        type: "get",
+                        url: Config.controller_url + "/edit",
+                        data: {ids: Config.bill_id, threadid: Config.thread_id},
+                        success: function (data) {
+                            $('#fastflow-edit-content #bill-edit').append($('#edit-form',data));
+                            if(Config.can_edit_fields !== true){
+                                Config.bill_fields.forEach(function (item) {
+                                    if ($.inArray(item, Config.can_edit_fields) === -1) {
+                                        let input = $('[name="row[' + item + ']"]',$('#edit-form','#fastflow-edit-content'));
+                                        input.attr('disabled','disabled');
+                                        input.closest('.form-group').find('button').attr('disabled','disabled');
+                                    }
+                                    else{
+                                        $($('[name="row[' + item + ']"]',$('#edit-form','#fastflow-edit-content'))).closest('.form-group').find('label').addClass('text-warning');
+                                    }
+                                });
+                            }
+                            Form.api.bindevent($("#edit-form"));
+                            $('button[disabled="disabled"]').closest('.form-group').find('a.btn').attr('disabled','disabled');
+                            $('button[disabled="disabled"]').closest('.form-group').find('a.btn').click(function () {return false;});
+                            layer.close(index);
+                        },
+                        error:function (e) {
+                            layer.close(index);
+                        }
+                    });
+                    $('button[type="submit"]').click(function () {
+                        $.ajax({
+                            type: "post",
+                            url: Config.controller_url + "/edit?ids=" + Config.bill_id + "&threadid=" + Config.thread_id,
+                            data: $('#edit-form').serialize(),
+                            success: function (data) {
+
+                            }
+                        });
+                    });
                 }
 
             },

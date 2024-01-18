@@ -10,4 +10,5 @@ return [
     'Updatetime' => '更新时间',
     'Deletetime' => '删除时间',
     'Search icon' => '搜索图标',
+	'BillAuth'    => '权限配置'
 ];

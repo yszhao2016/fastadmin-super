@@ -3,14 +3,16 @@
 namespace app\admin\controller\fastflow\flow;
 
 use app\admin\model\AuthRule;
+use app\admin\model\fastflow\Carbon;
+use app\admin\model\fastflow\flow\BillAuth;
 use app\common\controller\Backend;
 use think\Config;
 use think\console\Input;
-use think\console\Output;
 use think\Db;
 use think\Exception;
 use think\Loader;
 use fastflow\api;
+use think\Session;
 
 /**
  * 单据管理
@@ -25,7 +27,7 @@ class Bill extends Backend
      * @var \app\admin\model\fastflow\flow\Bill
      */
     protected $model = null;
-    protected $noNeedRight = ['getBadge', 'getFieldsWithComment'];
+    protected $noNeedRight = ['getBadge', 'getFieldsWithComment', 'getAuthSelectOptionData', 'getSelectpageWorkers'];
 
     public function _initialize()
     {
@@ -46,8 +48,11 @@ class Bill extends Backend
         }
         elseif ($this->request->isPost()) {
             $params = input('');
-            $must_fields = ['uid', 'status'];
+            $must_fields = ['admin_id', 'status'];
             $table = $params['table'];
+            if ($this->model->where(['bill_table' => $table])->find()) {
+                return ['code' => 0, 'msg' => $table . '表已存在对应单据，不能重复创建'];
+            }
             $table_fields_width_comment = (new api())->getFieldsWithComment($table);
             $table_fields = [];
             foreach ($table_fields_width_comment as $fc) {
@@ -133,6 +138,7 @@ class Bill extends Backend
             if (!$this->command($params, 'execute')) {
                 return ['code' => 0, 'msg' => '删除单据失败'];
             }
+            unset($params['controller']);
             $params['force'] = 1;
             $params['commandtype'] = 'menu';
             $params['controllerfile'] = $bill['controller'];
@@ -161,7 +167,7 @@ class Bill extends Backend
         return ['code' => 1, 'msg' => '获取成功', 'data' => $fileds];
     }
 
-    
+
     private function command($params, $action = '')
     {
         $commandtype = $params['commandtype'];
@@ -210,7 +216,7 @@ class Bill extends Backend
     {
         $commandName = "\\addons\\fastflow\\command\\" . ucfirst($commandtype);
         $input = new Input($argv);
-        $output = new Output();
+        $output = new \addons\fastflow\command\Output();
         $command = new $commandName($commandtype);
         try {
             $command->run($input, $output);
@@ -258,22 +264,130 @@ class Bill extends Backend
             }
         }
         $data = [];
+        $carbon_count = Carbon::where(['receiver_id' => Session::get()['admin']['id'], 'is_read' => 0])->count();
+        $temp_arr[] = ['level' => 'fastflow/carbon', 'count' => $carbon_count];
         foreach ($temp_arr as $item) {
-            $menu_id = $auth_rule->where(['name' => $item['level']])->find()['id'];
-            if ($menu_id) {
-                if ($item['level'] == 'fastflow') {
-                    $data[] = ['id' => $menu_id, 'count' => $item['count'], 'type' => 'top', 'color' => $colors['top'], 'shape' => $shapes['top'], 'show' => $item['count']];
-                }
-                elseif ($item['level'] == 'fastflow/bill') {
-                    $data[] = ['id' => $menu_id, 'count' => $item['count'], 'type' => 'second', 'color' => $colors['second'], 'shape' => $shapes['second'], 'show' => '单据待审'];
-                }
-                else {
-                    $data[] = ['id' => $menu_id, 'count' => $item['count'], 'type' => 'bill', 'color' => $colors['bill'], 'shape' => $shapes['bill'], 'show' => $item['count']];
+            $rule = $auth_rule->where(['name' => $item['level']])->find();
+            if ($rule) {
+                $menu_id = $rule['id'];
+                if ($menu_id) {
+                    if ($item['level'] == 'fastflow') {
+                        $data[] = ['id' => $menu_id, 'count' => ($item['count'] + $carbon_count), 'type' => 'top', 'color' => $colors['top'], 'shape' => $shapes['top'], 'show' => ($item['count'] + $carbon_count)];
+                    }
+                    elseif ($item['level'] == 'fastflow/bill') {
+                        $data[] = ['id' => $menu_id, 'count' => $item['count'], 'type' => 'second', 'color' => $colors['second'], 'shape' => $shapes['second'], 'show' => '单据待审'];
+                    }
+                    else {
+                        $data[] = ['id' => $menu_id, 'count' => $item['count'], 'type' => 'bill', 'color' => $colors['bill'], 'shape' => $shapes['bill'], 'show' => $item['count']];
+                    }
                 }
             }
         }
         return ['code' => 1, 'msg' => '获取菜单角标数据成功', 'data' => $data];
     }
 
+    public function auth($bill = null)
+    {
+        if ($this->request->isGet()) {
+            if (!$bill) {
+                $this->error('不能直接访问该页面', '');
+            }
+            else {
+                $bill_row = (new \app\admin\model\fastflow\flow\Bill())->where(['bill_table' => $bill])->find();
+                if (!$bill_row) {
+                    $this->error('参数错误，未找到该单据', '');
+                }
+                $flow_rows = (new \app\admin\model\fastflow\flow\Flow())->field(['id', 'name'])->where(['bill' => $bill_row['bill_table']])->select();
+                if (count($flow_rows) == 0) {
+                    $this->error('请先添加该单据流程', '');
+                }
+                $flowids = [];
+                foreach ($flow_rows as $flow_row) {
+                    $flowids[] = $flow_row['id'];
+                }
+                $this->view->assign(['bill_table' => $bill_row['bill_table'], 'bill_name' => $bill_row['bill_name'], 'flows' => $flow_rows]);
+                $rules = [];
+                $auth_row = (new BillAuth())->where(['bill' => $bill_row['bill_table']])->find();
+                if ($auth_row && $auth_row['rules'] != '') {
+                    $rules = json_decode($auth_row['rules'], true);
+                    foreach ($rules as $flow_id => &$flow_rules) {
+                        if (is_array($flow_rules)) {
+                            foreach ($flow_rules as &$flow_rule) {
+                                $flow_rule['fields'] = implode(',', $flow_rule['fields']);
+                                $flow_rule['steps'] = implode(',', $flow_rule['steps']);
+                            }
+                        }
+                    }
+                }
+                $this->assignconfig(['bill_table' => $bill_row['bill_table'], 'flowids' => $flowids, 'rules' => $rules]);
+                return $this->view->fetch();
+            }
+        }
+        elseif ($this->request->isPost()) {
+            $bill = input('bill');
+            $rules = input('rule/a');
+
+            if (!isset($bill) || $bill == '') {
+                return ['code' => 0, 'msg' => '参数错误，请联系管理员'];
+            }
+            if (isset($rules)) {
+                foreach ($rules as $flow_id => $flow_rules) {
+                    if (is_array($flow_rules)) {
+                        foreach ($flow_rules as $flow_rule) {
+                            if ($flow_rule['behavior'] == '' || $flow_rule['control'] == '') {
+                                return ['code' => 0, 'msg' => '参数错误，行为或操作不能为空'];
+                            }
+                        }
+                    }
+                    else {
+                        unset($rules[$flow_id]);
+                    }
+                }
+                if (count($rules) == 0) {
+                    $rules = '';
+                }
+                else {
+                    $rules = json_encode($rules);
+                }
+                $billAuthModel = new BillAuth();
+                $auth_row = $billAuthModel->where(['bill' => $bill])->find();
+                if (!$auth_row) {
+                    $billAuthModel->save(['bill' => $bill, 'rules' => $rules]);
+                }
+                else {
+                    $auth_row['rules'] = $rules;
+                    $auth_row->save();
+                }
+                return ['code' => 1, 'msg' => '单据权限配置成功'];
+            }
+            return ['code' => 1];
+        }
+    }
+
+    public function getAuthSelectOptionData($flowid)
+    {
+        $behavior = [
+            ['value' => 1, 'name' => '允许']
+        ];
+        $control = [
+            ['value' => 1, 'name' => '编辑']
+        ];
+
+        $all_steps = (new api())->getAllSteps($flowid);
+        $steps = [];
+        foreach ($all_steps as $step) {
+            if ($step['data']['type'] != 'start' && $step['data']['type'] != 'end') {
+                $steps[] = ['value'=>$step['id'],'name'=>$step['data']['name']];
+            }
+        }
+
+        $data = ['behavior' => $behavior, 'steps' => $steps, 'control' => $control];
+        return ['code' => 1, 'msg' => '获取成功', 'data' => $data];
+    }
+
+    public function getSelectpageWorkers()
+    {
+        return (new api())->getSelectpageWorkers();
+    }
 
 }

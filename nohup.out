@@ -1,0 +1,97 @@
+TCP Server is started at tcp://
+connection open: 1
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+Sync task Callback: ##0234QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801000000;w00000-Cou=1512.0,w00000-Min=16.4,w00000-Avg=17.5,w00000-Info=20,SB1-RS=1;a00000-Cou=1512.0,a00000-Min=16.4,a00000-Avg=17.5&&B681\r\n
+connection open: 2
+Sync task Callback: ##1005QN=20220111000001593;ST=22;CN=2051;PW=599168;MN=YZQZ321000000009;Flag=5;CP=&&DataTime=20220111000000;a01002-Min=86.118866,a01002-Max=86.45457,a01002-Avg=86.2864124,a01002-Flag=N;a01008-Avg=120.125,a01008-Min=91.703125,a01008-Max=165.6875,a01008-Flag=N;a01007-Max=5.4976344,a01007-Avg=3.561453,a01007-Min=2.3153472,a01007-Flag=N;a01006-Max=1023.3425,a01006-Min=1023.2661,a01006-Flag=N,a01006-Avg=1023.31074;a21026-Min=3.7128001,a21026-Flag=N,a21026-Avg=4.4558402,a21026-Max=4.9740002;a21004-Min=16.5840007,a21004-Avg=16.8696007,a21004-Max=17.1240007,a21004-Flag=N;a21005-Avg=1.0950721,a21005-Min=1.0898401,a21005-Max=1.1046001,a21005-Flag=N;a34004-Flag=N,a34004-Min=124.9,a34004-Avg=127.22,a34004-Max=130;a21002-Min=18.9600008,a21002-Flag=N,a21002-Avg=19.3296008,a21002-Max=19.5480008;a01001-Min=4.726864,a01001-Flag=N,a01001-Max=4.78294,a01001-Avg=4.7583733;a34002-Flag=N,a34002-Min=158.1,a34002-Max=159.9,a34002-Avg=159.18;a05024-Min=35.8080014,a05024-Avg=40.0968016,a05024-Max=46.5240018,a05024-Flag=N&&A781
+PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: General error: 2006 MySQL server has gone away in /apps/web/huaian-management/thinkphp/library/think/db/Connection.php:645
+Stack trace:
+#0 /apps/web/huaian-management/thinkphp/library/think/db/Connection.php(645): PDO->beginTransaction()
+#1 [internal function]: think\db\Connection->startTrans()
+#2 /apps/web/huaian-management/thinkphp/library/think/Db.php(178): call_user_func_array()
+#3 /apps/web/huaian-management/application/hj212/command/Hj212Server.php(129): think\Db::__callStatic()
+#4 [internal function]: app\hj212\command\Hj212Server->onSyncTask()
+#5 /apps/web/huaian-management/application/hj212/command/Hj212Server.php(62): Swoole\Server->start()
+#6 /apps/web/huaian-management/thinkphp/library/think/console/Command.php(175): app\hj212\command\Hj212Server->execute()
+#7 /apps/web/huaian-management/thinkphp/library/think/Console.php(674): think\console\Command->run()
+#8 /apps/web/huaian-management/thinkphp/library/think/Console.php(242): think\Console->doRunCommand()
+# in /apps/web/huaian-management/thinkphp/library/think/db/Connection.php on line 645
+
+
+                                                                                                                                                                      
+  [think\exception\ErrorException]                                                                                                                                    
+  Uncaught PDOException: SQLSTATE[HY000]: General error: 2006 MySQL server has gone away in /apps/web/huaian-management/thinkphp/library/think/db/Connection.php:645  
+  Stack trace:                                                                                                                                                        
+  #0 /apps/web/huaian-management/thinkphp/library/think/db/Connection.php(645): PDO->beginTransaction()                                                               
+  #1 [internal function]: think\db\Connection->startTrans()                                                                                                           
+  #2 /apps/web/huaian-management/thinkphp/library/think/Db.php(178): call_user_func_array()                                                                           
+  #3 /apps/web/huaian-management/application/hj212/command/Hj212Server.php(129): think\Db::__callStatic()                                                             
+  #4 [internal function]: app\hj212\command\Hj212Server->onSyncTask()                                                                                                 
+  #5 /apps/web/huaian-management/application/hj212/command/Hj212Server.php(62): Swoole\Server->start()                                                                
+  #6 /apps/web/huaian-management/thinkphp/library/think/console/Command.php(175): app\hj212\command\Hj212Server->execute()                                            
+  #7 /apps/web/huaian-management/thinkphp/library/think/Console.php(674): think\console\Command->run()                                                                
+  #8 /apps/web/huaian-management/thinkphp/library/think/Console.php(242): think\Console->doRunCommand()                                                               
+  #                                                                                                                                                                   
+                                                                                                                                                                      
+
+
+TCP Server is started at tcp://
+connection open: 1
+Sync task Callback: ##1005QN=20220111000001593;ST=22;CN=2051;PW=599168;MN=YZQZ321000000009;Flag=5;CP=&&DataTime=20220111000000;a01002-Min=86.118866,a01002-Max=86.45457,a01002-Avg=86.2864124,a01002-Flag=N;a01008-Avg=120.125,a01008-Min=91.703125,a01008-Max=165.6875,a01008-Flag=N;a01007-Max=5.4976344,a01007-Avg=3.561453,a01007-Min=2.3153472,a01007-Flag=N;a01006-Max=1023.3425,a01006-Min=1023.2661,a01006-Flag=N,a01006-Avg=1023.31074;a21026-Min=3.7128001,a21026-Flag=N,a21026-Avg=4.4558402,a21026-Max=4.9740002;a21004-Min=16.5840007,a21004-Avg=16.8696007,a21004-Max=17.1240007,a21004-Flag=N;a21005-Avg=1.0950721,a21005-Min=1.0898401,a21005-Max=1.1046001,a21005-Flag=N;a34004-Flag=N,a34004-Min=124.9,a34004-Avg=127.22,a34004-Max=130;a21002-Min=18.9600008,a21002-Flag=N,a21002-Avg=19.3296008,a21002-Max=19.5480008;a01001-Min=4.726864,a01001-Flag=N,a01001-Max=4.78294,a01001-Avg=4.7583733;a34002-Flag=N,a34002-Min=158.1,a34002-Max=159.9,a34002-Avg=159.18;a05024-Min=35.8080014,a05024-Avg=40.0968016,a05024-Max=46.5240018,a05024-Flag=N&&A781
+Sync task Callback: ##1005QN=20220111000001593;ST=22;CN=2051;PW=599168;MN=YZQZ321000000009;Flag=5;CP=&&DataTime=20220111000000;a01002-Min=86.118866,a01002-Max=86.45457,a01002-Avg=86.2864124,a01002-Flag=N;a01008-Avg=120.125,a01008-Min=91.703125,a01008-Max=165.6875,a01008-Flag=N;a01007-Max=5.4976344,a01007-Avg=3.561453,a01007-Min=2.3153472,a01007-Flag=N;a01006-Max=1023.3425,a01006-Min=1023.2661,a01006-Flag=N,a01006-Avg=1023.31074;a21026-Min=3.7128001,a21026-Flag=N,a21026-Avg=4.4558402,a21026-Max=4.9740002;a21004-Min=16.5840007,a21004-Avg=16.8696007,a21004-Max=17.1240007,a21004-Flag=N;a21005-Avg=1.0950721,a21005-Min=1.0898401,a21005-Max=1.1046001,a21005-Flag=N;a34004-Flag=N,a34004-Min=124.9,a34004-Avg=127.22,a34004-Max=130;a21002-Min=18.9600008,a21002-Flag=N,a21002-Avg=19.3296008,a21002-Max=19.5480008;a01001-Min=4.726864,a01001-Flag=N,a01001-Max=4.78294,a01001-Avg=4.7583733;a34002-Flag=N,a34002-Min=158.1,a34002-Max=159.9,a34002-Avg=159.18;a05024-Min=35.8080014,a05024-Avg=40.0968016,a05024-Max=46.5240018,a05024-Flag=N&&A781
+Sync task Callback: ##1005QN=20220111000001593;ST=22;CN=2051;PW=599168;MN=YZQZ321000000009;Flag=5;CP=&&DataTime=20220111000000;a01002-Min=86.118866,a01002-Max=86.45457,a01002-Avg=86.2864124,a01002-Flag=N;a01008-Avg=120.125,a01008-Min=91.703125,a01008-Max=165.6875,a01008-Flag=N;a01007-Max=5.4976344,a01007-Avg=3.561453,a01007-Min=2.3153472,a01007-Flag=N;a01006-Max=1023.3425,a01006-Min=1023.2661,a01006-Flag=N,a01006-Avg=1023.31074;a21026-Min=3.7128001,a21026-Flag=N,a21026-Avg=4.4558402,a21026-Max=4.9740002;a21004-Min=16.5840007,a21004-Avg=16.8696007,a21004-Max=17.1240007,a21004-Flag=N;a21005-Avg=1.0950721,a21005-Min=1.0898401,a21005-Max=1.1046001,a21005-Flag=N;a34004-Flag=N,a34004-Min=124.9,a34004-Avg=127.22,a34004-Max=130;a21002-Min=18.9600008,a21002-Flag=N,a21002-Avg=19.3296008,a21002-Max=19.5480008;a01001-Min=4.726864,a01001-Flag=N,a01001-Max=4.78294,a01001-Avg=4.7583733;a34002-Flag=N,a34002-Min=158.1,a34002-Max=159.9,a34002-Avg=159.18;a05024-Min=35.8080014,a05024-Avg=40.0968016,a05024-Max=46.5240018,a05024-Flag=N&&A781
+Sync task Callback: ##1005QN=20220111000001593;ST=22;CN=2051;PW=599168;MN=YZQZ321000000009;Flag=5;CP=&&DataTime=20220111000000;a01002-Min=86.118866,a01002-Max=86.45457,a01002-Avg=86.2864124,a01002-Flag=N;a01008-Avg=120.125,a01008-Min=91.703125,a01008-Max=165.6875,a01008-Flag=N;a01007-Max=5.4976344,a01007-Avg=3.561453,a01007-Min=2.3153472,a01007-Flag=N;a01006-Max=1023.3425,a01006-Min=1023.2661,a01006-Flag=N,a01006-Avg=1023.31074;a21026-Min=3.7128001,a21026-Flag=N,a21026-Avg=4.4558402,a21026-Max=4.9740002;a21004-Min=16.5840007,a21004-Avg=16.8696007,a21004-Max=17.1240007,a21004-Flag=N;a21005-Avg=1.0950721,a21005-Min=1.0898401,a21005-Max=1.1046001,a21005-Flag=N;a34004-Flag=N,a34004-Min=124.9,a34004-Avg=127.22,a34004-Max=130;a21002-Min=18.9600008,a21002-Flag=N,a21002-Avg=19.3296008,a21002-Max=19.5480008;a01001-Min=4.726864,a01001-Flag=N,a01001-Max=4.78294,a01001-Avg=4.7583733;a34002-Flag=N,a34002-Min=158.1,a34002-Max=159.9,a34002-Avg=159.18;a05024-Min=35.8080014,a05024-Avg=40.0968016,a05024-Max=46.5240018,a05024-Flag=N&&A781
+TCP Server is started at tcp://
+TCP Server is started at tcp://
+connection open: 1
+PHP Fatal error:  Uncaught think\exception\ErrorException: Undefined offset: 1 in /apps/web/huaian-management/application/hj212/segment/converter/DataConverter.php:29
+Stack trace:
+#0 /apps/web/huaian-management/application/hj212/segment/converter/DataConverter.php(29): think\Error::appError()
+#1 /apps/web/huaian-management/application/hj212/command/Hj212Server.php(78): app\hj212\segment\converter\DataConverter->convertData()
+#2 {main}
+  thrown in /apps/web/huaian-management/application/hj212/segment/converter/DataConverter.php on line 29
+
+
+                                                                                                                                                        
+  [think\exception\ErrorException]                                                                                                                      
+  Uncaught think\exception\ErrorException: Undefined offset: 1 in /apps/web/huaian-management/application/hj212/segment/converter/DataConverter.php:29  
+  Stack trace:                                                                                                                                          
+  #0 /apps/web/huaian-management/application/hj212/segment/converter/DataConverter.php(29): think\Error::appError()                                     
+  #1 /apps/web/huaian-management/application/hj212/command/Hj212Server.php(78): app\hj212\segment\converter\DataConverter->convertData()                
+  #2 {main}                                                                                                                                             
+    thrown                                                                                                                                              
+                                                                                                                                                        
+
+
+connection close: 1
+connection open: 2
+TCP Server is started at tcp://
+connection open: 1
+connection close: 1
+connection open: 2
+connection open: 3
+connection close: 3
+connection open: 4
+connection close: 4
+connection open: 5
+connection close: 5

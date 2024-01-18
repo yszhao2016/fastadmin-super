@@ -1,10 +1,10 @@
 <?php
 
 return array (
-  'name' => '淮安项目',
+  'name' => '工作流系统',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.1',
+  'version' => '1.0.3',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -40,5 +40,13 @@ return array (
     'category1' => 'Category1',
     'category2' => 'Category2',
     'custom' => 'Custom',
+  ),
+  'push_server_info' => 
+  array (
+    0 => 
+    array (
+      'ip' => '222.184.101.98',
+      'port' => '50000 ',
+    ),
   ),
 );

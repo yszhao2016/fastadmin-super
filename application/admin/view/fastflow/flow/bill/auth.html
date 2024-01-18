@@ -1,0 +1,80 @@
+<style>
+    legend {padding-bottom:5px;font-size:14px;font-weight:600;padding-left: 10px;padding-right: 15px;padding-top: 12px;}
+    .nav-tabs.flex-column .nav-link {
+        border-bottom-left-radius: .25rem;
+        border-top-right-radius: 0;
+        margin-right: -1px;
+        border:1px solid #e5e5e5;
+    }
+    .nav-tabs.flex-column .nav-item.show .nav-link, .nav-tabs.flex-column .nav-link.active {
+        color: #2e8cbf;
+        border-color: #dee2e6 transparent #dee2e6 #dee2e6;
+        border-left:2px solid #3c8dbc;
+        background:aliceblue;
+    }
+    .nav-tabs .nav-link {
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+    }
+    .nav-link {
+        color: grey;
+        display: block;
+        padding: .5rem 1rem;
+    }
+    .nav-tabs.flex-column .nav-link:focus, .nav-tabs.flex-column .nav-link:hover {
+        border-color: #e9ecef transparent #e9ecef #e9ecef;
+        border-left:2px solid #3c8dbc;
+    }
+    table tr th{
+        text-align: center;
+    }
+    .rule-fields, .rule-steps {
+        width: 220px!important;
+    }
+</style>
+<form id="rule-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <legend class="text-info">单据：
+        <span class="text-warning">{$bill_name}({$bill_table})</span>
+    </legend>
+    <div class="row">
+        <div class="col-5 col-sm-3">
+            <label class="text-info">选择流程添加规则</label>
+            <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
+                {volist name='flows' id='flow' key='k'}
+                    <a class="nav-link {if $k==1}active{/if}" id="flow-tab{$flow['id']}" data-toggle="pill" href="#tab-flow{$flow['id']}" role="tab">{$flow['name']}</a>
+                {/volist}
+            </div>
+        </div>
+        <div class="col-7 col-sm-9">
+            <div class="tab-content" id="vert-tabs-tabContent">
+                {volist name='flows' id='flow' key='k'}
+                    <div class="tab-pane text-left fade {if $k==1}active in{/if}" id="tab-flow{$flow['id']}" role="tabpanel">
+                        <table class="table table-responsive fieldlist table-bordered" data-name="rule[{$flow['id']}]" data-template="flow{$flow['id']}-rule-tpl" data-tag="tr" data-flowid="{$flow['id']}">
+                            <tr><th>行为</th><th>步骤(留空表示全部)</th><th>审批人/分组操作</th><th>字段(默认全部)</th><th>删除</th></tr>
+                            <tr><td colspan="5"><a href="javascript:;" class="btn btn-sm btn-success btn-append btn-newrule"><i class="fa fa-plus"></i> 添加规则</a></td></tr>
+                            <textarea name="rule[{$flow['id']}]" class="form-control hidden" cols="30" rows="5"></textarea>
+                        </table>
+                        <script type="text/html" id="flow{$flow['id']}-rule-tpl">
+                            <tr class="form-inline" data-flowid="{$flow['id']}">
+                                <td><select name="<%=name%>[<%=index%>][behavior]"  class="form-control selectpicker rule-behavior" value="<%=row.behavior%>"></select></td>
+                                <td><select name="<%=name%>[<%=index%>][steps][]" multiple class="form-control selectpicker rule-steps" value="<%=row.steps%>"></select></td>
+                                <td><select name="<%=name%>[<%=index%>][control]" class="form-control selectpicker rule-control" value="<%=row.control%>"></select></td>
+                                <td><select name="<%=name%>[<%=index%>][fields][]" multiple class="form-control selectpicker rule-fields" value="<%=row.fields%>"></select></td>
+                                <td><span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span></td>
+                            </tr>
+                        </script>
+                    </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-4"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>流程查看</title>
+    <style>
+        .main-content .tab-content{
+            height: calc(100vh - 106px)!important;
+            overflow: auto;
+            padding: 10px 0 0 10px!important;
+        }
+        table {
+            font-size: 14px;
+        }
+        table th,td {
+            text-align: center;
+            vertical-align: middle!important;
+        }
+        legend {
+            padding-bottom:8px;
+            font-size:14px;
+            font-weight:600;
+            padding-left: 10px;
+            padding-right: 15px;
+            padding-top: 8px;
+            background: #f4f4f4;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="row main-content">
+    <div id="fastflow-left-content" class="col-md-6 col-lg-6 col-sm-6">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#flow-viewer" data-toggle="tab" aria-expanded="true">流程图</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <img src="{$image}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fastflow-right-content" class="col-md-6 col-lg-6 col-sm-6">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#flow-detail" data-toggle="tab" aria-expanded="true">详情</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <legend>流程名称：<span class="text-success">{$flow_name}</span></legend>
+                    <legend>审批节点</legend>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>节点名称</th>
+                                <th>类型</th>
+                                <th>会签权限</th>
+                                <th>驳回权限</th>
+                                <th>审批模式</th>
+                                <th>审批人/组</th>
+                            </tr>
+                            {volist name="nodes" id="node" key='k'}
+                            <tr>
+                                <td>{$k}.</td>
+                                <td>{$node['name']}</td>
+                                <td>
+                                    {switch name="node['type']"}
+                                        {case value="start"}开始{/case}
+                                        {case value="end"}结束{/case}
+                                        {case value="step"}审批节点{/case}
+                                        {case value="condition"}条件{/case}
+                                        {default /}‘’
+                                    {/switch}
+                                </td>
+                                <td><a href="javascript:;" class="btn btn-xs {if $node['sign'] == 1}btn-success-light">✔{else /}">{/if}</a></td>
+                                <td><a href="javascript:;" class="btn btn-xs {if $node['back'] == 1}btn-success-light">✔{else /}">{/if}</a></td>
+                                <td>{if $node['checkmode'] == 1}联合审批{else / }任一审批{/if}</td>
+                                <td>{$node['worker']}</td>
+                            </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                    <legend>条件</legend>
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>条件名称</th>
+                            <th>流转逻辑</th>
+                        </tr>
+                        {volist name='conditions' id='condition' key='ck'}
+                            {volist name="condition['flowoutcondition']" id='row' key='rk'}
+                                {if $rk == 1}
+                                <tr>
+                                    <td rowspan="{$condition['conditioncount']}">{$ck}.</td>
+                                    <td rowspan="{$condition['conditioncount']}">{$condition['name']}</td>
+                                    <td>
+                                        {if $row['step'] ==false}未找到相应步骤，请检查流程设计
+                                        {else /}
+                                            如果
+                                            <a href="javascript:;" class="btn btn-xs btn-info-light" style="margin-top: -4px;">{$row['column']}</a>
+                                            <a href="javascript:;" class="btn btn-xs btn-warning-light" style="margin-top: -4px;">{$row['operator']}</a>
+                                            <a href="javascript:;" class="btn btn-xs btn-success-light" style="margin-top: -4px;">{$row['value']}</a>
+                                            则流转至
+                                            <a href="javascript:;" class="btn btn-xs btn-danger-light" style="margin-top: -4px;">{$row['step']}</a>
+                                        {/if}
+                                    </td>
+                                </tr>
+                                {else /}
+                                <tr>
+                                    <td>
+                                        {if $row['step'] ==false}未找到相应步骤，请检查流程设计
+                                        {else /}
+                                            如果
+                                            <a href="javascript:;" class="btn btn-xs btn-info-light" style="margin-top: -4px;">{$row['column']}</a>
+                                            <a href="javascript:;" class="btn btn-xs btn-warning-light" style="margin-top: -4px;">{$row['operator']}</a>
+                                            <a href="javascript:;" class="btn btn-xs btn-success-light" style="margin-top: -4px;">{$row['value']}</a>
+                                            则流转至
+                                            <a href="javascript:;" class="btn btn-xs btn-danger-light" style="margin-top: -4px;">{$row['step']}</a>
+                                        {/if}
+                                    </td>
+                                </tr>
+                                {/if}
+                            {/volist}
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

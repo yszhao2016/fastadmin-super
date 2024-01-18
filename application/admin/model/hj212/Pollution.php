@@ -27,7 +27,7 @@ class Pollution extends Model
         return $this->hasOne(Alarm::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
 
     }
-    public function PollutionCode()
+    public function pollutionCode()
     {
         return $this->hasOne(PollutionCode::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
 
