@@ -1,43 +1,49 @@
 <?php
+
 namespace app\hj212;
 
-class VerifyUtil {
+class VerifyUtil
+{
 
-    public static function  verifyChar($tar, $src,$e){
-        if(empty($tar)) {
+    public static function verifyChar($tar, $src, $e)
+    {
+        if (empty($tar)) {
             throw new \Exception("tar cannot be empty");
         }
-        if(empty($src)) {
+        if (empty($src)) {
             throw new \Exception("tar cannot be empty");
         }
-        if($tar != $src ){
+        if ($tar != $src) {
             throw new \Exception("Static data core: " . $e . ' | ' . $tar . ": " . $tar . " -> " . $src);
         }
     }
 
-    public static function verifyEqualLen(int $count, int $length, $e) {
-        if($count != $length){
+    public static function verifyEqualLen(int $count, int $length, $e)
+    {
+        if ($count != $length) {
             throw new \Exception("Length does not core: " . $e . ' | ' . $count . " -> " . $length);
         }
     }
 
-    public static function  verifyRangeLen(String $str, int $min, int $max, $e) {
-        if(empty($str)){
+    public static function verifyRangeLen(String $str, int $min, int $max, $e)
+    {
+        if (empty($str)) {
             return;
         }
         $len = strlen($str);
 
-        if($len >= $min  && $len <= $max){
+        if ($len >= $min && $len <= $max) {
 
-        }else{
+        } else {
             throw new \Exception("Length does not in range: " . $e . " : " . $str . " -> (" . $min . "," . $max . ")");
         }
     }
 
-    public static function  verifyRange(int $src, int $min, int $max, $e) {
-        if($src >= $min  && $src <= $max){
+    public static function verifyRange(int $src, int $min, int $max, $e)
+    {
+        if ($src >= $min && $src <= $max) {
 
-        }else{
+        } else {
             throw new \Exception("Length does not in range: " . $src . " -> (" . $min . "," . $max . ")");
         }
     }
@@ -55,16 +61,20 @@ class VerifyUtil {
 //        return str;
 //    }
 
-    public static function  verifyCrc($msg, $crc, $e) {
-//        $crc16 = T212Parser.crc16Checkout($msg,strlen($msg));
-//        $crcSrc = Integer.parseInt(new String(crc),16);
-//
-//        if($crc16 != $crcSrc){
-//            throw new Exception("Crc Verification failed: " . $msg . ": " . $crc);
-//        }
+    public static function verifyCrc($ysdata)
+    {
+        $tempdata = ltrim(rtrim($ysdata,"\r\n"),"##");
+        $data = substr($tempdata, 4, strlen($tempdata)-4-4);
+        $crc16 = T212Parser::crc16Checkout($data, strlen($data));
+        $crcSrc = substr( $tempdata,-4);
+        if ($crc16 != $crcSrc) {
+            return false;
+        }
+        return true;
     }
 
-    public static function  verifyHave($object, $e){
+    public static function verifyHave($object, $e)
+    {
 //        if(!object.containsKey(e.name())){
 //            throw new Exception("Field is missing: " . $e . ": " . $object);
 //        }

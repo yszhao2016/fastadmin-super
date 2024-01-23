@@ -40,9 +40,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate: false},
                         {field: 'qn', title: __('Qn'),operate: 'LIKE'},
                         {
-                            field: 'site_id',
+                            field: 'site_name',
                             title: __('SiteName'),
-                            searchList:Config.siteList
+                            operate: 'LIKE'
                         },
                         {field: 'cn', title: __('Cn')},
                         {field: 'mn', title: __('Mn')},
@@ -50,7 +50,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime},
-                        {field: 'is_forward', title: __('Is_forward'),searchList:{"0":__('No'),"1":__('YES')},formatter: Table.api.formatter.status },
+                        // {field: 'is_forward', title: __('Is_forward'),searchList:{"0":__('No'),"1":__('YES')},formatter: Table.api.formatter.status },
                         {
                             field: 'is_alarm',
                             title: __('Is_alarm'),

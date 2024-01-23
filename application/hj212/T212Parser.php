@@ -144,7 +144,7 @@ class T212Parser {
      * 读取 data + 校验
      * @see PacketElement
      * @return chars
-\     * @throws IOException
+    \     * @throws IOException
      */
     function readDataAndCrc(int $dataLen) {
         $data = substr($this->reader,$this->readerIndex, $dataLen);
@@ -180,8 +180,9 @@ class T212Parser {
                 }
             }
         }
-
-        return strtoupper(dechex($crc_reg));
+        $res = strtoupper(dechex($crc_reg));
+        $res = str_pad($res, 4, "0", STR_PAD_LEFT);
+        return $res;
     }
 
 

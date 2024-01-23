@@ -10,10 +10,10 @@ class User extends Validate
      * 验证规则
      */
     protected $rule = [
-        'username' => 'require|regex:\w{3,30}|unique:user',
-        'nickname' => 'require|unique:user',
+        'username' => 'require|regex:\w{2,30}|unique:user',
+        'nickname' => 'unique:user',
         'password' => 'regex:\S{6,30}',
-        'email'    => 'require|email|unique:user',
+        'email'    => 'email|unique:user',
         'mobile'   => 'unique:user'
     ];
 

@@ -39,14 +39,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'data_id', title: __('Data_id')},
                         {
-                            field: 'code',
-                            title: __('Code'),
-                            searchList: Config.codelist
+                            field: 'pollutioncode.name',
+                            title: '检查因子',
+                            // searchList: Config.codelist
+                            operate:'LIKE'
+                        },
+                        {
+                            field: 'pollutioncode.code',
+                            title: '因子编码',
+                            // searchList: Config.codelist
+                            operate:'LIKE'
                         },
                         {field: 'min', title: __('Min'), operate:'BETWEEN'},
                         {field: 'avg', title: __('Avg'), operate:'BETWEEN'},
                         {field: 'max', title: __('Max'), operate:'BETWEEN'},
-                        {field: 'flag', title: __('Flag'), operate: 'LIKE', formatter: Table.api.formatter.flag},
+                        // {field: 'flag', title: __('Flag'), operate: 'LIKE', formatter: Table.api.formatter.flag},
                         {field: 'is_alarm', title: __('Is_alarm'),searchList:{"0":__('Normal'),"1":__('Is_alarm')},
                             formatter: function(val){
                                 if(val == '0'){

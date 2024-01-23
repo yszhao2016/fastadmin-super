@@ -26,7 +26,7 @@ class Auth
     //默认配置
     protected $config = [];
     protected $options = [];
-    protected $allowFields = ['id', 'username', 'nickname', 'mobile', 'avatar', 'score','is_shenhe'];
+    protected $allowFields = ['id', 'email','username', 'nickname', 'mobile', 'avatar', 'score','is_shenhe'];
 
     public function __construct($options = [])
     {
@@ -230,6 +230,29 @@ class Auth
         return $this->direct($user->id);
     }
 
+
+    public function login2($account, $password,$type=0)
+    {
+        $field = Validate::is($account, 'email') ? 'email' : (Validate::regex($account, '/^1\d{10}$/') ? 'mobile' : 'username');
+        $user = User::get([$field => $account]);
+        if (!$user) {
+            $this->setError('Account is incorrect');
+            return false;
+        }
+
+        if ($user->status != 'normal') {
+            $this->setError('Account is locked');
+            return false;
+        }
+
+        if ($user->password != $password) {
+            $this->setError('Password is incorrect');
+            return false;
+        }
+
+        //直接登录会员
+        return $this->direct($user->id);
+    }
     /**
      * 退出
      *

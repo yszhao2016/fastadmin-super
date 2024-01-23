@@ -50,15 +50,9 @@ class User extends Api
         if (!$account || !$password) {
             $this->error(__('Invalid parameters'));
         }
-        $ret = $this->auth->login($account, $password);
+        $ret = $this->auth->login2($account, $password,1);
         if ($ret) {
-            $userinfo=$this->auth->getUserinfo();
-            if($userinfo['is_shenhe']==0){
-                $this->error("请耐心等到管理员审核");
-            }elseif ($userinfo['is_shenhe']==2) {
-                $this->error("账号注册申请被驳回");
-            }
-            $data = ['userinfo' => $userinfo];
+            $data = ['userinfo' => $this->auth->getUserinfo()];
             $this->success(__('Logged in successful'), $data);
         } else {
             $this->error($this->auth->getError());
@@ -131,6 +125,7 @@ class User extends Api
         }
         $user = \app\common\model\User::getByMobile($mobile);
         if ($user) {
+            var_dump($user);
             if ($user->status != 'normal') {
                 $this->error(__('Account is locked'));
             }
@@ -214,8 +209,9 @@ class User extends Api
         $user = $this->auth->getUser();
         $username = $this->request->post('username');
         $nickname = $this->request->post('nickname');
-        $bio = $this->request->post('bio');
+        $email = $this->request->post('email');
         $avatar = $this->request->post('avatar', '', 'trim,strip_tags,htmlspecialchars');
+        $password =  $this->request->post('password');
         if ($username) {
             $exists = \app\common\model\User::where('username', $username)->where('id', '<>', $this->auth->id)->find();
             if ($exists) {
@@ -230,8 +226,16 @@ class User extends Api
             }
             $user->nickname = $nickname;
         }
-        $user->bio = $bio;
-        $user->avatar = $avatar;
+        if($email){
+            $user->email = $email;
+        }
+        if($avatar){
+            $user->avatar = $avatar;
+        }
+        if($password){
+            $user->password = $password;
+        }
+
         $user->save();
         $this->success();
     }

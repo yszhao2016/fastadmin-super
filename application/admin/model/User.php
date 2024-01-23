@@ -35,9 +35,10 @@ class User extends Model
             //如果有修改密码
             if (isset($changed['password'])) {
                 if ($changed['password']) {
-                    $salt = \fast\Random::alnum();
-                    $row->password = \app\common\library\Auth::instance()->getEncryptPassword($changed['password'], $salt);
-                    $row->salt = $salt;
+//                    $salt = \fast\Random::alnum();
+//                    $row->password = \app\common\library\Auth::instance()->getEncryptPassword($changed['password'], $salt);
+//                    $row->salt = $salt;
+                    $row->password = md5($changed['password']);
                 } else {
                     unset($row->password);
                 }

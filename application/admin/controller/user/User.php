@@ -4,6 +4,8 @@ namespace app\admin\controller\user;
 
 use app\common\controller\Backend;
 use app\common\library\Auth;
+use fast\Random;
+use think\Db;
 
 /**
  * 会员管理
@@ -64,7 +66,41 @@ class User extends Backend
         if ($this->request->isPost()) {
             $this->token();
         }
-        return parent::add();
+        $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), '', ['class' => 'form-control selectpicker']));
+
+        if (false === $this->request->isPost()) {
+            return $this->view->fetch();
+        }
+        $params = $this->request->post('row/a');
+        if (empty($params)) {
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $params = $this->preExcludeFields($params);
+
+        if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+            $params[$this->dataLimitField] = $this->auth->id;
+        }
+        $result = false;
+        Db::startTrans();
+        try {
+            //是否采用模型验证
+            if ($this->modelValidate) {
+                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
+                $this->model->validateFailException()->validate($validate);
+            }
+            $params['salt'] = Random::alnum();
+            $params['password'] = md5($params['password']);
+            $result = $this->model->allowField(true)->save($params);
+            Db::commit();
+        } catch (ValidateException|PDOException|Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
+        if ($result === false) {
+            $this->error(__('No rows were inserted'));
+        }
+        $this->success();
     }
 
     /**

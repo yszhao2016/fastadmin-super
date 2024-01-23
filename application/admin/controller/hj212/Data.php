@@ -70,20 +70,21 @@ class Data extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            $list = $this->model
-                ->with("Device")
+            $list = DB::name("hj212_data")
+                ->field("a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at")
+                ->alias('a')
+                ->join('hj212_device d', 'a.mn=d.device_code', 'left')
+                ->join('hj212_site s', 'd.site_id=s.id', 'left')
                 ->where($where)
-                ->order($sort, $order)
-                ->paginate($limit);
+                ->order("a.id", $order)
+                ->paginate($limit,true);
 
-            $rows = $list->items();
-
-            foreach($rows as $v){
-                //获取站点信息
-                $siteId = $v['device']->site_id ?? 0;
-                $v['site_id'] = $siteArr[$siteId]?? '-';
-            }
-            $result = array("total" => $list->total(), "rows" => $rows);
+//            foreach($rows as $v){
+//                //获取站点信息
+//                $siteId = $v['device']->site_id ?? 0;
+//                $v['site_id'] = $siteArr[$siteId]?? '-';
+//            }
+            $result = array("total" =>  $this->model->count(), "rows" => $list->items());
 
             return json($result);
         }

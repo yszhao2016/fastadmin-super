@@ -33,7 +33,7 @@ class Pollution extends Backend
 
         $arr = array();
         foreach($codeArr as $v){
-            $arr[$v['code']] = $v['name'];
+           $arr[$v['code']] = $v['name'];
         }
         $this->codelist = $arr ;
         $this->assignconfig('codelist', $this->codelist);
@@ -72,7 +72,7 @@ class Pollution extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             
-            $list = $this->model
+            $list = $this->model->alias("p")->with('pollutioncode')
             ->where(function($query) use($data_id){
                 if($data_id){
                     $query->where('data_id',$data_id);
@@ -81,13 +81,8 @@ class Pollution extends Backend
             ->where($where)
             ->order($sort, $order)
             ->paginate($limit);
-            
+
             $rows = $list->items();
-            $arr = $this->codelist;
-            foreach($rows as $v){
-                $v['code'] = $arr[$v['code']];
-            }
-            
             $result = array("total" => $list->total(), "rows" => $rows);
             
             return json($result);

@@ -48,24 +48,14 @@ class Device extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            
+
             $list = $this->model
-            ->where($where)
-            ->order($sort, $order)
-            ->paginate($limit);
-            
-            $rows = $list->items();
-            foreach($rows as $v){
-                //获取站点信息
-                $site = Db::name("hj212_site")->where(['id' => $v['site_id']])->find();
-                if($site){
-                    $v['site'] = $site['site_name'];
-                }else{
-                    $v['site'] = '';
-                }
-            }
-            $result = array("total" => $list->total(), "rows" => $rows);
-            
+                ->with("site")
+                ->where($where)
+                ->order($sort, $order)
+                ->paginate($limit);
+
+            $result = array("total" => $list->total(), "rows" => $list->items());
             return json($result);
         }
         return $this->view->fetch();

@@ -9,9 +9,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     add_url: 'hj212/device/add',
                     edit_url: 'hj212/device/edit',
                     del_url: 'hj212/device/del',
-                    multi_url: 'hj212/device/multi',
+                    // multi_url: 'hj212/device/multi',
                     import_url: 'hj212/device/import',
                     table: 'hj212_device',
+
                 }
             });
 
@@ -28,19 +29,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
                         {
-                            field: 'site_id',
-                            visible: false,
+                            field: 'site.site_name',
+                            // visible: false,
                             title: __('SiteName'),
-                            addclass: 'selectpage',
-                            extend: 'data-source="hj212/pollutionsite/index" data-field="site_name" data-primary-key="id"',
-                            operate: '=',
-                            formatter: Table.api.formatter.search
+                            operate: 'LIKE'
+                            // addclass: 'selectpage',
+                            // extend: 'data-source="hj212/pollutionsite/index" data-field="site_name" data-primary-key="id"',
+                            // operate: '=',
+                            // formatter: Table.api.formatter.search
                         },
-                        {
-                            field: 'site',
-                            title: __('SiteName'),
-                            operate: false,
-                        },
+                        // {
+                        //     field: 'site',
+                        //     title: __('SiteName'),
+                        //     operate: false,
+                        // },
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                                  buttons:[
                                      {
@@ -68,7 +70,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                      },
                                  ]}
                     ]
-                ]
+                ],
+                // showToggle: false,
             });
 
             // 为表格绑定事件
