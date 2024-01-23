@@ -49,7 +49,7 @@ class Hj212Server extends Command
 //            'open_length_check' => true,
 //            'package_length_func' => '',
             'daemonize' => true,
-            'log_file' => "runtime/log/swoole.log",
+            'log_file' => ROOT_PATH."/runtime/log/swoole.log",
             'dispatch_mode' => 2,
         ));
         $this->t212Parser = new T212Parser();
@@ -73,12 +73,12 @@ class Hj212Server extends Command
     public function onConnect($serv, $fd)
     {
         echo "connection open: {$fd}\n";
-        file_put_contents('runtime/log/hj212connect_' . date("Ymd") . '.log', date('Y-m-d H:i:s') . "ip" . $this->getIP() . "open: {$fd}");
+        file_put_contents(ROOT_PATH.'/runtime/log/hj212connect_' . date("Ymd") . '.log', date('Y-m-d H:i:s') . "ip" . $this->getIP() . "open: {$fd}");
     }
 
     public function onReceive($serv, $fd, $reactor_id, $data)
     {
-        file_put_contents('runtime/log/hj212receive_' . date("Ymd") . '.log', date('Y-m-d H:i:s') . "receive:  " . $data . PHP_EOL, FILE_APPEND);
+        file_put_contents(ROOT_PATH.'/runtime/log/hj212receive_' . date("Ymd") . '.log', date('Y-m-d H:i:s') . "receive:  " . $data . PHP_EOL, FILE_APPEND);
 
         $tempdata = rtrim($data, "\r\n");
         $strlen = strlen($tempdata);

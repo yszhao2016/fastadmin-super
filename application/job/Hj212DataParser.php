@@ -21,8 +21,7 @@ class Hj212DataParser
     public function fire(Job $job, $data)
     {
         try {
-//            Log::info('开始发送消息：' . json_encode($data));
-//            var_dump($data);exit("xxx");
+            $ysdata = $data;
             $t212Parser = new T212Parser();
             $sourceData = $data;
             $t212Parser->setReader($data);
@@ -46,6 +45,7 @@ class Hj212DataParser
                 foreach ($cpData['pollution'] as $k => $val) {
                     $pModel = clone $pollutionModel;
                     $val['data_id'] = $dataModel->id;
+                    $val['cn'] = $dataModel->cn;
                     $val['code'] = $k;
                     $pModel->data($val);
                     $pModel->save();
@@ -56,9 +56,7 @@ class Hj212DataParser
             }
             $job->delete();
         } catch (\Exception $exception) {
-            var_dump($data);
-            var_dump($exception->getMessage());
-//            exit("xxx12334");
+            file_put_contents(ROOT_PATH . "/runtime/log/hj212queue-error-" . date("Y-m-d") . ".log", $ysdata . PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL);
             $job->delete();
 //            // 队列执行失败
 //            Log::error('发送消息队列执行失败：---' . json_encode($data) . '---' . PHP_EOL . $exception->getMessage());
