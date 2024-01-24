@@ -46,6 +46,8 @@ class Hj212DataParser
                     $pModel = clone $pollutionModel;
                     $val['data_id'] = $dataModel->id;
                     $val['cn'] = $dataModel->cn;
+                    $val['mn'] = $dataModel->mn;
+                    $val['cp_datatime'] = $dataModel->cp_datatime;
                     $val['code'] = $k;
                     $pModel->data($val);
                     $pModel->save();

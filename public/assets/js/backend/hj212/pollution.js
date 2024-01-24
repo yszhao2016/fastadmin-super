@@ -45,7 +45,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate:'LIKE'
                         },
                         {
-                            field: 'pollutioncode.code',
+                            field: 'code',
                             title: '因子编码',
                             // searchList: Config.codelist
                             operate:'LIKE'

@@ -63,7 +63,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             }
                         },
-                        {field: 'created_at', title: __('Created_at'),
+                        {field: 'cp_datatime', title: "采集时间",
                             operate: 'RANGE',
                             addclass: 'datetimerange',
                             formatter: Table.api.formatter.datetime},
