@@ -45,6 +45,7 @@ class Hj212DataParser
                 foreach ($cpData['pollution'] as $k => $val) {
                     $pModel = clone $pollutionModel;
                     $val['data_id'] = $dataModel->id;
+                    $val['qn'] = $dataModel->qn;
                     $val['cn'] = $dataModel->cn;
                     $val['mn'] = $dataModel->mn;
                     $val['cp_datatime'] = $dataModel->cp_datatime;
