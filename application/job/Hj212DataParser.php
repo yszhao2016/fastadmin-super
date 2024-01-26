@@ -50,6 +50,7 @@ class Hj212DataParser
                 $insetdata['created_at'] = time();
                 $insetdata['updated_at'] = time();
                 $id = $this->getID("hj212_data_", $suffix);
+                $insetdata['updated_at'] =  $id;
                 Db::name($dataTableName)->insert($insetdata);
                 // 遍历数据 并插入数据库 pollution
                 foreach ($cpData['pollution'] as $k => $val) {
