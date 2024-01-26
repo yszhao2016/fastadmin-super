@@ -95,14 +95,15 @@ class Hj212DataParser
         $id = Cache::get($tableName);
         if (!$id) {
             // 如果缓存不存在，数据库获取
-            $id = Db::name($tableName . $suffix)->getLastInsID();
-            if (!$id) {
+            $model = Db::name($tableName . $suffix)->order("id","desc")->find();
+
+            if (!isset($model->id)) {
                 // 如果数据库获取不打 那就上个月的表获取id
                 $newsuffix = date("Yd", strtotime('-1 month'));
-                $newid = Db::name($tableName . $newsuffix)->getLastInsID();
+                $newmodel = Db::name($tableName . $newsuffix)->order("id","desc")->find();
 
                 // 如果还取不到，就从0开始吧
-                $id = $newid ? $newid : 0;
+                $id = isset($newmodel->id) ? $newmodel->id : 0;
             }
         }
         // 取到上一次id 自增

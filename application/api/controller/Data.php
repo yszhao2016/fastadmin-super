@@ -14,6 +14,7 @@ use app\admin\model\hj212\PollutionCode;
 use app\common\controller\Api;
 use app\common\library\Utils;
 use think\Db;
+use think\Loader;
 
 /**
  *  上报数据
@@ -122,4 +123,6 @@ class Data extends Api
             ->select();
         $this->success('成功', $res);
     }
+
+
 }

@@ -69,19 +69,20 @@ class Pollution extends Backend
             $time = date("Ym");
         }
         $suffix= substr($time, 0, 6);
+        var_dump($suffix);exit;
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $list = Db::name("hj212_pollution_".$suffix)
                 ->alias("p")
                 ->field("data_id,p.id,c.name,c.code,min,max,avg,is_alarm")
                 ->join('hj212_pollution_code c', "p.code=c.code", "left")
                 ->where('data_id',$data_id)
-                ->order($sort, $order)
-                ->paginate($limit);
+                ->order("id", "desc")
+                ->paginate(50);
             $rows = $list->items();
             $result = array("total" => $list->total(), "rows" => $rows);
             
