@@ -46,10 +46,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         },
                         {field: 'cn', title: __('Cn')},
                         {field: 'mn', title: __('Mn')},
-                        {field: 'cp_datatime', title: __('Cp_datatime'),
-                            operate: 'RANGE',
-                            addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime},
+                        // {field: 'cp_datatime', title: __('Cp_datatime'),
+                        //     operate: 'RANGE',
+                        //     addclass: 'datetimerange',
+                        //     formatter: Table.api.formatter.datetime},
                         // {field: 'is_forward', title: __('Is_forward'),searchList:{"0":__('No'),"1":__('YES')},formatter: Table.api.formatter.status },
                         {
                             field: 'is_alarm',
@@ -73,7 +73,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                          'name':'bindCp',
 	                                      'text':'检测数据查询',
 	                                      'classname': 'btn btn-xs btn-info btn-dialog',
-	                                      'url':'hj212/pollution/index/data_id/{ids}',
+	                                      'url':'hj212/pollution/index?data_id={ids}&time={qn}',
 	                                      'extend': 'data-area=\'["95%","95%"]\''
                                      },
                                      {
@@ -86,7 +86,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                  ]}
                     ]
                 ],
-
+                showExport: false,
             });
 
             // 为表格绑定事件

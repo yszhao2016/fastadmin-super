@@ -12,6 +12,8 @@ use app\admin\model\hj212\Device;
 use app\admin\model\hj212\Pollution;
 use app\admin\model\hj212\PollutionCode;
 use app\common\controller\Api;
+use app\common\library\Utils;
+use think\Db;
 
 /**
  *  上报数据
@@ -26,14 +28,52 @@ class Data extends Api
 
     public function  list()
     {
-
         $page = $this->request->get('page', 1);
         $pagesize = $this->request->get('pagesize', 10);
-        $list = \app\admin\model\hj212\Data::field("a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name")->alias('a')
-            ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-            ->join('hj212_site s', 'd.site_id=s.id', 'left')
-            ->order('id desc')
-            ->paginate($pagesize, false, ['page' => $page]);
+        $search = $this->request->get('search');
+        $suffixArr = [date("Ym")];
+        $f = 0;
+//        $where = [];
+        $query = "";
+        foreach ($suffixArr as $suffix) {
+            //需求处理月份 不存在的表
+            $isExist = Utils::isTableExist("hj212_data_" . $suffix);
+            if (!$isExist) {
+                continue;
+            }
+
+            if ($f == 0) {
+                $query = DB::name("hj212_data_" . $suffix)
+                    ->alias('a')
+                    ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
+                    ->join('hj212_device d', 'a.mn=d.device_code', 'left')
+                    ->join('hj212_site s', 'd.site_id=s.id', 'left');
+                if ($search) {
+                    $query = $query->where("s.site_name", "like", "%" . $search . "%");
+                }
+
+            } else {
+                $query1 = DB::name("hj212_data_" . $suffix)
+                    ->alias('a')
+                    ->field('"a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name')
+                    ->join('hj212_device d', 'a.mn=d.device_code', 'left')
+                    ->join('hj212_site s', 'd.site_id=s.id', 'left');
+                if ($search) {
+                    $query = $query->where("s.site_name", "like", "%" . $search . "%");
+                }
+                $query = $query->union($query1);
+            }
+            $f++;
+        }
+        $list = $query->order("id", 'desc')->paginate($pagesize, false, ['page' => $page]);
+
+//         $page = $this->request->get('page', 1);
+//        $pagesize = $this->request->get('pagesize', 10);
+//        $list = \app\admin\model\hj212\Data::field("a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name")->alias('a')
+//            ->join('hj212_device d', 'a.mn=d.device_code', 'left')
+//            ->join('hj212_site s', 'd.site_id=s.id', 'left')
+//            ->order('id desc')
+//            ->paginate($pagesize, false, ['page' => $page]);
         $this->success("成功", $list);
     }
 
@@ -44,11 +84,18 @@ class Data extends Api
     public function detail()
     {
         $id = $this->request->get("id");
-        $list = Pollution::alias("p")
+        $time = $this->request->get("time", "");
+        if (!$time || $time == "null") {
+            $suffix = date("Ym", time());
+        } else {
+            $suffix = substr($time, 0, 6);
+        }
+        $list = Db::name("hj212_pollution_" . $suffix)
+            ->alias("p")
             ->field("p.id as id,c.name as name, p.code as code,avg,min,max,is_alarm")
             ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
-            ->where("data_id", $id)->select();
-
+            ->where("data_id", $id)
+            ->select();
         $this->success('成功', $list);
     }
 
@@ -63,15 +110,14 @@ class Data extends Api
         $id = $this->request->get("id");
         $mn = $this->request->get("mn");
 
-
-        $res['device']  = Device::field("device_code,site_name,address,lon,lat,industrial_park,s.contact as contact")->alias("p")
-            ->where('device_code',$mn)
-            ->join('fa_hj212_site s','p.site_id=s.id','left')
+        $res['device'] = Device::field("device_code,site_name,address,lon,lat,industrial_park,s.contact as contact")->alias("p")
+            ->where('device_code', $mn)
+            ->join('fa_hj212_site s', 'p.site_id=s.id', 'left')
             ->find();
         $res['data'] = Pollution::alias("p")
             ->field("p.id as id,c.name as  name, p.code as code,avg,min,max,is_alarm,alarm_min,alarm_max,avg_min as alarm_avg_min ,avg_max as alarm_avg_max,measures,emissions,type ")
             ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
-            ->join('fa_hj212_alarm a','p.code=a.code','left')
+            ->join('fa_hj212_alarm a', 'p.code=a.code', 'left')
             ->where("data_id", $id)
             ->select();
         $this->success('成功', $res);

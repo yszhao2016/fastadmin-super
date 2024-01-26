@@ -13,7 +13,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     import_url: 'hj212/device/import',
                     table: 'hj212_device',
 
-                }
+                },
+
             });
 
             var table = $("#table");
@@ -23,11 +24,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
+                        {field: 'type', title: "设备监测物", searchList:{"1":"水体","2":"气体"}},
+                        // {field: 'type', title: "设备监测物",searchList:{"1":__('Normal'),"2":__('Is_alarm')}},
                         {
                             field: 'site.site_name',
                             // visible: false,
@@ -38,6 +42,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // operate: '=',
                             // formatter: Table.api.formatter.search
                         },
+
                         // {
                         //     field: 'site',
                         //     title: __('SiteName'),
@@ -71,6 +76,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                  ]}
                     ]
                 ],
+                exportTypes: [ 'excel'],
                 // showToggle: false,
             });
 

@@ -64,30 +64,31 @@ class Pollution extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         $data_id = $this->request->param('data_id', 0);
-        
+        $time = $this->request->param('time', date("Ym"));
+        if(trim($time," ") =="null"){
+            $time = date("Ym");
+        }
+        $suffix= substr($time, 0, 6);
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            
-            $list = $this->model->alias("p")->with('pollutioncode')
-            ->where(function($query) use($data_id){
-                if($data_id){
-                    $query->where('data_id',$data_id);
-                }
-            })
-            ->where($where)
-            ->order($sort, $order)
-            ->paginate($limit);
-
+            $list = Db::name("hj212_pollution_".$suffix)
+                ->alias("p")
+                ->field("data_id,p.id,c.name,c.code,min,max,avg,is_alarm")
+                ->join('hj212_pollution_code c', "p.code=c.code", "left")
+                ->where('data_id',$data_id)
+                ->order($sort, $order)
+                ->paginate($limit);
             $rows = $list->items();
             $result = array("total" => $list->total(), "rows" => $rows);
             
             return json($result);
         }
         return $this->view->fetch();
+        parent::index();
     }
     /**
      * 添加

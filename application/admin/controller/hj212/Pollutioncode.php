@@ -21,7 +21,8 @@ class Pollutioncode extends Backend
      * @var \app\admin\model\hj212\PollutionCode
      */
     protected $model = null;
-    
+
+    protected $searchFields='code,name';
     public function _initialize()
     {
         parent::_initialize();

@@ -27,7 +27,12 @@ class Alarm extends Model
     protected $append = [
 
     ];
-    
+
+    public function pollutionCode()
+    {
+        return $this->hasOne(PollutionCode::class, 'code', 'code', [], 'LEFT')->setEagerlyType(0);
+
+    }
 
     
 

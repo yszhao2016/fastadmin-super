@@ -21,6 +21,7 @@ class Device extends Backend
      * @var \app\admin\model\hj212\Device
      */
     protected $model = null;
+    protected $searchFields='device_code,site.site_name';
 
     public function _initialize()
     {
@@ -122,18 +123,18 @@ class Device extends Backend
         $site_id = $this->request->post('site_id',0);
         $id = $this->request->post('id',0);
         //获取站点信息
-        if($site_id){
-            $site = Db::name("hj212_device")
-                ->where("site_id =".$site_id)
-                ->where('id !='.$id)
-                ->find();
-
-            if($site){
-                $this->error("站点已绑定");
-            }else{
-                $this->success();
-            }
-        }
+//        if($site_id){
+//            $site = Db::name("hj212_device")
+//                ->where("site_id =".$site_id)
+//                ->where('id !='.$id)
+//                ->find();
+//
+//            if($site){
+//                $this->error("站点已绑定");
+//            }else{
+//                $this->success();
+//            }
+//        }
         $this->success();
     }
     /**

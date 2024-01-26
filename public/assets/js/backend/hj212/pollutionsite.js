@@ -24,6 +24,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortName: 'id',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                exportTypes: ['excel'],
                 columns: [
                     [
                         {checkbox: true},
@@ -35,7 +36,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'contact', title: __('Contact'), operate: 'LIKE'},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
-                ]
+                ],
+
             });
 
             // 为表格绑定事件

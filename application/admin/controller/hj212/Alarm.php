@@ -6,7 +6,7 @@ use app\common\controller\Backend;
 use think\Db;
 
 /**
- * 
+ *
  *
  * @icon fa fa-circle-o
  */
@@ -18,6 +18,8 @@ class Alarm extends Backend
      * @var \app\admin\model\hj212\Alarm
      */
     protected $model = null;
+    protected $searchFields = 'pollutioncode.name';
+    protected $relationSearch = true;
 
     public function _initialize()
     {
@@ -46,24 +48,25 @@ class Alarm extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            
+
             $list = $this->model
-            ->where($where)
-            ->order($sort, $order)
-            ->paginate($limit);
-            
-            $rows = $list->items();
-            foreach($rows as $v){
-                //获取检测因子信息
-                $code = \app\admin\model\hj212\PollutionCode::where(['code'=>$v['code']])->find();
-                if($code){
-                    $v['codeNm'] = $code['name'];
-                }else{
-                    $v['codeNm'] = $v['code'];
-                }
-            }
+                ->with("pollutioncode")
+                ->where($where)
+                ->order($sort, $order)
+                ->paginate($limit);
+
+//            $rows = $list->items();
+//            foreach($rows as $v){
+//                //获取检测因子信息
+//                $code = \app\admin\model\hj212\PollutionCode::where(['code'=>$v['code']])->find();
+//                if($code){
+//                    $v['codeNm'] = $code['name'];
+//                }else{
+//                    $v['codeNm'] = $v['code'];
+//                }
+//            }
             $result = array("total" => $list->total(), "rows" => $list->items());
-            
+
             return json($result);
         }
         return $this->view->fetch();
@@ -75,18 +78,18 @@ class Alarm extends Backend
      */
     public function checkalarm()
     {
-        $code = $this->request->post('code',0);
-        $id = $this->request->post('id',0);
+        $code = $this->request->post('code', 0);
+        $id = $this->request->post('id', 0);
         //获取站点信息
-        if($code){
+        if ($code) {
             $site = Db::name("hj212_alarm")
-                ->where(['code'=>$code])
-                ->where('id !='.$id)
+                ->where(['code' => $code])
+                ->where('id !=' . $id)
                 ->find();
 
-            if($site){
+            if ($site) {
                 $this->error("监测因子已设置，请重新选择");
-            }else{
+            } else {
                 $this->success();
             }
         }

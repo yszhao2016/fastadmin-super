@@ -6,11 +6,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'hj212/pollution/index/' +Config.data_id+ location.search,
-                    add_url: 'hj212/pollution/add/data_id/'+Config.data_id,
-                    edit_url: 'hj212/pollution/edit',
-                    del_url: 'hj212/pollution/del',
-                    multi_url: 'hj212/pollution/multi',
-                    import_url: 'hj212/pollution/import',
+                    // add_url: 'hj212/pollution/add/data_id/'+Config.data_id,
+                    // edit_url: 'hj212/pollution/edit',
+                    // del_url: 'hj212/pollution/del',
+                    // multi_url: 'hj212/pollution/multi',
+                    // import_url: 'hj212/pollution/import',
                     table: 'hj212_pollution',
                 }
             });
@@ -24,6 +24,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortName: 'id',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                dblClickToEdit: false, //是否启用双击编辑
+                singleSelect: false, //是否启用单选
+                showRefresh: false,
                 rowStyle:function(row,index){
                     var style = {};
                     style = { css: {'background-color' : '#FFFAF0','color':'red'}}
@@ -39,7 +42,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'data_id', title: __('Data_id')},
                         {
-                            field: 'pollutioncode.name',
+                            field: 'name',
                             title: '检查因子',
                             // searchList: Config.codelist
                             operate:'LIKE'
@@ -63,7 +66,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             }
                         },
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        // {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
             });

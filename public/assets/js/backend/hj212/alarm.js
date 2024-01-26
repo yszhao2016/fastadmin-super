@@ -36,7 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Table.api.formatter.search
                         },
                         {
-                            field: 'codeNm',
+                            field: 'pollutioncode.name',
                             title: __('Code'),
                             operate: false,
                         },
@@ -46,7 +46,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'alarm_max', title: __('Alarm_max'), operate:false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
-                ]
+                ],
+                exportTypes: [ 'excel'],
             });
 
             // 为表格绑定事件

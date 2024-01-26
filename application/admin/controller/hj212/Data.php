@@ -3,6 +3,8 @@
 namespace app\admin\controller\hj212;
 
 use app\common\controller\Backend;
+use app\common\library\Utils;
+use function fast\e;
 use think\Db;
 use think\Exception;
 use think\exception\PDOException;
@@ -10,7 +12,7 @@ use think\exception\ValidateException;
 use app\hj212\segment\converter\DataReverseConverter;
 
 /**
- * 
+ *
  *
  * @icon fa fa-circle-o
  */
@@ -37,11 +39,11 @@ class Data extends Backend
         $list = Db::name('hj212_site')->select();
         $site = collection($list)->toArray();
         $siteArr = array();
-        foreach($site as $v){
-            $siteArr[$v['id']]= $v['site_name'];
+        foreach ($site as $v) {
+            $siteArr[$v['id']] = $v['site_name'];
         }
         $this->siteList = $siteArr;
-        $this->assignconfig('siteList',$this->siteList);
+        $this->assignconfig('siteList', $this->siteList);
         $this->assignconfig('data_id', $data_id);
 
 
@@ -62,34 +64,59 @@ class Data extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         $siteArr = $this->siteList;
-
+        $filter = $this->request->get("filter", '');
+        $filterArr = json_decode($filter, true);
+        if (isset($filterArr['cp_datatime'])) {
+            $datatimearr = explode(' - ', $filterArr['cp_datatime']);
+            $start = date("Y-m", strtotime($datatimearr[0]));
+            $end = date("Y-m", strtotime($datatimearr[1]));
+            $suffixArr = Utils::getYMRange($start, $end);
+        } else {
+            $suffixArr[] = date("Ym");
+        }
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $f = 0;
+            $query = "";
+            foreach ($suffixArr as $suffix) {
+                //需求处理月份 不存在的表
+                $isExist = Utils::isTableExist("hj212_data_" . $suffix);
+                if (!$isExist) {
+                    continue;
+                }
 
-            $list = DB::name("hj212_data")
-                ->field("a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at")
-                ->alias('a')
-                ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                ->where($where)
-                ->order("a.id", $order)
-                ->paginate($limit,true);
+                if ($f == 0) {
+                    $query = DB::name("hj212_data_" . $suffix)
+                        ->alias('a')
+                        ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
+                        ->join('hj212_device d', 'a.mn=d.device_code', 'left')
+                        ->join('hj212_site s', 'd.site_id=s.id', 'left')
+                        ->where($where);
+                } else {
 
-//            foreach($rows as $v){
-//                //获取站点信息
-//                $siteId = $v['device']->site_id ?? 0;
-//                $v['site_id'] = $siteArr[$siteId]?? '-';
-//            }
-            $result = array("total" =>  $this->model->count(), "rows" => $list->items());
+                    $query1 = DB::name("hj212_data_" . $suffix)
+                        ->alias('a')
+                        ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
+                        ->join('hj212_device d', 'a.mn=d.device_code', 'left')
+                        ->join('hj212_site s', 'd.site_id=s.id', 'left')
+                        ->where($where);
+                    $query = $query->union($query1);
+                }
+                $f++;
+            }
+            $list = $query->order("id", $order)->paginate($limit);
+            $count = $query->count();
+            $result = array("total" => $count, "rows" => $list->items());
 
             return json($result);
         }
         return $this->view->fetch();
     }
+
     /**
      * 添加
      */
@@ -99,7 +126,7 @@ class Data extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
                 $params = $this->preExcludeFields($params);
-                
+
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
@@ -113,12 +140,12 @@ class Data extends Backend
                         $this->model->validateFailException(true)->validate($validate);
                     }
                     //获取设备密码
-                    $device = \app\admin\model\hj212\Device::where('device_code',$params['mn'])->field('device_pwd')->find();
+                    $device = \app\admin\model\hj212\Device::where('device_code', $params['mn'])->field('device_pwd')->find();
                     $params['pw'] = isset($device->device_pwd) ? $device->device_pwd : '';
                     //获取当前时间
-                    $currentDate = date('YmdHis',time());
+                    $currentDate = date('YmdHis', time());
                     $params['cp_datatime'] = $currentDate;
-                    
+
                     $result = $this->model->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -141,7 +168,7 @@ class Data extends Backend
         }
         return $this->view->fetch();
     }
-    
+
     /**
      * 编辑
      */
@@ -171,15 +198,16 @@ class Data extends Backend
                         $row->validateFailException(true)->validate($validate);
                     }
                     $data = new DataReverseConverter();
-                    
+
                     //获取设备密码
-                    $device = \app\admin\model\hj212\Device::where('device_code',$params['mn'])->field('device_pwd')->find();
-                    print_r($params);die;
+                    $device = \app\admin\model\hj212\Device::where('device_code', $params['mn'])->field('device_pwd')->find();
+                    print_r($params);
+                    die;
                     $params['pw'] = isset($device->device_pwd) ? $device->device_pwd : '';
                     //获取当前时间
-                    $currentDate = date('YmdHis',time());
+                    $currentDate = date('YmdHis', time());
                     $params['cp_datatime'] = $currentDate;
-                    
+
                     $result = $row->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -203,47 +231,48 @@ class Data extends Backend
         $this->view->assign("row", $row);
         return $this->view->fetch();
     }
+
     /**
-              * 数据分析
+     * 数据分析
      */
     public function analysisdata()
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         $Id = $this->request->param('data_id', 0);
-        
-        $list =$this->model
-        ->where(function ($query) use ($Id) {
-            if ($Id) {
-                $query->where('id', $Id);
-            }
-        })
-        ->find();
+
+        $list = $this->model
+            ->where(function ($query) use ($Id) {
+                if ($Id) {
+                    $query->where('id', $Id);
+                }
+            })
+            ->find();
         $site = '';
         $pollutionInfo = array();
-        if($list){
+        if ($list) {
             $device_code = $list['mn'];
             $site = Db::name('hj212_device')->alias("device")
-            ->join("fa_hj212_site site", "site.id = device.site_id")
-            ->where(['device.device_code'=>$device_code])
-            ->find();
-            if($site){
+                ->join("fa_hj212_site site", "site.id = device.site_id")
+                ->where(['device.device_code' => $device_code])
+                ->find();
+            if ($site) {
                 $site['mn'] = $device_code;
             }
-            
+
             //获取检测因子信息
             $pollutionInfo = Db::name('hj212_pollution')->alias('p')
-            ->join("hj212_pollution_code c","c.code = p.code","LEFT")
-            ->join("hj212_alarm a","a.code = c.code","LEFT")
-            ->where(['p.data_id'=>$list['id']])
-            ->field('p.code,a.*,c.*,p.max')
-            ->select();
-            
+                ->join("hj212_pollution_code c", "c.code = p.code", "LEFT")
+                ->join("hj212_alarm a", "a.code = c.code", "LEFT")
+                ->where(['p.data_id' => $list['id']])
+                ->field('p.code,a.*,c.*,p.max')
+                ->select();
+
         }
-        
+
         $this->view->assign('pollutionsite', $site);
         $this->view->assign('pollutionInfo', $pollutionInfo);
-        
+
         return $this->view->fetch();
     }
 
