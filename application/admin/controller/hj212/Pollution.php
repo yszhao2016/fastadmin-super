@@ -69,7 +69,6 @@ class Pollution extends Backend
             $time = date("Ym");
         }
         $suffix= substr($time, 0, 6);
-        var_dump($suffix);exit;
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
