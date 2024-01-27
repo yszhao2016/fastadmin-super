@@ -48,8 +48,7 @@ class Hj212CheckAlarm extends Command
         $dataTableName = "hj212_data_" . $suffix;
         $pollutionTableName = "hj212_pollution_" . $suffix;
         $data = Db::name($dataTableName)
-            ->where('is_forward', 0)
-            ->where('is_alarm', 0)
+            ->where('is_check', 0)
             ->where('cn', "in", ['2011', '2051'])
             ->select();
 

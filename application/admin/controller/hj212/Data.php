@@ -98,7 +98,8 @@ class Data extends Backend
                         ->alias('a')
                         ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
                         ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                        ->join('hj212_site s', 'd.site_id=s.id', 'left');
+                        ->join('hj212_site s', 'd.site_id=s.id', 'left')
+                        ->where("cn","in",["2011","2051"]);
 //                        ->where($where);
                     foreach ($where as $k => $v) {
                         if (is_array($v)) {
@@ -114,7 +115,8 @@ class Data extends Backend
                         ->alias('a')
                         ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
                         ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                        ->join('hj212_site s', 'd.site_id=s.id', 'left');
+                        ->join('hj212_site s', 'd.site_id=s.id', 'left')
+                        ->where("cn","in",["2011","2051"]);
 //                        ->where($where);
                     foreach ($where as $k => $v) {
                         if (is_array($v)) {

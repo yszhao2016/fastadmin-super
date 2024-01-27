@@ -49,7 +49,8 @@ class Data extends Api
                     ->alias('a')
                     ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
                     ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                    ->join('hj212_site s', 'd.site_id=s.id', 'left');
+                    ->join('hj212_site s', 'd.site_id=s.id', 'left')
+                    ->where("cn","in",["2011","2051"]);
                 if ($search) {
                     $query = $query->where("s.site_name", "like", "%" . $search . "%");
                 }
@@ -59,7 +60,8 @@ class Data extends Api
                     ->alias('a')
                     ->field('"a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name')
                     ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                    ->join('hj212_site s', 'd.site_id=s.id', 'left');
+                    ->join('hj212_site s', 'd.site_id=s.id', 'left')
+                    ->where("cn","in",["2011","2051"]);
                 if ($search) {
                     $query = $query->where("s.site_name", "like", "%" . $search . "%");
                 }
