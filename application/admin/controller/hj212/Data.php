@@ -63,7 +63,7 @@ class Data extends Backend
     public function index()
     {
         //设置过滤方法
-
+        $where = $this->getWhere();
         $this->request->filter(['strip_tags', 'trim']);
         $siteArr = $this->siteList;
         $filter = $this->request->get("filter", '');
@@ -99,6 +99,14 @@ class Data extends Backend
                         ->join('hj212_device d', 'a.mn=d.device_code', 'left')
                         ->join('hj212_site s', 'd.site_id=s.id', 'left');
 //                        ->where($where);
+                    foreach ($where as $k => $v) {
+                        if (is_array($v)) {
+                            call_user_func_array([$query, 'where'], $v);
+                        } else {
+                            $query->where($v);
+                        }
+                    }
+
                 } else {
 
                     $query1 = DB::name("hj212_data_" . $suffix)
@@ -107,6 +115,13 @@ class Data extends Backend
                         ->join('hj212_device d', 'a.mn=d.device_code', 'left')
                         ->join('hj212_site s', 'd.site_id=s.id', 'left');
 //                        ->where($where);
+                    foreach ($where as $k => $v) {
+                        if (is_array($v)) {
+                            call_user_func_array([$query1, 'where'], $v);
+                        } else {
+                            $query1->where($v);
+                        }
+                    }
                     $query = $query->union($query1);
                 }
                 $f++;
@@ -123,7 +138,8 @@ class Data extends Backend
     /**
      * 添加
      */
-    public function add()
+    public
+    function add()
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
@@ -175,7 +191,8 @@ class Data extends Backend
     /**
      * 编辑
      */
-    public function edit($ids = null)
+    public
+    function edit($ids = null)
     {
         $row = $this->model->get($ids);
         if (!$row) {
@@ -238,41 +255,46 @@ class Data extends Backend
     /**
      * 数据分析
      */
-    public function analysisdata()
+    public
+    function analysisdata()
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
-        $Id = $this->request->param('data_id', 0);
-
-        $list = $this->model
-            ->where(function ($query) use ($Id) {
-                if ($Id) {
-                    $query->where('id', $Id);
-                }
-            })
-            ->find();
-        $site = '';
-        $pollutionInfo = array();
-        if ($list) {
-            $device_code = $list['mn'];
-            $site = Db::name('hj212_device')->alias("device")
-                ->join("fa_hj212_site site", "site.id = device.site_id")
-                ->where(['device.device_code' => $device_code])
-                ->find();
-            if ($site) {
-                $site['mn'] = $device_code;
-            }
-
-            //获取检测因子信息
-            $pollutionInfo = Db::name('hj212_pollution')->alias('p')
-                ->join("hj212_pollution_code c", "c.code = p.code", "LEFT")
-                ->join("hj212_alarm a", "a.code = c.code", "LEFT")
-                ->where(['p.data_id' => $list['id']])
-                ->field('p.code,a.*,c.*,p.max')
-                ->select();
-
+        $id = $this->request->param('data_id', 0);
+        $device_code = $this->request->param('mn', 0);
+        $time = $this->request->param('time', date("Ym"));
+        if (trim($time, " ") == "null") {
+            $time = date("Ym");
         }
+        $suffix = substr($time, 0, 6);
+//        $list = $this->model
+//            ->where(function ($query) use ($Id) {
+//                if ($Id) {
+//                    $query->where('id', $Id);
+//                }
+//            })
+//            ->find();
+//        $site = '';
+//        $pollutionInfo = array();
+//        if ($list) {
+//            $device_code = $list['mn'];
+        $site = Db::name('hj212_device')->alias("device")
+            ->join("fa_hj212_site site", "site.id = device.site_id", "left")
+            ->where(['device.device_code' => $device_code])
+            ->find();
 
+
+        //获取检测因子信息
+        $pollutionInfo = Db::name('hj212_pollution_' . $suffix)->alias('p')
+            ->join("hj212_pollution_code c", "c.code = p.code", "LEFT")
+            ->join("hj212_alarm a", "a.code = c.code", "LEFT")
+            ->where(['p.data_id' => $id])
+            ->field('p.code,a.*,c.*,p.max')
+            ->select();
+
+//        }
+
+        $this->view->assign('mn', $device_code);
         $this->view->assign('pollutionsite', $site);
         $this->view->assign('pollutionInfo', $pollutionInfo);
 
@@ -280,46 +302,25 @@ class Data extends Backend
     }
 
 
-    protected function buildparams($searchfields = null, $relationSearch = null)
+    private
+    function getWhere($searchfields = null, $relationSearch = null)
     {
+
+
         $searchfields = is_null($searchfields) ? $this->searchFields : $searchfields;
         $relationSearch = is_null($relationSearch) ? $this->relationSearch : $relationSearch;
         $search = $this->request->get("search", '');
         $filter = $this->request->get("filter", '');
         $op = $this->request->get("op", '', 'trim');
-        $sort = $this->request->get("sort", !empty($this->model) && $this->model->getPk() ? $this->model->getPk() : 'id');
+        //       $sort = $this->request->get("sort", !empty($this->model) && $this->model->getPk() ? $this->model->getPk() : 'id');
         $order = $this->request->get("order", "DESC");
         $offset = $this->request->get("offset/d", 0);
         $limit = $this->request->get("limit/d", 999999);
-        //新增自动计算页码
-        $page = $limit ? intval($offset / $limit) + 1 : 1;
-        if ($this->request->has("page")) {
-            $page = $this->request->get("page/d", 1);
-        }
-        $this->request->get([config('paginate.var_page') => $page]);
+        $aliasName ="";
         $filter = (array)json_decode($filter, true);
         $op = (array)json_decode($op, true);
         $filter = $filter ? $filter : [];
         $where = [];
-        $alias = [];
-        $bind = [];
-        $name = '';
-        $aliasName = '';
-        if (!empty($this->model) && $this->relationSearch) {
-            $name = $this->model->getTable();
-            $alias[$name] = Loader::parseName(basename(str_replace('\\', '/', get_class($this->model))));
-            $aliasName = $alias[$name] . '.';
-        }
-        $sortArr = explode(',', $sort);
-        foreach ($sortArr as $index => & $item) {
-            $item = stripos($item, ".") === false ? $aliasName . trim($item) : $item;
-        }
-        unset($item);
-        $sort = implode(',', $sortArr);
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            $where[] = [$aliasName . $this->dataLimitField, 'in', $adminIds];
-        }
         if ($search) {
             $searcharr = is_array($searchfields) ? $searchfields : explode(',', $searchfields);
             foreach ($searcharr as $k => &$v) {
@@ -387,9 +388,7 @@ class Data extends Backend
                 case 'BETWEEN':
                 case 'NOT BETWEEN':
                     $arr = array_slice(explode(',', $v), 0, 2);
-                    if (stripos($v, ',') === false || !array_filter($arr, function($v){
-                            return $v != '' && $v !== false && $v !== null;
-                        })) {
+                    if (stripos($v, ',') === false || !array_filter($arr)) {
                         continue 2;
                     }
                     //当出现一边为空时改变操作符
@@ -436,23 +435,6 @@ class Data extends Backend
             }
             $index++;
         }
-        if (!empty($this->model)) {
-            $this->model->alias($alias);
-        }
-        $model = $this->model;
-        $where = function ($query) use ($where, $alias, $bind, &$model) {
-            if (!empty($model)) {
-                $model->alias($alias);
-                $model->bind($bind);
-            }
-            foreach ($where as $k => $v) {
-                if (is_array($v)) {
-                    call_user_func_array([$query, 'where'], $v);
-                } else {
-                    $query->where($v);
-                }
-            }
-        };
-        return [$where, $sort, $order, $offset, $limit, $page, $alias, $bind];
+        return $where;
     }
 }

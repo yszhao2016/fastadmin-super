@@ -26,55 +26,61 @@
 </style>
 <form id="analysis-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <div class="form-header">
+        <h3>站点信息</h3>
     {if !empty($pollutionsite)}
-    <h3>站点信息</h3>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Mn')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.mn}</label>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Mn')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.device_code}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('SiteName')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.site_name}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Address')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.address}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Lon')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.lon}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Lat')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.lat}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Industrial_park')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.industrial_park}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Contact')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <label class="control-label">{$pollutionsite.contact}</label>
+            </div>
         </div>
     </div>
+    {else}
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('SiteName')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.site_name}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Address')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.address}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Lon')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.lon}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Lat')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.lat}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Industrial_park')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.industrial_park}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Contact')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <label class="control-label">{$pollutionsite.contact}</label>
-        </div>
-    </div>
+        <label class="control-label col-xs-12 col-sm-2">暂未录入设备号为{$mn}设备的信息</label>
     </div>
     {/if}
     <div class="form-block">
+        <h3>检测标准</h3>
     {if !empty($pollutionInfo)}
-    <h3>检测标准</h3>
+
     {foreach name="pollutionInfo" item="vo"}
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-1">{:__('Code')}:</label>
@@ -95,6 +101,10 @@
         </div>
     </div>
     {/foreach}
-    {/if}
+    {else}
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">暂未录入相关因子的报警标准</label>
+        </div>
+     {/if}
     </div>
 </form>

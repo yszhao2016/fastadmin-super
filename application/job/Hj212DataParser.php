@@ -50,7 +50,7 @@ class Hj212DataParser
                 $insetdata['created_at'] = time();
                 $insetdata['updated_at'] = time();
                 $id = $this->getID("hj212_data_", $suffix);
-                $insetdata['updated_at'] =  $id;
+                $insetdata['id'] =  $id;
                 Db::name($dataTableName)->insert($insetdata);
                 // 遍历数据 并插入数据库 pollution
                 foreach ($cpData['pollution'] as $k => $val) {
@@ -78,7 +78,7 @@ class Hj212DataParser
             }
             $job->delete();
         } catch (\Exception $exception) {
-            file_put_contents(ROOT_PATH . "/runtime/log/hj212queue-error-" . date("Y-m-d") . ".log", $ysdata . PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL);
+            file_put_contents(ROOT_PATH . "runtime/log/hj212queue-error-" . date("Y-m-d") . ".log", $ysdata . PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL);
             $job->delete();
         }
     }

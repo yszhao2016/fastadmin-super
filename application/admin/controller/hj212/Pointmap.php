@@ -26,27 +26,27 @@ class Pointmap extends Backend
     {
         $data = $this->model->all();
         $list = collection($data)->toArray();
-        $list = array_map(function ($val) {
-            $device = Device::where('site_id', $val['id'])->find();
-            $data = [];
-            if (isset($device->device_code)&&$device->device_code) {
-                $data = Data::where('mn', $device->device_code)
-                    ->order('created_at','desc')
-                    ->find();
-            }
-            if ($data) {
-                $pollution = \app\admin\model\hj212\Pollution::with('PollutionCode')
-                    ->where('data_id', $data->id)->select();
-                $pollution = array_map(function ($val) {
-                    $val['name'] = $val['PollutionCode']['name'];
-                    unset($val['PollutionCode']);
-                    return $val;
-                }, $pollution);
-                $data['pollution'] = $pollution;
-            }
-            $val['data'] = $data;
-            return $val;
-        }, $list);
+//        $list = array_map(function ($val) {
+//            $device = Device::where('site_id', $val['id'])->find();
+//            $data = [];
+//            if (isset($device->device_code)&&$device->device_code) {
+//                $data = Data::where('mn', $device->device_code)
+//                    ->order('created_at','desc')
+//                    ->find();
+//            }
+//            if ($data) {
+//                $pollution = \app\admin\model\hj212\Pollution::with('PollutionCode')
+//                    ->where('data_id', $data->id)->select();
+//                $pollution = array_map(function ($val) {
+//                    $val['name'] = $val['PollutionCode']['name'];
+//                    unset($val['PollutionCode']);
+//                    return $val;
+//                }, $pollution);
+//                $data['pollution'] = $pollution;
+//            }
+//            $val['data'] = $data;
+//            return $val;
+//        }, $list);
         $this->assignconfig('list', json_encode($list));
         return $this->view->fetch();
     }

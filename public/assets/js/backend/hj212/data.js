@@ -81,7 +81,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 	                                    name:"数据分析",
 	                                   'extend': 'data-area=\'["95%","95%"]\'',
 	                                    classname:"btn btn-primary btn-xs btn-dialog",
-	                                    url:'hj212/data/analysisdata/data_id/{ids}',
+	                                    url:'hj212/data/analysisdata?data_id={ids}&time={qn}&mn={mn}',
 	                                },
                                  ]}
                     ]

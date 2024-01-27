@@ -48,6 +48,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ],
                 exportTypes: [ 'excel'],
+                showExport: false,
             });
 
             // 为表格绑定事件
