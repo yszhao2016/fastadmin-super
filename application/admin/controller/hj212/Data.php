@@ -294,11 +294,11 @@ class Data extends Backend
             ->join("hj212_pollution_code c", "c.code = p.code", "LEFT")
             ->join("hj212_alarm a", "a.code = c.code", "LEFT")
             ->where(['p.data_id' => $id])
-            ->field('p.code,a.*,c.*,p.max')
+            ->field('p.code,a.*,c.*,p.max,p.min,p.avg,p.rtd')
             ->select();
 
 //        }
-
+//        var_dump($pollutionInfo);
         $this->view->assign('mn', $device_code);
         $this->view->assign('pollutionsite', $site);
         $this->view->assign('pollutionInfo', $pollutionInfo);

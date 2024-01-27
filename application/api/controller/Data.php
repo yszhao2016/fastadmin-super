@@ -97,7 +97,7 @@ class Data extends Api
             if (Utils::isTableExist($tableName)) {
                 $list = Db::name($tableName)
                     ->alias("p")
-                    ->field("p.id as id,c.name as name, p.code as code,avg,min,max,is_alarm")
+                    ->field("cn,p.id as id,c.name as name, p.code as code,avg,min,max,rtd,is_alarm")
                     ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
                     ->where("data_id", $id)
                     ->select();
@@ -133,7 +133,7 @@ class Data extends Api
             ->find();
 
         $res['data'] = Db::name($tableName)->alias("p")
-            ->field("p.id as id,c.name as  name, p.code as code,avg,min,max,is_alarm,alarm_min,alarm_max,avg_min as alarm_avg_min ,avg_max as alarm_avg_max,measures,emissions,type ")
+            ->field("cn,p.id as id,c.name as  name, p.code as code,avg,min,max,rtd,is_alarm,alarm_min,alarm_max,measures,emissions,type ")
             ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
             ->join('fa_hj212_alarm a', 'p.code=a.code', 'left')
             ->where("data_id", $id)

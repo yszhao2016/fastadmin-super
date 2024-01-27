@@ -29,7 +29,7 @@ class Alarm extends Api
 
 //        Alarm::
         $model = \app\admin\model\hj212\Alarm::alias('a')
-            ->field("a.id,c.name as name,alarm_min,alarm_max,avg_min,avg_max")
+            ->field("a.id,c.name as name,alarm_min,alarm_max")
             ->join('fa_hj212_pollution_code c',"a.code=c.code","left")
             ->order('a.id desc');
         if ($search) {

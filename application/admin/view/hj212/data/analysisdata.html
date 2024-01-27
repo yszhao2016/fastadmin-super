@@ -84,19 +84,42 @@
     {foreach name="pollutionInfo" item="vo"}
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-1">{:__('Code')}:</label>
-        <div class="col-xs-12 col-sm-2" style="padding-left: 0;padding-right: 0">
+        <div class="col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">
             <label class="control-label">{$vo.name}</label>
         </div>
-        <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">{:__('Max')}:</label>
-        <div class="col-xs-12 col-sm-2" style="padding-right: 0">
-            <label class="control-label" style="text-align:left">{$vo.max}{$vo.measures}</label>
+
+        <label class="control-label col-xs-12 col-sm-1">最小值:</label>
+        <div class="col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">
+            {if $vo.min}
+            <label class="control-label">{$vo.min}</label>
+            {/if}
         </div>
+
+
+        <label class="control-label col-xs-12 col-sm-1">最大值:</label>
+        <div class="col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">
+            {if $vo.max}
+            <label class="control-label">{$vo.max}</label>
+            {/if}
+        </div>
+
         <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">{:__('Avg')}:</label>
-        <div class="col-xs-12 col-sm-2" style="padding-right: 0">
-            <label class="control-label" style="text-align:left">{if !empty($vo.avg_min) || !empty($vo.avg_max) }{$vo.avg_min} ~ {$vo.avg_max} {$vo.measures}{/if}</label>
+        <div class="col-xs-12 col-sm-1" style="padding-right: 0">
+            {if $vo.avg}
+            <label class="control-label" style="text-align:left">{$vo.avg} {$vo.measures}</label>
+            {/if}
         </div>
+
+
+        <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">实时值:</label>
+        <div class="col-xs-12 col-sm-1" style="padding-right: 0">
+            {if $vo.rtd}
+            <label class="control-label" style="text-align:left">{$vo.rtd}{$vo.measures}</label>
+            {/if}
+        </div>
+
         <label class="control-label col-xs-12 col-sm-1" style="padding-left: 0;padding-right: 0">{:__('Alarm')}:</label>
-        <div class="col-xs-12 col-sm-2" style="padding-right: 0">
+        <div class="col-xs-12 col-sm-1" style="padding-right: 0">
             <label class="control-label" style="text-align:left">{if !empty($vo.alarm_min) || !empty($vo.alarm_max) }{$vo.alarm_min} ~ {$vo.alarm_max} {$vo.measures}{/if}</label>
         </div>
     </div>
