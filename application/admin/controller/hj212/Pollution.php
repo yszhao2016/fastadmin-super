@@ -77,7 +77,7 @@ class Pollution extends Backend
 //            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $list = Db::name("hj212_pollution_".$suffix)
                 ->alias("p")
-                ->field("data_id,p.id,c.name,c.code,min,max,avg,is_alarm")
+                ->field("data_id,p.id,c.name,c.code,min,max,rtd,avg,is_alarm")
                 ->join('hj212_pollution_code c', "p.code=c.code", "left")
                 ->where('data_id',$data_id)
                 ->order("id", "desc")

@@ -56,6 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'min', title: __('Min'), operate:'BETWEEN'},
                         {field: 'avg', title: __('Avg'), operate:'BETWEEN'},
                         {field: 'max', title: __('Max'), operate:'BETWEEN'},
+                        {field: 'rtd', title: "实时数据", operate:'BETWEEN'},
                         // {field: 'flag', title: __('Flag'), operate: 'LIKE', formatter: Table.api.formatter.flag},
                         {field: 'is_alarm', title: __('Is_alarm'),searchList:{"0":__('Normal'),"1":__('Is_alarm')},
                             formatter: function(val){
