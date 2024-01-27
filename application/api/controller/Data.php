@@ -14,6 +14,7 @@ use app\admin\model\hj212\PollutionCode;
 use app\common\controller\Api;
 use app\common\library\Utils;
 use think\Db;
+use think\Exception;
 use think\Loader;
 
 /**
@@ -85,19 +86,29 @@ class Data extends Api
     public function detail()
     {
         $id = $this->request->get("id");
-        $time = $this->request->get("time", "");
-        if (!$time || $time == "null") {
-            $suffix = date("Ym", time());
-        } else {
-            $suffix = substr($time, 0, 6);
+        $time = $this->request->get("qn", "");
+        try {
+            if (!$time || $time == "null") {
+                $suffix = date("Ym", time());
+            } else {
+                $suffix = substr($time, 0, 6);
+            }
+            $tableName = "hj212_pollution_" . $suffix;
+            if (Utils::isTableExist($tableName)) {
+                $list = Db::name($tableName)
+                    ->alias("p")
+                    ->field("p.id as id,c.name as name, p.code as code,avg,min,max,is_alarm")
+                    ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
+                    ->where("data_id", $id)
+                    ->select();
+            } else {
+                $list = [];
+            }
+            $this->success('成功', $list);
+        } catch (Exception $e) {
+            $this->error('失败', "");
         }
-        $list = Db::name("hj212_pollution_" . $suffix)
-            ->alias("p")
-            ->field("p.id as id,c.name as name, p.code as code,avg,min,max,is_alarm")
-            ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
-            ->where("data_id", $id)
-            ->select();
-        $this->success('成功', $list);
+
     }
 
 
@@ -110,12 +121,18 @@ class Data extends Api
     {
         $id = $this->request->get("id");
         $mn = $this->request->get("mn");
-
+        $time = $this->request->param('qn', date("Ym"));
+        if (trim($time, " ") == "null") {
+            $time = date("Ym");
+        }
+        $suffix = substr($time, 0, 6);
+        $tableName = "hj212_pollution_" . $suffix;
         $res['device'] = Device::field("device_code,site_name,address,lon,lat,industrial_park,s.contact as contact")->alias("p")
             ->where('device_code', $mn)
             ->join('fa_hj212_site s', 'p.site_id=s.id', 'left')
             ->find();
-        $res['data'] = Pollution::alias("p")
+
+        $res['data'] = Db::name($tableName)->alias("p")
             ->field("p.id as id,c.name as  name, p.code as code,avg,min,max,is_alarm,alarm_min,alarm_max,avg_min as alarm_avg_min ,avg_max as alarm_avg_max,measures,emissions,type ")
             ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
             ->join('fa_hj212_alarm a', 'p.code=a.code', 'left')
