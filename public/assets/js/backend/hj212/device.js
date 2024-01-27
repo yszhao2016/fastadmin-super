@@ -30,7 +30,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'device_code', title: __('Device_code'), operate: 'LIKE'},
-                        {field: 'type', title: "设备监测物", searchList:{"1":"水体","2":"气体"}},
+                        {field: 'type', title: "设备监测物", searchList:{"1":"水体","2":"气体"}, formatter: function(val){
+                                if(val == '1'){
+                                    return "<span ><i ></i>水体</span>";
+                                }else if(val == '2'){
+                                    return "<span></span>气体</span>";
+                                }
+                            }},
                         // {field: 'type', title: "设备监测物",searchList:{"1":__('Normal'),"2":__('Is_alarm')}},
                         {
                             field: 'site.site_name',

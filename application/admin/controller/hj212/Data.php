@@ -25,7 +25,7 @@ class Data extends Backend
      * @var \app\admin\model\hj212\Data
      */
     protected $model = null;
-
+    protected $searchFields = "site_name,cn,mn";
     protected $siteList = array();
 
     public function _initialize()
@@ -63,7 +63,7 @@ class Data extends Backend
     public function index()
     {
         //设置过滤方法
-        $where = $this->getWhere();
+
         $this->request->filter(['strip_tags', 'trim']);
         $siteArr = $this->siteList;
         $filter = $this->request->get("filter", '');
@@ -84,7 +84,6 @@ class Data extends Backend
 //            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $f = 0;
             $query = "";
-
             foreach ($suffixArr as $suffix) {
                 //需求处理月份 不存在的表
                 $isExist = Utils::isTableExist("hj212_data_" . $suffix);
@@ -93,6 +92,8 @@ class Data extends Backend
                 }
 
                 if ($f == 0) {
+                    $where = $this->getWhere("hj212_data_" . $suffix);
+
                     $query = DB::name("hj212_data_" . $suffix)
                         ->alias('a')
                         ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
@@ -108,7 +109,7 @@ class Data extends Backend
                     }
 
                 } else {
-
+                    $where = $this->getWhere("hj212_data_" . $suffix);
                     $query1 = DB::name("hj212_data_" . $suffix)
                         ->alias('a')
                         ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
@@ -126,9 +127,15 @@ class Data extends Backend
                 }
                 $f++;
             }
-            $list = $query->order("id", "desc")->paginate(10);
-            $count = $query->count();
-            $result = array("total" => $count, "rows" => $list->items());
+            if ($query) {
+                $list = $query->order("id", "desc")->paginate(10)->items();
+                $count = $query->count();
+            } else {
+                $count = 0;
+                $list = [];
+            }
+
+            $result = array("total" => $count, "rows" => $list);
 
             return json($result);
         }
@@ -138,8 +145,7 @@ class Data extends Backend
     /**
      * 添加
      */
-    public
-    function add()
+    public function add()
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
@@ -255,8 +261,7 @@ class Data extends Backend
     /**
      * 数据分析
      */
-    public
-    function analysisdata()
+    public function analysisdata()
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
@@ -303,7 +308,7 @@ class Data extends Backend
 
 
     private
-    function getWhere($searchfields = null, $relationSearch = null)
+    function getWhere($tableName, $searchfields = null, $relationSearch = null)
     {
 
 
@@ -316,7 +321,26 @@ class Data extends Backend
         $order = $this->request->get("order", "DESC");
         $offset = $this->request->get("offset/d", 0);
         $limit = $this->request->get("limit/d", 999999);
-        $aliasName ="";
+        $aliasName = "";
+
+        if (!empty($this->model) && $this->relationSearch) {
+            $name = Db::name($tableName)->getTable();
+            $alias[$name] = Loader::parseName(basename(str_replace('\\', '/', get_class($this->model))));
+            $aliasName = $alias[$name] . '.';
+        }
+
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            $where[] = [$aliasName . $this->dataLimitField, 'in', $adminIds];
+        }
+        if ($search) {
+            $searcharr = is_array($searchfields) ? $searchfields : explode(',', $searchfields);
+            foreach ($searcharr as $k => &$v) {
+                $v = stripos($v, ".") === false ? $aliasName . $v : $v;
+            }
+            unset($v);
+            $where[] = [implode("|", $searcharr), "LIKE", "%{$search}%"];
+        }
         $filter = (array)json_decode($filter, true);
         $op = (array)json_decode($op, true);
         $filter = $filter ? $filter : [];
@@ -329,6 +353,7 @@ class Data extends Backend
             unset($v);
             $where[] = [implode("|", $searcharr), "LIKE", "%{$search}%"];
         }
+//        var_dump($where);exit;
         $index = 0;
         foreach ($filter as $k => $v) {
             if (!preg_match('/^[a-zA-Z0-9_\-\.]+$/', $k)) {
