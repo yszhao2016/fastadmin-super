@@ -8,6 +8,7 @@
 namespace app\hj212\command;
 
 
+use app\admin\model\hj212\Alarm;
 use app\common\library\UtoooSms;
 use app\hj212\model\Data;
 use app\admin\model\hj212\Device;
@@ -47,43 +48,37 @@ class Hj212CheckAlarm extends Command
         $suffix = date("Ym");
         $dataTableName = "hj212_data_" . $suffix;
         $pollutionTableName = "hj212_pollution_" . $suffix;
-        $data = Db::name($dataTableName)
-            ->where('is_check', 0)
-            ->where('cn', "in", ['2011', '2051'])
-            ->select();
 
-        foreach ($data as $item) {
-            $pollutionData = Db::name($pollutionTableName)
-                ->field('id,code,cou,min,max,avg,flag,rtd')
-                ->join("hj212_alarm")
-                ->with('Alarm,Info')
-                ->where('data_id', $item->id)
-                ->select();
-            $msg = "";
-            foreach ($pollutionData as $val) {
-
-                if ($val->alarm->alarm_max && $val->avg > $val->alarm->alarm_max) {
-                    Db::startTrans();
-                    try {
-                        Db::name($pollutionTableName)->where('id', $val->id)->update(['is_alarm' => 1]);
-                        $item->is_alarm = 1;
-                        $item->save();
-                        $msg .= $val->Info->name . '为' . $val->avg . '已经超出报警值' . "\n";
-
-                    } catch (Exception $e) {
-                        Db::rollback();
-                        var_dump($e->getMessage());
-                    }
-                    Db::commit();
-
-                }
-
+        try{
+            $alarmData = Alarm::all();
+            foreach ($alarmData as $alarm) {
+                $alarmArr[$alarm['code']] = $alarm;
             }
-//            if ($msg) {
-//                $this->sendMessage($item->mn, $msg);
-//            }
-
+            $data = Db::name($pollutionTableName)
+                ->where('is_check', 0)
+                ->where('cn', "in", ['2011', '2051'])
+                ->select();
+            foreach ($data as $item) {
+                if (!isset($alarmData[$item['code']])) {
+                    continue;
+                }
+                if ($item['cn'] == "2011" && $alarmData[$item['code']]["alarm_max"] < $item['rtd']) {
+                    //当是事实数据的时候 判断rtd 是否大于报警值
+                    Db::name($pollutionTableName)->where('id', $item->id)->update(['is_alarm' => 1]);
+                    Db::name($dataTableName)->where('id', $item->data_id)->update(['is_alarm' => 1]);
+                } else if ($item->cn == "2051" && ($alarmData[$item['code']]["alarm_min"] > $item['min']
+                        || $alarmData[$item['code']]["alarm_max"] < $item['max']
+                        || $alarmData[$item['code']]["alarm_max"] < $item['avg']
+                    )) {
+                    //当是分钟数据的时候 判断最小值 是否小于最小报警值
+                    //                   或者最大值是否大于最大报警值
+                    //                   或者平均值是否大于最大报警值
+                    Db::name($pollutionTableName)->where('id', $item->id)->update(['is_alarm' => 1]);
+                    Db::name($dataTableName)->where('id', $item->data_id)->update(['is_alarm' => 1]);
+                }
+            }
+        }catch (Exception $exception){
+            var_dump($exception->getMessage());
         }
     }
-
 }
