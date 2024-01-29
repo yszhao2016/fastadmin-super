@@ -43,7 +43,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'data_id', title: __('Data_id')},
                         {
                             field: 'name',
-                            title: '检查因子',
+                            title: '监测因子',
                             // searchList: Config.codelist
                             operate:'LIKE'
                         },
