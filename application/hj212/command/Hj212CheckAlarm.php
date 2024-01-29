@@ -66,7 +66,7 @@ class Hj212CheckAlarm extends Command
                     //当是事实数据的时候 判断rtd 是否大于报警值
                     Db::name($pollutionTableName)->where('id', $item->id)->update(['is_alarm' => 1]);
                     Db::name($dataTableName)->where('id', $item->data_id)->update(['is_alarm' => 1]);
-                } else if ($item->cn == "2051" && ($alarmData[$item['code']]["alarm_min"] > $item['min']
+                } else if (in_array($item->cn,["2051","2061"]) && ($alarmData[$item['code']]["alarm_min"] > $item['min']
                         || $alarmData[$item['code']]["alarm_max"] < $item['max']
                         || $alarmData[$item['code']]["alarm_max"] < $item['avg']
                     )) {
