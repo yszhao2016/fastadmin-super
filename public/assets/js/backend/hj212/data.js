@@ -71,7 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                  buttons:[
                                      {
                                          'name':'bindCp',
-	                                      'text':'检测数据查询',
+	                                      'text':'监测数据查询',
 	                                      'classname': 'btn btn-xs btn-info btn-dialog',
 	                                      'url':'hj212/pollution/index?data_id={ids}&time={qn}',
 	                                      'extend': 'data-area=\'["95%","95%"]\''

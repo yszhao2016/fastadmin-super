@@ -91,7 +91,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             var avg_max = (typeof(data.data.avg_max) !== 'undefined') ? data.data.avg_max : 0;
                             var measures = (typeof(data.data.measures) !== 'undefined') ? data.data.measures : '';
 
-                            $("#avg-notice").html("* 检测时间内平均值范围 "+avg_min+'~'+avg_max+''+measures);
+                            $("#avg-notice").html("* 监测时间内平均值范围 "+avg_min+'~'+avg_max+''+measures);
                         }
                         console.log(data);
                     });

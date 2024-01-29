@@ -192,7 +192,7 @@ class Config extends Backend
     }
 
     /**
-     * 检测配置项是否存在
+     * 监测配置项是否存在
      * @internal
      */
     public function check()

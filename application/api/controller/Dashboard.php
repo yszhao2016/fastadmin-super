@@ -11,6 +11,7 @@ namespace app\api\controller;
 use app\admin\model\hj212\Device;
 use app\admin\model\hj212\Pollution;
 use app\common\controller\Api;
+use app\common\library\Utils;
 use think\Db;
 
 class Dashboard extends Api
@@ -26,7 +27,7 @@ class Dashboard extends Api
     {
         $device_code = $this->request->get("mn");
 //        pq.id,pq.avg as rtd,pq.quota_id,pq.is_alarm,pq.qn,q.title,q.unit
-        $tableName= "hj212_pollution_".date("Ym");
+        $tableName = "hj212_pollution_" . date("Ym");
         $last = Db::name($tableName)->field("qn,cp_datatime")
             ->where("mn", $device_code)
             ->where("cn", "2051")
@@ -56,23 +57,68 @@ class Dashboard extends Api
         $this->success("成功", $list);
     }
 
+
+    /**
+     * 2061 小时数据
+     */
     public function chartData()
     {
         $start = $this->request->get('start', date("Y-m-d"));
         $end = $this->request->get("end", date("Y-m-d"));
-        $mn = $this->request->get("mn", "81733553216103");
-        $suffix= date("Ym",strtotime($end));
-        $sql = 'SELECT p.code,c.name,DATE_FORMAT( FROM_UNIXTIME( `cp_datatime` ), "%Y-%m-%d %H:%i") AS time,avg FROM
-	            fa_hj212_pollution_'.$suffix.'  p left join fa_hj212_pollution_code c on p.code=c.code where mn = "' . $mn . '"
+        $mn = $this->request->get("mn");
+
+        //拼接sql
+        $sql = $this->getSqlStr($start, $end, $mn);
+        // sql 无法拼接 或者数据就是查询不到   直接返回空
+        $data = $sql ? Db::query($sql) : "";
+        if (!$data) {
+            $this->success('success', ['main' => [], 'list' => [], 'x' => []]);
+        }
+        list($temp, $x) = $this->getFormatData($data);
+        $this->success('success', ['main' => $temp, 'list' => [$temp], 'x' => $x]);
+
+    }
+
+
+    private function getSqlStr($start, $end, $mn)
+    {
+        $suffixArr = Utils::getYMRange($start, $end);
+        $sql = "";
+        $flag = false;
+        $k = 0;
+        foreach ($suffixArr as $item) {
+            //需求处理月份 不存在的表
+            $isExist = Utils::isTableExist("hj212_data_" . $item);
+            if (!$isExist) {
+                continue;
+            }
+
+            if ($k == 0) {
+                $sql = 'SELECT fa_hj212_pollution_' . $item . '.code,fa_hj212_pollution_code.name,DATE_FORMAT( FROM_UNIXTIME( `cp_datatime` ), "%Y-%m-%d %H:%i") AS time,avg FROM
+	            fa_hj212_pollution_' . $item . '   left join fa_hj212_pollution_code on fa_hj212_pollution_' . $item . '.code=fa_hj212_pollution_code.code where mn = "' . $mn . '"
                 AND cn = "2061"
                 AND cp_datatime BETWEEN ' . strtotime($start . " 00:00:00") . ' and ' . strtotime($end . " 23:59:59");
-        $data = Db::query($sql);
-        if(!$data){
-            $this->error("没有数据");
+            } else {
+                $flag = true;
+                $sql .= ' union SELECT fa_hj212_pollution_' . $item . '.code,fa_hj212_pollution_code.name,DATE_FORMAT( FROM_UNIXTIME( `cp_datatime` ), "%Y-%m-%d %H:%i") AS time,avg FROM
+	            fa_hj212_pollution_' . $item . ' left join fa_hj212_pollution_code  on fa_hj212_pollution_' . $item . '.code=fa_hj212_pollution_code.code where mn = "' . $mn . '"
+                AND cn = "2061"
+                AND cp_datatime BETWEEN ' . strtotime($start . " 00:00:00") . ' and ' . strtotime($end . " 23:59:59");
+            }
+            $k++;
         }
+        if ($flag) {
+            $sql = "select * from ({$sql}) as temp";
+        }
+        return $sql;
+    }
+
+
+    private function getFormatData($data)
+    {
         $iscztime = array();
         foreach ($data as $item) {
-            isset($iscztime[$item['code']])?"":$iscztime[$item['code']]=[];
+            isset($iscztime[$item['code']]) ? "" : $iscztime[$item['code']] = [];
             if (in_array($item['time'], $iscztime[$item['code']])) {
                 continue;
             }
@@ -96,14 +142,7 @@ class Dashboard extends Api
             $temp[] = $linetemp;
         }
         $x = $x_asse;
-        $this->success('success', ['main' => $temp, 'list' => [$temp], 'x' => $x]);
-
-    }
-
-
-    private function getTime()
-    {
-
+        return [$temp, $x];
     }
 
     // 水   w01018 化学需氧量(COD)   w21003 氨氮   w21011 总磷  w21001  总氮    w01001 pH值  流量

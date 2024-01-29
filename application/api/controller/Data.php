@@ -50,7 +50,7 @@ class Data extends Api
                     ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
                     ->join('hj212_device d', 'a.mn=d.device_code', 'left')
                     ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                    ->where("cn","in",["2011","2051"]);
+                    ->where("cn", "in", ["2011", "2051", "2061", "2031"]);
                 if ($search) {
                     $query = $query->where("s.site_name", "like", "%" . $search . "%");
                 }
@@ -61,7 +61,7 @@ class Data extends Api
                     ->field('"a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name')
                     ->join('hj212_device d', 'a.mn=d.device_code', 'left')
                     ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                    ->where("cn","in",["2011","2051"]);
+                    ->where("cn", "in", ["2011", "2051", "2061", "2031"]);
                 if ($search) {
                     $query = $query->where("s.site_name", "like", "%" . $search . "%");
                 }
@@ -82,12 +82,13 @@ class Data extends Api
     }
 
     /**
-     * 监测数据-检测数据查询
+     * 监测数据-监测数据查询
      * @param  $id  数据id
      */
     public function detail()
     {
         $id = $this->request->get("id");
+        $search = $this->request->get("search");
         $time = $this->request->get("qn", "");
         try {
             if (!$time || $time == "null") {
@@ -101,8 +102,12 @@ class Data extends Api
                     ->alias("p")
                     ->field("cn,p.id as id,c.name as name, p.code as code,avg,min,max,rtd,is_alarm")
                     ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
-                    ->where("data_id", $id)
-                    ->select();
+                    ->where("data_id", $id);
+                if ($search) {
+                    $list = $list->where("c.name", "like","%".$search."%")
+                        ->select();
+                }
+
             } else {
                 $list = [];
             }

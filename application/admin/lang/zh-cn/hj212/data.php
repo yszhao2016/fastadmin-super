@@ -26,7 +26,7 @@ return [
     'Contact'         => '厂家联系方式',
     'Alarm'=>'报警阈值',
     'Avg'=>'平均值',
-    'Code'=>'检测因子',
+    'Code'=>'监测因子',
     'Is_alarm'=>'报警',
     'Max'=>'最大值',
     'Created_at'=>'发送时间',

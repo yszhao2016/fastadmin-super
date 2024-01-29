@@ -116,7 +116,7 @@ class Device extends Backend
     }
     
     /**
-             * 检测站点是否已经被绑定
+             * 监测站点是否已经被绑定
      */
     public function checksite()
     {

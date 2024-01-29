@@ -31,7 +31,7 @@
             <input id="c-avg" data-rule="required" class="form-control"
                    name="row[avg]" type="number" value="{$row.avg|htmlentities}">
             <span class="text-danger" id="avg-notice">
-             * 检测时间内平均值范围 {if !empty($alarm.avg_min) || !empty($alarm.avg_max) }{$alarm.avg_min} ~ {$alarm.avg_max} {$code.measures}{/if}
+             * 监测时间内平均值范围 {if !empty($alarm.avg_min) || !empty($alarm.avg_max) }{$alarm.avg_min} ~ {$alarm.avg_max} {$code.measures}{/if}
             </span>
         </div>
     </div>

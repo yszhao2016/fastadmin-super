@@ -88,7 +88,7 @@ define(['gdmap'], function f() {
 
                 if (marker.data) {
                     content.push("-------------------------------------------------");
-                    content.push("检测时间:" + marker.data.cp_datatime_text);
+                    content.push("监测时间:" + marker.data.cp_datatime_text);
                     for (let i in  marker.data.pollution) {
                         if (marker.data.pollution[i].name) {
                             content.push(  marker.data.pollution[i].name+"&nbsp：&nbsp" + marker.data.pollution[i].min + '~' + marker.data.pollution[i].max);

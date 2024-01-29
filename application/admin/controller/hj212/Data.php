@@ -68,6 +68,7 @@ class Data extends Backend
         $siteArr = $this->siteList;
         $filter = $this->request->get("filter", '');
         $filterArr = json_decode($filter, true);
+        $limit = $this->request->get("limit/d", 999999);
         if (isset($filterArr['cp_datatime'])) {
             $datatimearr = explode(' - ', $filterArr['cp_datatime']);
             $start = date("Y-m", strtotime($datatimearr[0]));
@@ -84,22 +85,23 @@ class Data extends Backend
 //            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $f = 0;
             $query = "";
+            $unionQuery = array();
             foreach ($suffixArr as $suffix) {
                 //需求处理月份 不存在的表
-                $isExist = Utils::isTableExist("hj212_data_" . $suffix);
+                $tableName = "hj212_data_" . $suffix;
+                $sqlTableName = "fa_" . $tableName;
+                $isExist = Utils::isTableExist($tableName);
                 if (!$isExist) {
                     continue;
                 }
-
                 if ($f == 0) {
-                    $where = $this->getWhere("hj212_data_" . $suffix);
+                    $where = $this->getWhere($tableName);
 
-                    $query = DB::name("hj212_data_" . $suffix)
-                        ->alias('a')
-                        ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
-                        ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                        ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                        ->where("cn","in",["2011","2051"]);
+                    $query = DB::name($tableName)
+                        ->field("{$sqlTableName}.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,{$sqlTableName}.created_at as created_at")
+                        ->join('hj212_device', "{$sqlTableName}.mn=hj212_device.device_code", 'left')
+                        ->join('hj212_site', 'hj212_device.site_id=hj212_site.id', 'left')
+                        ->where("cn", "in", ["2011", "2051", "2061", "2031"]);
 //                        ->where($where);
                     foreach ($where as $k => $v) {
                         if (is_array($v)) {
@@ -109,14 +111,15 @@ class Data extends Backend
                         }
                     }
 
+
                 } else {
-                    $where = $this->getWhere("hj212_data_" . $suffix);
-                    $query1 = DB::name("hj212_data_" . $suffix)
-                        ->alias('a')
-                        ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
-                        ->join('hj212_device d', 'a.mn=d.device_code', 'left')
-                        ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                        ->where("cn","in",["2011","2051"]);
+
+                    $where = $this->getWhere($tableName);
+                    $query1 = DB::name($tableName)
+                        ->field("{$sqlTableName}.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,{$sqlTableName}.created_at as created_at")
+                        ->join('hj212_device', "{$sqlTableName}.mn=hj212_device.device_code", 'left')
+                        ->join('hj212_site', 'hj212_device.site_id=hj212_site.id', 'left')
+                        ->where("cn", "in", ["2011", "2051", "2061", "2031"]);
 //                        ->where($where);
                     foreach ($where as $k => $v) {
                         if (is_array($v)) {
@@ -125,19 +128,24 @@ class Data extends Backend
                             $query1->where($v);
                         }
                     }
-                    $query = $query->union($query1);
+                    $unionQuery[] = $query1->buildSql();
+
                 }
                 $f++;
             }
+            if($unionQuery){
+                $query = $query->union($unionQuery,true);
+            }
+
             if ($query) {
-                $list = $query->order("id", "desc")->paginate(10)->items();
-                $count = $query->count();
+                $list = $query->order('id',"desc")
+                    ->paginate($limit);
             } else {
                 $count = 0;
                 $list = [];
             }
 
-            $result = array("total" => $count, "rows" => $list);
+            $result = array("total" => $list->total(), "rows" => $list->items());
 
             return json($result);
         }
@@ -291,7 +299,7 @@ class Data extends Backend
             ->find();
 
 
-        //获取检测因子信息
+        //获取监测因子信息
         $pollutionInfo = Db::name('hj212_pollution_' . $suffix)->alias('p')
             ->join("hj212_pollution_code c", "c.code = p.code", "LEFT")
             ->join("hj212_alarm a", "a.code = c.code", "LEFT")

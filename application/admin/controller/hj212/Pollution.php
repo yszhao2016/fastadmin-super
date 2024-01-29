@@ -27,7 +27,7 @@ class Pollution extends Backend
         $data_id = $this->request->param('data_id', 0);
         $this->assignconfig('data_id', $data_id);
 
-        //检测因子信息
+        //监测因子信息
         $list = Db::name('hj212_pollution_code')->select();
         $codeArr = collection($list)->toArray();
 
@@ -40,7 +40,7 @@ class Pollution extends Backend
 
         $ids = $this->request->param('ids',0);
         if($ids){
-            //获取检测报警信息
+            //获取监测报警信息
             $alarmInfo =  $this->model->with('Alarm')->find($ids);
             $codeInfo =  $this->model->with('PollutionCode')->find($ids);
 

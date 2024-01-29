@@ -44,7 +44,7 @@ return [
     'Wipe addons cache'                                          => '清除插件缓存',
     'Wipe browser cache'                                         => '清除浏览器缓存',
     'Wipe browser cache tips'                                    => '清除浏览器端静态JS、CSS、图片等资源',
-    'Check for updates'                                          => '检测更新',
+    'Check for updates'                                          => '监测更新',
     'Discover new version'                                       => '发现新版本',
     'Go to download'                                             => '去下载更新',
     'Currently is the latest version'                            => '当前已经是最新版本',
