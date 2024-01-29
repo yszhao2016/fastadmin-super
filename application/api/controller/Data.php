@@ -98,16 +98,16 @@ class Data extends Api
             }
             $tableName = "hj212_pollution_" . $suffix;
             if (Utils::isTableExist($tableName)) {
-                $list = Db::name($tableName)
+                $model = Db::name($tableName)
                     ->alias("p")
                     ->field("cn,p.id as id,c.name as name, p.code as code,avg,min,max,rtd,is_alarm")
                     ->join('fa_hj212_pollution_code c', 'p.code=c.code', 'left')
                     ->where("data_id", $id);
                 if ($search) {
-                    $list = $list->where("c.name", "like","%".$search."%")
-                        ->select();
-                }
+                    $model = $model->where("c.name", "like","%".$search."%");
 
+                }
+                $list = $model->select();
             } else {
                 $list = [];
             }
