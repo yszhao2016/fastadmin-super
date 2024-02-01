@@ -71,7 +71,6 @@ class Data extends Api
             $f++;
         }
         $list = $query->order("id", 'desc')->paginate($pagesize, false, ['page' => $page]);
-
 //         $page = $this->request->get('page', 1);
 //        $pagesize = $this->request->get('pagesize', 10);
 //        $list = \app\admin\model\hj212\Data::field("a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name")->alias('a')

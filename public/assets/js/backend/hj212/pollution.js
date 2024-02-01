@@ -6,6 +6,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'hj212/pollution/index/' +Config.data_id+ location.search,
+                    // index_url: 'hj212/pollution/index/',
                     // add_url: 'hj212/pollution/add/data_id/'+Config.data_id,
                     // edit_url: 'hj212/pollution/edit',
                     // del_url: 'hj212/pollution/del',

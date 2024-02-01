@@ -48,7 +48,7 @@ class Alarm extends Api
         $search = $this->request->get('search');
         $query = DB::name("hj212_alarm_data" )
         ->alias('a')
-        ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_read,a.created_at as created_at')
+        ->field('a.id as alarm_data_id,qn,cn,mn,cp_datatime,site_name,is_read,a.created_at as created_at,data_id')
         ->join('hj212_device d', 'a.mn=d.device_code', 'left')
         ->join('hj212_site s', 'd.site_id=s.id', 'left');
         if ($search) {

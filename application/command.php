@@ -19,5 +19,6 @@ return [
     'app\admin\command\Api',
     'app\hj212\command\Hj212Server',
     'app\hj212\command\Hj212Client',
-    'app\hj212\command\Hj212CheckAlarm'
+    'app\hj212\command\Hj212CheckAlarm',
+     'app\hj212\command\CreateTable'
 ];

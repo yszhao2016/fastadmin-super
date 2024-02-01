@@ -13,6 +13,7 @@ use app\common\library\UtoooSms;
 use app\hj212\model\Data;
 use app\admin\model\hj212\Device;
 use app\hj212\model\Pollution;
+use think\Cache;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
@@ -48,7 +49,8 @@ class Hj212CheckAlarm extends Command
         $suffix = date("Ym");
         $dataTableName = "hj212_data_" . $suffix;
         $pollutionTableName = "hj212_pollution_" . $suffix;
-
+        $rem = [];
+        $isupdate = false;
         try {
             $alarmData = collection(Alarm::all())->toArray();
             foreach ($alarmData as $alarm) {
@@ -61,6 +63,7 @@ class Hj212CheckAlarm extends Command
                 ->select();
 
             foreach ($data as $item) {
+                // 没有因子报警 设置 跳过
                 if (!isset($alarmArr[$item['code']])) {
                     continue;
                 }
@@ -77,20 +80,29 @@ class Hj212CheckAlarm extends Command
                     //                   或者平均值是否大于最大报警值
 
 
-                   $test=  Db::name($pollutionTableName)->where('id', $item['id'])->update(['is_alarm' => 1]);
-                    Db::name($dataTableName)->where('id', $item['data_id'])->update(['is_alarm' => 1]);
+                    Db::name($pollutionTableName)->where('id', $item['id'])->update(['is_alarm' => 1]);
+                    //这条数据中 已经有因子报警了  data表 is_alarm 就无需更新
+                    if (!in_array($item['data_id'], $rem)) {
+                        $data = Db::name($dataTableName)->where('id', $item['data_id'])->find();
+                        if($data->is_check){continue;}
+                        $isupdate = Db::name($dataTableName)->where('id', $item['data_id'])->update(['is_alarm' => 1,'is_check'=>1]);
 
-
-                    $data = Db::name($dataTableName)->where('id', $item['data_id'])->find();
-                    $pollution = Db::name($pollutionTableName)->where('id', $item['id'])->find();
-                    $data['detail'] = json_encode($pollution);
-                    unset($data['id']);
-                    unset($data['is_forward']);
-                    unset($data['is_change']);
-                    unset($data['is_alarm']);
-                    unset($data['is_check']);
-                    Db::name("hj212_alarm_data")->insert($data);
+//                        $pollution = Db::name($pollutionTableName)->where('id', $item['id'])->find();
+//                        $data['detail'] = json_encode($pollution);
+                        $data['data_id'] = $data['id'];
+                        unset($data['id']);
+                        unset($data['is_forward']);
+                        unset($data['is_change']);
+                        unset($data['is_alarm']);
+                        unset($data['is_check']);
+                        Db::name("hj212_alarm_data")->insert($data);
+                    }
+                    // 如果跟新data 表成功 就记住id 下次就无需 跟新data表 和alarm_data表
+                    if ($isupdate) {
+                        $rem[] = $item['data_id'];
+                    }
                 }
+                // 无论是否报警更新  is_check 字段
                 Db::name($pollutionTableName)->where('id', $item['id'])->update(['is_check' => 1]);
             }
         } catch (Exception $exception) {

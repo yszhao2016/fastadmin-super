@@ -33,19 +33,19 @@ class Data extends Backend
 
         parent::_initialize();
         $this->model = new \app\admin\model\hj212\Data;
-        $this->view->assign("statusList", ["0" => __('No'), "1" => __('Yes')]);
-        $data_id = $this->request->param('data_id', 0);
+//        $this->view->assign("statusList", ["0" => __('No'), "1" => __('Yes')]);
+//        $data_id = $this->request->param('data_id', 0);
 
         //设置站点列表
-        $list = Db::name('hj212_site')->select();
-        $site = collection($list)->toArray();
-        $siteArr = array();
-        foreach ($site as $v) {
-            $siteArr[$v['id']] = $v['site_name'];
-        }
-        $this->siteList = $siteArr;
-        $this->assignconfig('siteList', $this->siteList);
-        $this->assignconfig('data_id', $data_id);
+//        $list = Db::name('hj212_site')->select();
+//        $site = collection($list)->toArray();
+//        $siteArr = array();
+//        foreach ($site as $v) {
+//            $siteArr[$v['id']] = $v['site_name'];
+//        }
+//        $this->siteList = $siteArr;
+//        $this->assignconfig('siteList', $this->siteList);
+//        $this->assignconfig('data_id', $data_id);
 
 
     }
@@ -317,8 +317,7 @@ class Data extends Backend
     }
 
 
-    private
-    function getWhere($tableName, $searchfields = null, $relationSearch = null)
+    private function getWhere($tableName, $searchfields = null, $relationSearch = null)
     {
 
 
@@ -332,7 +331,11 @@ class Data extends Backend
         $offset = $this->request->get("offset/d", 0);
         $limit = $this->request->get("limit/d", 999999);
         $aliasName = "";
-
+        $page = $limit ? intval($offset / $limit) + 1 : 1;
+        if ($this->request->has("page")) {
+            $page = $this->request->get("page/d", 1);
+        }
+        $this->request->get([config('paginate.var_page') => $page]);
         if (!empty($this->model) && $this->relationSearch) {
             $name = Db::name($tableName)->getTable();
             $alias[$name] = Loader::parseName(basename(str_replace('\\', '/', get_class($this->model))));

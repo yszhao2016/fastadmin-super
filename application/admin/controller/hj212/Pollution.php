@@ -23,30 +23,30 @@ class Pollution extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\hj212\Pollution;
+//        $this->model = new \app\admin\model\hj212\Pollution;
         $data_id = $this->request->param('data_id', 0);
         $this->assignconfig('data_id', $data_id);
-
-        //监测因子信息
-        $list = Db::name('hj212_pollution_code')->select();
-        $codeArr = collection($list)->toArray();
-
-        $arr = array();
-        foreach($codeArr as $v){
-           $arr[$v['code']] = $v['name'];
-        }
-        $this->codelist = $arr ;
-        $this->assignconfig('codelist', $this->codelist);
-
-        $ids = $this->request->param('ids',0);
-        if($ids){
-            //获取监测报警信息
-            $alarmInfo =  $this->model->with('Alarm')->find($ids);
-            $codeInfo =  $this->model->with('PollutionCode')->find($ids);
-
-            $this->assign('alarm',$alarmInfo['alarm']);
-            $this->assign('code',$alarmInfo['pollutioncode']);
-        }
+//
+//        //监测因子信息
+//        $list = Db::name('hj212_pollution_code')->select();
+//        $codeArr = collection($list)->toArray();
+//
+//        $arr = array();
+//        foreach($codeArr as $v){
+//           $arr[$v['code']] = $v['name'];
+//        }
+//        $this->codelist = $arr ;
+//        $this->assignconfig('codelist', $this->codelist);
+//
+//        $ids = $this->request->param('ids',0);
+//        if($ids){
+//            //获取监测报警信息
+//            $alarmInfo =  $this->model->with('Alarm')->find($ids);
+//            $codeInfo =  $this->model->with('PollutionCode')->find($ids);
+//
+//            $this->assign('alarm',$alarmInfo['alarm']);
+//            $this->assign('code',$alarmInfo['pollutioncode']);
+//        }
     }
 
 
@@ -63,7 +63,8 @@ class Pollution extends Backend
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
-        $data_id = $this->request->param('data_id', 0);
+        $data_id = $this->request->get('data_id', 0);
+
         $time = $this->request->param('time', date("Ym"));
         if(trim($time," ") =="null"){
             $time = date("Ym");
@@ -74,7 +75,7 @@ class Pollution extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+
             $list = Db::name("hj212_pollution_".$suffix)
                 ->alias("p")
                 ->field("data_id,p.id,c.name,c.code,min,max,rtd,avg,is_alarm")
@@ -87,7 +88,6 @@ class Pollution extends Backend
             return json($result);
         }
         return $this->view->fetch();
-        parent::index();
     }
     /**
      * 添加
