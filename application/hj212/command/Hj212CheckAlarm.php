@@ -84,7 +84,7 @@ class Hj212CheckAlarm extends Command
                     //这条数据中 已经有因子报警了  data表 is_alarm 就无需更新
                     if (!in_array($item['data_id'], $rem)) {
                         $data = Db::name($dataTableName)->where('id', $item['data_id'])->find();
-                        if($data->is_alarm){continue;}
+                        if($data['is_alarm']){continue;}
                         $isupdate = Db::name($dataTableName)->where('id', $item['data_id'])->update(['is_alarm' => 1]);
 
 //                        $pollution = Db::name($pollutionTableName)->where('id', $item['id'])->find();
