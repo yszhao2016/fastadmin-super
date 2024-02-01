@@ -26,16 +26,7 @@ class CreateTable extends Command
     protected function execute(Input $input, Output $output)
     {
 
-        $data = Db::name("hj212_alarm_data")->select();
 
-        foreach($data as $item){
-
-            $p = json_decode($item['detail'],true);
-            if(!isset($p['data_id'])) continue;
-            Db::name("hj212_alarm_data")->where('id',$item['id'])->update(['data_id'=>$p['data_id']]);
-
-        }
-        exit;
         $suffix = date('Ym', strtotime("+1 month"));
         $dataTableName = "hj212_data_" . $suffix;
         $pollutionTableName = "hj212_pollution_" . $suffix;
