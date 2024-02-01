@@ -138,7 +138,7 @@ class Data extends Backend
             }
 
             if ($query) {
-                $list = $query->order('id',"desc")
+                $list = $query->order('cp_datatime',"desc")
                     ->paginate($limit);
             } else {
                 $count = 0;
