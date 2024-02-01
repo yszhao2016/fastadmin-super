@@ -17,7 +17,7 @@ class Data extends Model
     protected $createTime = 'created_at';
     protected $updateTime = 'updated_at';
     protected $deleteTime = false;
-
+    const SEARCH_CN = ['2051','2061','2011','2031'];
     // 追加属性
     protected $append = [
         'cp_datatime_text'

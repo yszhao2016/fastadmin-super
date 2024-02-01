@@ -63,6 +63,7 @@ class Hj212DataParser
                     $val['created_at'] = time();
                     $val['updated_at'] = time();
                     Db::name($pollutionTableName)->insert($val);
+
                 }
                 Db::commit();
             } catch (\think\exception\PDOException $e) {
@@ -76,6 +77,7 @@ class Hj212DataParser
                 Db::rollback();
               ;
             }
+
             $job->delete();
         } catch (\Exception $exception) {
             file_put_contents(ROOT_PATH . "runtime/log/hj212queue-error-" . date("Y-m-d") . ".log", $ysdata . PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL);

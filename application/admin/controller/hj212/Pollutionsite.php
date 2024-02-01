@@ -3,6 +3,7 @@
 namespace app\admin\controller\hj212;
 
 use app\common\controller\Backend;
+use app\common\library\Utils;
 
 /**
  *
@@ -56,5 +57,14 @@ class Pollutionsite extends Backend
 
     }
 
+    public function checkSiteIsAlarm()
+    {
+        $site_id = $this->request->get('site_id');
+        $isAlarm = Utils::getSiteIsAlarm($site_id);
+        $res["is_alarm"] = $isAlarm ? 1 : 0;
+//        var_dump($res);
+//        exit(json_encode($res))
+        $this->success("成功",$url = null,$res);
+    }
 
 }

@@ -9,6 +9,7 @@ namespace app\api\controller;
 
 use app\admin\model\hj212\PollutionSite;
 use app\common\controller\Api;
+use app\common\library\Utils;
 
 /**
  *
@@ -45,6 +46,29 @@ class MonitorSite extends Api
     }
 
     /**
+     * 站点列表接口  加报警字段
+     */
+    public function list1()
+    {
+
+        $page = $this->request->get('page', 1);
+        $pagesize = $this->request->get('pagesize', 10);
+        $search = $this->request->get('search');
+
+        $model = PollutionSite::order('id desc');
+        if ($search) {
+            $model = $model->where('site_name', "like", "%$search%");
+        }
+        $list = $model->paginate($pagesize, false, ['page' => $page]);
+        $res = $list->toArray();
+        foreach ($res['data'] as $k => $site) {
+            $isAlarm = Utils::getSiteIsAlarm($site['id']);
+            $res['data'][$k]['is_alarm'] = $isAlarm ? 1 : 0;
+        }
+        $this->success("成功", $res);
+    }
+
+    /**
      * 监测点详情
      * @method GET
      * @param id
@@ -57,6 +81,17 @@ class MonitorSite extends Api
         }
         $data = PollutionSite::get($id);
         $this->success("成功", $data);
+    }
+
+    /**
+     * 检查站点是否报警接口
+     */
+    public function checkSiteIsAlarm()
+    {
+        $site_id = $this->request->get('site_id');
+        $isAlarm = Utils::getSiteIsAlarm($site_id);
+        $res["is_alarm"] = $isAlarm ? 1 : 0;
+        $this->success("成功", $res);
     }
 
 }

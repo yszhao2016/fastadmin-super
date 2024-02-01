@@ -84,7 +84,6 @@ class Pollution extends Backend
                 ->paginate(50);
             $rows = $list->items();
             $result = array("total" => $list->total(), "rows" => $rows);
-            
             return json($result);
         }
         return $this->view->fetch();

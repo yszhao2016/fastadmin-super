@@ -28,6 +28,7 @@ class Data extends Api
     // 无需鉴权的接口,*表示全部
     protected $noNeedRight = ["*"];
 
+
     public function  list()
     {
         $page = $this->request->get('page', 1);
@@ -50,7 +51,7 @@ class Data extends Api
                     ->field('a.id as id,qn,cn,mn,cp_datatime,site_name,is_alarm,a.created_at as created_at')
                     ->join('hj212_device d', 'a.mn=d.device_code', 'left')
                     ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                    ->where("cn", "in", ["2011", "2051", "2061", "2031"]);
+                    ->where("cn", "in", \app\admin\model\hj212\Data::SEARCH_CN);
                 if ($search) {
                     $query = $query->where("s.site_name", "like", "%" . $search . "%");
                 }
@@ -61,7 +62,7 @@ class Data extends Api
                     ->field('"a.id,a.qn,a.cn,a.mn,a.is_alarm,cp_datatime,s.site_name')
                     ->join('hj212_device d', 'a.mn=d.device_code', 'left')
                     ->join('hj212_site s', 'd.site_id=s.id', 'left')
-                    ->where("cn", "in", ["2011", "2051", "2061", "2031"]);
+                    ->where("cn", "in", \app\admin\model\hj212\Data::SEARCH_CN);
                 if ($search) {
                     $query = $query->where("s.site_name", "like", "%" . $search . "%");
                 }
@@ -148,5 +149,5 @@ class Data extends Api
         $this->success('成功', $res);
     }
 
-
+//    public function
 }

@@ -58,24 +58,24 @@ define(['gdmap'], function f() {
             var markers = JSON.parse(Config.list);
 
             //添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
-            markers.forEach(function (marker) {
-
-                var point = new AMap.Marker({
+            var point = [];
+            markers.forEach(function (marker,index) {
+                 point[index] = new AMap.Marker({
                     map: map,
                     icon: marker.icon,
                     position: [marker.lon, marker.lat],
                     offset: new AMap.Pixel(-13, -30)
                 });
-                point.on('click', function () {
-                    infoWindow.open(map, point.getPosition());
+                point[index].on('click', function () {
+                    infoWindow.open(map, point[index].getPosition());
                 });
 
                 // 设置鼠标划过点标记显示的文字提示
-                point.setTitle('marker.site_name');
+                point[index].setTitle('marker.site_name');
 
                 // 设置label标签
                 // label默认蓝框白底左上角显示，样式className为：amap-marker-label
-                point.setLabel({
+                point[index].setLabel({
                     direction: 'right',
                     offset: new AMap.Pixel(0, 0),  //设置文本标注偏移量
                     content: "<div style='font-weight: bold'>" + marker.site_name + "</div>", //设置文本标注内容
@@ -104,6 +104,29 @@ define(['gdmap'], function f() {
             });
             var center = map.getCenter();
             map.setFitView();
+
+            function updateIcon(marker,f=false) {
+                var iconImg = "/assets/img/poi-marker-default.png";
+                if(f){
+                    iconImg="/assets/img/poi-marker-red.png";
+                }
+                marker.setIcon(iconImg)
+            }
+            function updateAllPointIcon(markers){
+                markers.forEach(function (marker,index) {
+                    $.get("hj212/pollutionsite/checksiteisalarm?site_id="+marker.id,function(data){
+                        if(data.data.is_alarm == 1){
+                            updateIcon(point[index],true);
+                        }else{
+                            updateIcon(point[index])
+                        }
+                    })
+                });
+            }
+            updateAllPointIcon(markers)
+            setInterval(function(){
+                updateAllPointIcon(markers);
+            }, 1000*60);
         },
     };
     return Controller;
