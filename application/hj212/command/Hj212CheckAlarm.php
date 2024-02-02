@@ -90,13 +90,13 @@ class Hj212CheckAlarm extends Command
 
 //                        $pollution = Db::name($pollutionTableName)->where('id', $item['id'])->find();
 //                        $data['detail'] = json_encode($pollution);
-                        $data['data_id'] = $data['id'];
-                        unset($data['id']);
-                        unset($data['is_forward']);
-                        unset($data['is_change']);
-                        unset($data['is_alam']);
-                        unset($data['is_check']);
-                        Db::name("hj212_alarm_data")->insert($data);
+                        $sdata['data_id'] = $sdata['id'];
+                        unset($sdata['id']);
+                        unset($sdata['is_forward']);
+                        unset($sdata['is_change']);
+                        unset($sdata['is_alam']);
+                        unset($sdata['is_check']);
+                        Db::name("hj212_alarm_data")->insert($sdata);
                     }
                     // 如果跟新data 表成功 就记住id 下次就无需 跟新data表 和alarm_data表
                     if ($isupdate) {
