@@ -18,7 +18,7 @@ class Alarm extends Backend
      * @var \app\admin\model\hj212\Alarm
      */
     protected $model = null;
-    protected $searchFields = 'pollutioncode.name';
+    protected $searchFields = 'pollutioncode.name,site.site_name';
     protected $relationSearch = true;
 
     public function _initialize()
@@ -50,7 +50,7 @@ class Alarm extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
             $list = $this->model
-                ->with("pollutioncode")
+                ->with("pollutioncode,site")
                 ->where($where)
                 ->order($sort, $order)
                 ->paginate($limit);
@@ -94,6 +94,38 @@ class Alarm extends Backend
             }
         }
         $this->success();
+    }
+
+
+    public function edit($ids = null)
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+
+            $data = \app\admin\model\hj212\Alarm::where("code",$params['code'])
+                ->where('id',"<>",$ids)
+                ->where("site_id",$params['site_id'])
+                ->find();
+            if($data){
+                $this->error("此站点已存在，无法");
+            }
+        }
+       return parent::edit($ids);
+    }
+
+
+    public function add()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            $data = \app\admin\model\hj212\Alarm::where("code",$params['code'])
+                ->where("site_id",$params['site_id'])
+                ->find();
+            if($data){
+                $this->error("此站点已经添加无法继续添加！！");
+            }
+        }
+        return parent::add();
     }
 
 }

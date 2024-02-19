@@ -30,8 +30,9 @@ class Alarm extends Api
 
 //        Alarm::
         $model = \app\admin\model\hj212\Alarm::alias('a')
-            ->field("a.id,c.name as name,alarm_min,alarm_max")
+            ->field("a.id,c.name as name,alarm_min,alarm_max,site_name")
             ->join('fa_hj212_pollution_code c',"a.code=c.code","left")
+            ->join('fa_hj212_site s','a.site_id=s.id','left')
             ->order('a.id desc');
         if ($search) {
             $model = $model->where('name', 'like', "%$search%");
