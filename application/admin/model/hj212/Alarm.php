@@ -34,6 +34,13 @@ class Alarm extends Model
 
     }
 
+
+    public function site()
+    {
+        return $this->hasOne(PollutionSite::class, 'id', 'site_id', [], 'LEFT')->setEagerlyType(0);
+
+    }
+
     
 
 

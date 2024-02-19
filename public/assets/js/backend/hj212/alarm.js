@@ -40,7 +40,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: __('Code'),
                             operate: false,
                         },
-                        // {field: 'avg_min', title: __('Avg_min'), operate:false},
+                       {field: 'site.site_name', title: "站点",operate: 'LIKE'},
                         // {field: 'avg_max', title: __('Avg_max'), operate:false},
                         {field: 'alarm_min', title: __('Alarm_min'), operate:false},
                         {field: 'alarm_max', title: __('Alarm_max'), operate:false},

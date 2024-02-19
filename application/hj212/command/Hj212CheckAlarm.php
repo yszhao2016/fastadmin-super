@@ -54,27 +54,31 @@ class Hj212CheckAlarm extends Command
         try {
             $alarmData = collection(Alarm::all())->toArray();
             foreach ($alarmData as $alarm) {
-                $alarmArr[$alarm['code']] = $alarm;
+                $alarmArr[$alarm['site_id']][$alarm['code']] = $alarm;
             }
             $data = Db::name($pollutionTableName)
+                ->alias('a')
+                ->join('hj212_device', "a.mn=hj212_device.device_code", 'left')
                 ->where('is_check', 0)
                 ->where('cn', "in", \app\admin\model\hj212\Data::SEARCH_CN)
-                ->order('id', "desc")
+                ->whereBetween("a.created_at", [time() - 300, time()])
+                ->order("a.id", "desc")
                 ->select();
 
             foreach ($data as $item) {
-                // 没有因子报警 设置 跳过
-                if (!isset($alarmArr[$item['code']])) {
+                // 没有因子报警 设置 跳过 is_check 设置为2
+                if (!$item['site_id'] ||  !isset($alarmArr[$item['site_id']][$item['code']])) {
+                    Db::name($pollutionTableName)->where('id', $item['id'])->update(['is_check' => 2]);
                     continue;
                 }
-
+                $alarminfo = $alarmArr[$item['site_id']][$item['code']];
                 if (
                     (in_array($item['cn'], ["2051", "2061", "2031"])
-                        && ($alarmArr[$item['code']]["alarm_min"] > $item['min']
-                            || $alarmArr[$item['code']]["alarm_max"] < $item['max']
-                            || $alarmArr[$item['code']]["alarm_max"] < $item['avg']
+                        && ($alarminfo["alarm_min"] > $item['min']
+                            || $alarminfo["alarm_max"] < $item['max']
+                            || $alarminfo["alarm_max"] < $item['avg']
                         )) || ($item['cn'] == "2011"
-                        && $alarmArr[$item['code']]["alarm_max"] < $item['rtd'])) {
+                        && $alarminfo["alarm_max"] < $item['rtd'])) {
                     //当是分钟数据的时候 判断最小值 是否小于最小报警值
                     //                   或者最大值是否大于最大报警值
                     //                   或者平均值是否大于最大报警值
@@ -85,7 +89,9 @@ class Hj212CheckAlarm extends Command
                     if (!in_array($item['data_id'], $rem)) {
                         $sdata = Db::name($dataTableName)->where('id', $item['data_id'])->find();
 
-                        if($sdata['is_alarm']){continue;}
+                        if ($sdata['is_alarm']) {
+                            continue;
+                        }
                         $isupdate = Db::name($dataTableName)->where('id', $item['data_id'])->update(['is_alarm' => 1]);
 
 //                        $pollution = Db::name($pollutionTableName)->where('id', $item['id'])->find();
@@ -106,8 +112,8 @@ class Hj212CheckAlarm extends Command
                 // 无论是否报警更新  is_check 字段
                 Db::name($pollutionTableName)->where('id', $item['id'])->update(['is_check' => 1]);
             }
-	} catch (Exception $exception) {
-	   var_dump($sdata);		
+        } catch (Exception $exception) {
+            var_dump($exception->getTraceAsString());
             var_dump($exception->getMessage());
         }
     }
