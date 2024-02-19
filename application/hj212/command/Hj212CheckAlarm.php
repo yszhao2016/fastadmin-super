@@ -57,6 +57,7 @@ class Hj212CheckAlarm extends Command
                 $alarmArr[$alarm['site_id']][$alarm['code']] = $alarm;
             }
             $data = Db::name($pollutionTableName)
+                ->field("a.*,site_id")
                 ->alias('a')
                 ->join('hj212_device', "a.mn=hj212_device.device_code", 'left')
                 ->where('is_check', 0)
