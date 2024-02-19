@@ -101,7 +101,7 @@ class Hj212CheckAlarm extends Command
                         unset($sdata['id']);
                         unset($sdata['is_forward']);
                         unset($sdata['is_change']);
-                        unset($sdata['is_alam']);
+                        unset($sdata['is_alarm']);
                         unset($sdata['is_check']);
                         Db::name("hj212_alarm_data")->insert($sdata);
                     }

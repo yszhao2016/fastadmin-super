@@ -10,6 +10,8 @@ namespace app\admin\command;
 use fast\Ftp;
 use think\console\Command;
 use think\Exception;
+use think\console\Input;
+use think\console\Output;
 
 class Test extends Command
 {
@@ -23,6 +25,15 @@ class Test extends Command
     protected function execute(Input $input, Output $output)
     {
 
+	$data = \app\admin\model\hj212\Pollution::all();
+        foreach ($data as  $item){
+            $d = \app\admin\model\hj212\Data::get($item->data_id);
+	    $item->qn=$d->qn;
+	   // $item->cp_datatime=$d->cp_datatime;
+            $item->save();
+        }	
+
+        exit();
         try{
             $ftp_host = config("site.ftp_host");
             $ftp_port = config("site.ftp_port");
