@@ -1,10 +1,10 @@
 <?php
 
 return array (
-  'name' => '工作流系统',
+  'name' => '秉凯环境科技(宿迁)有限公司',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.3',
+  'version' => '1.0.4',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 

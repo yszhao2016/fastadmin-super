@@ -94,7 +94,7 @@ class Hj212CheckAlarm extends Command
                         unset($sdata['id']);
                         unset($sdata['is_forward']);
                         unset($sdata['is_change']);
-                        unset($sdata['is_alam']);
+                        unset($sdata['is_alarm']);
                         unset($sdata['is_check']);
                         Db::name("hj212_alarm_data")->insert($sdata);
                     }
@@ -106,7 +106,8 @@ class Hj212CheckAlarm extends Command
                 // 无论是否报警更新  is_check 字段
                 Db::name($pollutionTableName)->where('id', $item['id'])->update(['is_check' => 1]);
             }
-        } catch (Exception $exception) {
+	} catch (Exception $exception) {
+	   var_dump($sdata);		
             var_dump($exception->getMessage());
         }
     }

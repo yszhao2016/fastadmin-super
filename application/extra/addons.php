@@ -2,11 +2,7 @@
 
 return [
     'autoload' => false,
-    'hooks' => [
-        'app_init' => [
-            'fastflow',
-        ],
-    ],
+    'hooks' => [],
     'route' => [],
     'priority' => [],
     'domain' => '',
