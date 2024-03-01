@@ -1,17 +1,11 @@
-# Management Background
-宿城区 环境监测
+# fastadmin 项目汇总
 
-# 开发项目
+fastadmin 技术开发汇总
+    1、水平分表应用
+    2、tcp 应用
+    3、ftp 应用
+    4、queue应用
 
-## 依赖安装
-```shell script
-composer install
 ```
 
-## 数据库配置
-
-```shell script
-cp .env.sample .env
-```
-配置本地MySQL数据库信息
 

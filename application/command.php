@@ -20,5 +20,8 @@ return [
     'app\hj212\command\Hj212Server',
     'app\hj212\command\Hj212Client',
     'app\hj212\command\Hj212CheckAlarm',
-     'app\hj212\command\CreateTable'
+    'app\hj212\command\CreateTable',
+    'app\admin\command\FtpData',
+    'app\admin\command\WebsocketServer',
+    'app\admin\command\SocketIoServer'
 ];
