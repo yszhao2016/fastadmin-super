@@ -31,8 +31,12 @@ class Dashboard extends Api
         $lasttime = date("Y-m-d H:i:s");
         $start = date("Y-m-d H:i:s", strtotime("-5 month"));
         $times = Utils::getYMRange($start, date("Y-m-d", time()));
-        foreach (rsort($times) as $k => $value) {
+        rsort($times);
+        foreach ($times as $k => $value) {
             $tableName = "hj212_pollution_" . $value;
+            if (!Utils::isTableExist($tableName)) {
+                continue;
+            }
             $last = Db::name($tableName)->field("qn,cp_datatime")
                 ->where("mn", $device_code)
                 ->where("cn", "2051")
