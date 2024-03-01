@@ -50,14 +50,14 @@ class Dashboard extends Api
                     ->where("cn", "2051")
                     ->where("qn", $last['qn'])
                     ->select();
-                $lasttime = $last['cp_datatime'];
+                $lasttime = date('Y-m-d H:i:s', $last['cp_datatime']);
                 break;
             }
         }
 
         $this->success("成功", [
             "list" => $list,
-            'time' => date('Y-m-d H:i:s', $lasttime)
+            'time' => $lasttime
         ]);
     }
 
