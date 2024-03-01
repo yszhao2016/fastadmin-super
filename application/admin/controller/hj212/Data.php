@@ -134,7 +134,8 @@ class Data extends Backend
                 $f++;
             }
             if($unionQuery){
-                $query = $query->union($unionQuery,true);
+                $_link_sql  = $query->union($unionQuery,true)->buildSql();
+                $query= Db::table($_link_sql.' a');
             }
 
             if ($query) {
