@@ -27,22 +27,33 @@ class Dashboard extends Api
     {
         $device_code = $this->request->get("mn");
 //        pq.id,pq.avg as rtd,pq.quota_id,pq.is_alarm,pq.qn,q.title,q.unit
-        $tableName = "hj212_pollution_" . date("Ym");
-        $last = Db::name($tableName)->field("qn,cp_datatime")
-            ->where("mn", $device_code)
-            ->where("cn", "2051")
-            ->order("id desc")
-            ->find();
-        $list = Db::name($tableName)->field("avg as rtd,c.name as title,is_alarm,cp_datatime")
-            ->alias('p')
-            ->join('hj212_pollution_code c', "p.code=c.code", "left")
-            ->where("mn", $device_code)
-            ->where("cn", "2051")
-            ->where("qn", $last['qn'])
-            ->select();
+        $list = [];
+        $lasttime = date("Y-m-d H:i:s");
+        $start = date("Y-m-d H:i:s", strtotime("-5 month"));
+        $times = self::getYMRange($start, date("Y-m-d", time()));
+        foreach (rsort($times) as $k => $value) {
+            $tableName = "hj212_pollution_" . $value;
+            $last = Db::name($tableName)->field("qn,cp_datatime")
+                ->where("mn", $device_code)
+                ->where("cn", "2051")
+                ->order("id desc")
+                ->find();
+            if ($last) {
+                $list = Db::name($tableName)->field("avg as rtd,c.name as title,is_alarm,cp_datatime")
+                    ->alias('p')
+                    ->join('hj212_pollution_code c', "p.code=c.code", "left")
+                    ->where("mn", $device_code)
+                    ->where("cn", "2051")
+                    ->where("qn", $last['qn'])
+                    ->select();
+                $lasttime = $last['cp_datatime'];
+                break;
+            }
+        }
+
         $this->success("成功", [
             "list" => $list,
-            'time' => date('Y-m-d H:i:s', $last['cp_datatime'])
+            'time' => date('Y-m-d H:i:s', $lasttime)
         ]);
     }
 
