@@ -30,7 +30,7 @@ class Dashboard extends Api
         $list = [];
         $lasttime = date("Y-m-d H:i:s");
         $start = date("Y-m-d H:i:s", strtotime("-5 month"));
-        $times = self::getYMRange($start, date("Y-m-d", time()));
+        $times = Utils::getYMRange($start, date("Y-m-d", time()));
         foreach (rsort($times) as $k => $value) {
             $tableName = "hj212_pollution_" . $value;
             $last = Db::name($tableName)->field("qn,cp_datatime")
