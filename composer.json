@@ -31,15 +31,20 @@
         "ext-pdo": "*",
         "ext-bcmath": "*",
         "txthinking/mailer": "^2.0",
-        "topthink/think-migration": "1.*"
+        "topthink/think-migration": "1.*",
+        "topthink/think-swoole": "2"
     },
     "config": {
-        "preferred-install": "dist"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://gitee.com/karson/framework"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "topthink/think-installer": true,
+            "easywechat-composer/easywechat-composer": true
         }
-    ]
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    }
 }

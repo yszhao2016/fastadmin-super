@@ -8,104 +8,119 @@
 namespace App\websocket;
 
 use Swoole\WebSocket\Server as SwooleServer;
-use app\service\ImService;
+use app\websocket\handler\Message as MessageHandler;
+use app\websocket\handler\User as UserHandler;
+use app\websocket\handler\Auth as AuthHandler;
 
 class Event
 {
     protected $server;
     protected $frame;
     protected $redis;
-    protected $imService;
+    protected $messageHandler;
+    protected $userHandler;
+    protected $authHandler;
 
     public function __construct(SwooleServer $server, $frame, $redis)
     {
         $this->server = $server;
         $this->frame = $frame;
         $this->redis = $redis;
-        $this->imService = new ImService();
+
+        $this->messageHandler = new MessageHandler($server);
+        $this->userHandler = new UserHandler($server);
+        $this->authHandler = new AuthHandler();
     }
 
     /**
-     * 处理私聊消息
+     * 处理认证
+     */
+    public function auth($data)
+    {
+        $token = $data['token'] ?? '';
+        $userId = $this->authHandler->verifyToken($token);
+
+        if (!$userId) {
+            $this->server->close($this->frame->fd);
+            return;
+        }
+
+        // 绑定用户
+        $this->userHandler->online($userId, $this->frame->fd, [
+            'device' => $data['device'] ?? 'web',
+            'ip' => $this->getClientIp(),
+            'user_agent' => $data['user_agent'] ?? ''
+        ]);
+
+        // 发送认证成功消息
+        $this->server->push($this->frame->fd, json_encode([
+            'type' => 'auth_success',
+            'user_id' => $userId,
+            'timestamp' => time()
+        ]));
+    }
+
+    /**
+     * 处理聊天消息
      */
     public function chat($data)
     {
-        $message = [
-            'type' => 'chat',
-            'from_user' => $data['user_id'],
-            'to_user' => $data['to_user'],
-            'content' => $data['content'],
-            'msg_type' => $data['msg_type'] ?? 'text',
-            'timestamp' => time()
-        ];
+        $messageType = $data['message_type'] ?? 'private';
 
-        // 保存到数据库
-        $msgId = $this->imService->saveMessage($message);
-        $message['msg_id'] = $msgId;
-
-        // 获取接收方FD
-        $toFd = $this->redis->hGet('im:online_users', $data['to_user']);
-
-        if ($toFd && $this->server->isEstablished($toFd)) {
-            // 接收方在线，实时推送
-            $this->server->push($toFd, json_encode($message));
-
-            // 发送送达回执
-            $this->server->push($this->frame->fd, json_encode([
-                'type' => 'receipt',
-                'msg_id' => $msgId,
-                'status' => 'delivered'
-            ]));
-        } else {
-            // 接收方离线，存储离线消息
-            $this->imService->saveOfflineMessage($data['to_user'], $message);
-        }
-
-        // 推送给自己（消息同步）
-        $this->server->push($this->frame->fd, json_encode($message));
-    }
-
-    /**
-     * 处理群聊消息
-     */
-    public function group($data)
-    {
-        $groupId = $data['group_id'];
-        $members = $this->imService->getGroupMembers($groupId);
-
-        $message = [
-            'type' => 'group',
-            'from_user' => $data['user_id'],
-            'group_id' => $groupId,
-            'content' => $data['content'],
-            'timestamp' => time()
-        ];
-
-        // 保存群消息
-        $msgId = $this->imService->saveGroupMessage($message);
-        $message['msg_id'] = $msgId;
-
-        // 推送给所有在线群成员
-        foreach ($members as $memberId) {
-            if ($memberId == $data['user_id']) continue;
-
-            $toFd = $this->redis->hGet('im:online_users', $memberId);
-            if ($toFd && $this->server->isEstablished($toFd)) {
-                $this->server->push($toFd, json_encode($message));
-            } else {
-                $this->imService->saveOfflineMessage($memberId, $message);
-            }
+        switch ($messageType) {
+            case 'private':
+                $this->messageHandler->handlePrivateChat($data, $this->frame->fd);
+                break;
+            case 'group':
+                $this->messageHandler->handleGroupChat($data, $this->frame->fd);
+                break;
+            case 'recall':
+                $this->messageHandler->recallMessage($data, $this->frame->fd);
+                break;
+            case 'read_receipt':
+                $this->messageHandler->messageRead($data, $this->frame->fd);
+                break;
         }
     }
 
     /**
-     * 心跳处理
+     * 处理心跳
      */
     public function heartbeat($data)
     {
+        $this->userHandler->heartbeat($this->frame->fd);
+
         $this->server->push($this->frame->fd, json_encode([
             'type' => 'heartbeat',
             'timestamp' => time()
         ]));
+    }
+
+    /**
+     * 处理用户状态
+     */
+    public function user($data)
+    {
+        $action = $data['action'] ?? '';
+
+        switch ($action) {
+            case 'get_online_status':
+                $userId = $data['user_id'] ?? null;
+                $status = $this->userHandler->getOnlineUsers($userId);
+                $this->server->push($this->frame->fd, json_encode([
+                    'type' => 'online_status',
+                    'data' => $status
+                ]));
+                break;
+        }
+    }
+
+    /**
+     * 获取客户端IP
+     */
+    private function getClientIp()
+    {
+        $fdInfo = $this->server->getClientInfo($this->frame->fd);
+        return $fdInfo['remote_ip'] ?? '0.0.0.0';
     }
 }
