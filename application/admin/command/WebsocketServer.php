@@ -64,6 +64,6 @@ class WebsocketServer extends Command
         });
 
         $ws->start();
-
     }
+
 }

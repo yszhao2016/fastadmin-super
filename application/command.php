@@ -23,5 +23,7 @@ return [
     'app\hj212\command\CreateTable',
     'app\admin\command\FtpData',
     'app\admin\command\WebsocketServer',
-    'app\admin\command\SocketIoServer'
+    'app\admin\command\JT808Client',
+//    'app\admin\command\SocketIoServer'
+
 ];
